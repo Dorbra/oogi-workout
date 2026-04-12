@@ -34,6 +34,10 @@ const T = {
     exercises: 'תרגילים',
     remaining: 'נותר',
     sec: 'שנ׳',
+    dayA: 'יום א׳',
+    dayB: 'יום ב׳',
+    pushFocus: 'דחיפה + משיכה אנכית',
+    pullFocus: 'משיכה אופקית + דחיפה',
   },
   en: {
     appTitle: 'Workout',
@@ -65,6 +69,10 @@ const T = {
     exercises: 'exercises',
     remaining: 'remaining',
     sec: 's',
+    dayA: 'Day A',
+    dayB: 'Day B',
+    pushFocus: 'Push + Vertical Pull',
+    pullFocus: 'Horizontal Pull + Push',
   },
 }
 
@@ -130,18 +138,30 @@ const TEMPLATES = {
       { exerciseId: '21', sets: 3, reps: 10, rest: 75,  setDuration: 30, weight: '17.5 ק"ג' },
     ],
   },
-  30: {
+  '30a': {
     duration: 30,
     warmupSecs: 3 * 30,
     cooldownSecs: 40 + 40 + 40 + 30,
     exercises: [
-      { exerciseId: '7',  sets: 3, reps: 8,      rest: 90,  setDuration: 35, weight: 'אפוד 0–16 ק"ג' },
-      { exerciseId: '2',  sets: 3, reps: 10,     rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
-      { exerciseId: '9',  sets: 3, reps: 10,     rest: 90,  setDuration: 70, weight: '17.5 ק"ג' },
-      { exerciseId: '6',  sets: 3, reps: 12,     rest: 60,  setDuration: 40, weight: 'אפוד 10–20 ק"ג' },
-      { exerciseId: '13', sets: 3, reps: 12,     rest: 45,  setDuration: 35, weight: '2×5 ק"ג' },
-      { exerciseId: '18', sets: 3, reps: 10,     rest: 75,  setDuration: 30, weight: '2×10 ק"ג', supersetWith: '22' },
-      { exerciseId: '22', sets: 3, reps: 12,     rest: 75,  setDuration: 35, weight: '2×5 ק"ג' },
+      { exerciseId: '7',  sets: 4, reps: 6,  rest: 90, setDuration: 35, weight: 'אפוד 8–16 ק"ג' },
+      { exerciseId: '2',  sets: 3, reps: 10, rest: 75, setDuration: 35, weight: '2×10 ק"ג' },
+      { exerciseId: '15', sets: 3, reps: 10, rest: 75, setDuration: 35, weight: '2×8 ק"ג' },
+      { exerciseId: '3',  sets: 3, reps: 8,  rest: 90, setDuration: 35, weight: 'אפוד / משקל גוף' },
+      { exerciseId: '13', sets: 2, reps: 12, rest: 45, setDuration: 30, weight: '2×5 ק"ג', supersetWith: '16' },
+      { exerciseId: '16', sets: 2, reps: 12, rest: 45, setDuration: 30, weight: '2×5 ק"ג' },
+    ],
+  },
+  '30b': {
+    duration: 30,
+    warmupSecs: 3 * 30,
+    cooldownSecs: 40 + 40 + 40 + 30,
+    exercises: [
+      { exerciseId: '8',  sets: 4, reps: 10, rest: 60, setDuration: 35, weight: 'אפוד 8–16 ק"ג' },
+      { exerciseId: '1',  sets: 3, reps: 10, rest: 75, setDuration: 35, weight: '2×12.5 ק"ג' },
+      { exerciseId: '10', sets: 3, reps: 12, rest: 75, setDuration: 40, weight: '2×12.5 ק"ג' },
+      { exerciseId: '6',  sets: 3, reps: 12, rest: 60, setDuration: 40, weight: 'אפוד 10–20 ק"ג' },
+      { exerciseId: '18', sets: 3, reps: 10, rest: 75, setDuration: 30, weight: '2×10 ק"ג', supersetWith: '21' },
+      { exerciseId: '21', sets: 3, reps: 10, rest: 75, setDuration: 30, weight: '17.5 ק"ג' },
     ],
   },
   45: {
@@ -291,7 +311,7 @@ function playRestTone() {
 const initialState = {
   lang: 'he',
   screen: 'home',        // home | preview | active | complete
-  selectedDuration: 30,
+  selectedDuration: '30a',
   skipWarmup: false,
   steps: [],
   groupStarts: [],
@@ -914,6 +934,12 @@ function ProgressBar({ progress, color = 'bg-orange-500' }) {
   )
 }
 
+function getDurationLabel(selectedDuration, t) {
+  if (selectedDuration === '30a') return t.dayA
+  if (selectedDuration === '30b') return t.dayB
+  return `${selectedDuration} ${t.min}`
+}
+
 // ─────────────────────────────────────────────
 // SCREEN: HOME
 // ─────────────────────────────────────────────
@@ -942,20 +968,30 @@ function HomeScreen({ state, dispatch }) {
       </div>
 
       {/* Duration picker */}
-      <div className="flex gap-4 md:gap-6">
-        {[20, 30, 45].map(d => (
-          <button
-            key={d}
-            onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
-            className={`flex flex-col items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-2xl border-2 font-black transition-all active:scale-95
-              ${state.selectedDuration === d
-                ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
-                : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
-          >
-            <span className="text-4xl md:text-5xl leading-none">{d}</span>
-            <span className="text-sm md:text-base mt-1 font-medium">{t.min}</span>
-          </button>
-        ))}
+      <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+        {[20, '30a', '30b', 45].map(d => {
+          const isDay = d === '30a' || d === '30b'
+          const label = isDay ? (d === '30a' ? t.dayA : t.dayB) : String(d)
+          const sub   = isDay ? (d === '30a' ? t.pushFocus : t.pullFocus) : t.min
+          const isSelected = state.selectedDuration === d
+          return (
+            <button
+              key={d}
+              onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
+              className={`flex flex-col items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-2xl border-2 font-black transition-all active:scale-95
+                ${isSelected
+                  ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
+                  : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
+            >
+              <span className={`leading-none ${isDay ? 'text-2xl md:text-3xl' : 'text-4xl md:text-5xl'}`}>
+                {label}
+              </span>
+              <span className={`mt-1 font-medium text-center px-1 ${isDay ? 'text-xs leading-tight' : 'text-sm md:text-base'}`}>
+                {sub}
+              </span>
+            </button>
+          )
+        })}
       </div>
 
       {/* Preview button */}
@@ -1004,7 +1040,7 @@ function PreviewScreen({ state, dispatch }) {
           {t.back}
         </button>
         <div className="flex-1 text-center">
-          <h2 className="text-white font-black text-xl">{state.selectedDuration} {t.min}</h2>
+          <h2 className="text-white font-black text-xl">{getDurationLabel(state.selectedDuration, t)}</h2>
           <p className="text-zinc-500 text-sm">{items.length} {t.exercises}</p>
         </div>
         <div className="w-16" />
@@ -1406,7 +1442,7 @@ function CompleteScreen({ state, dispatch }) {
       <div className="text-8xl md:text-9xl">🏆</div>
       <div>
         <h1 className="text-5xl md:text-6xl font-black text-white">{t.complete}</h1>
-        <p className="text-zinc-400 text-xl md:text-2xl mt-2">{state.selectedDuration} {t.min} {state.lang === 'he' ? 'אימון הושלם' : 'workout done'}</p>
+        <p className="text-zinc-400 text-xl md:text-2xl mt-2">{getDurationLabel(state.selectedDuration, t)} {state.lang === 'he' ? 'אימון הושלם' : 'workout done'}</p>
       </div>
       <div className="bg-zinc-900 rounded-2xl px-10 md:px-14 py-6 md:py-8 border border-zinc-800">
         <p className="text-zinc-500 text-sm md:text-base uppercase tracking-wide mb-1">{t.totalTime}</p>
