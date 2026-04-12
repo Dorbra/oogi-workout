@@ -311,7 +311,8 @@ function playRestTone() {
 const initialState = {
   lang: 'he',
   screen: 'home',        // home | preview | active | complete
-  selectedDuration: '30a',
+  selectedDuration: 30,
+  selectedVariation: 'a',  // 'a' | 'b'  (only used when duration === 30)
   skipWarmup: false,
   steps: [],
   groupStarts: [],
@@ -343,6 +344,9 @@ function reducer(state, action) {
     case 'SET_DURATION':
       return { ...state, selectedDuration: action.duration }
 
+    case 'SET_VARIATION':
+      return { ...state, selectedVariation: action.variation }
+
     case 'TOGGLE_SKIP_WARMUP':
       return { ...state, skipWarmup: !state.skipWarmup }
 
@@ -356,7 +360,10 @@ function reducer(state, action) {
       return { ...initialState, lang: state.lang }
 
     case 'START_WORKOUT': {
-      const template = TEMPLATES[state.selectedDuration]
+      const templateKey = state.selectedDuration === 30
+        ? '30' + state.selectedVariation
+        : state.selectedDuration
+      const template = TEMPLATES[templateKey]
       const { steps, groupStarts } = buildSteps(template, state.skipWarmup)
       const firstStep = steps[0]
       return {
@@ -438,79 +445,140 @@ function Dumbbell({ x1, y1, x2, y2 }) {
 
 const SVGS = {
   bench_press: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      {/* Bench */}
-      <rect x="10" y="52" width="80" height="8" rx="2" fill="#3f3f46" />
-      <line x1="20" y1="60" x2="20" y2="72" stroke="#3f3f46" strokeWidth="3" />
-      <line x1="80" y1="60" x2="80" y2="72" stroke="#3f3f46" strokeWidth="3" />
-      {/* Person lying */}
-      <circle cx="25" cy="44" r="7" fill="#e2e8f0" />
-      <line x1="32" y1="44" x2="70" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      {/* Arms pressing up */}
-      <line x1="40" y1="47" x2="35" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="60" y1="48" x2="65" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={30} y1={28} x2={42} y2={28} />
-      <Dumbbell x1={58} y1={28} x2={70} y2={28} />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: flat bench, dumbbells at chest */}
+      <rect x="5" y="52" width="82" height="6" rx="2" fill="#3f3f46" />
+      <line x1="14" y1="58" x2="14" y2="70" stroke="#3f3f46" strokeWidth="2.5" />
+      <line x1="79" y1="58" x2="79" y2="70" stroke="#3f3f46" strokeWidth="2.5" />
+      <circle cx="14" cy="44" r="6" fill="#e2e8f0" />
+      <line x1="20" y1="44" x2="72" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="32" y1="46" x2="28" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="55" y1="48" x2="58" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={23} y1={33} x2={33} y2={33} />
+      <Dumbbell x1={53} y1={35} x2={63} y2={35} />
+      <line x1="72" y1="50" x2="80" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="72" y1="50" x2="84" y2="57" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms extended */}
+      <rect x="115" y="52" width="82" height="6" rx="2" fill="#3f3f46" />
+      <line x1="124" y1="58" x2="124" y2="70" stroke="#3f3f46" strokeWidth="2.5" />
+      <line x1="189" y1="58" x2="189" y2="70" stroke="#3f3f46" strokeWidth="2.5" />
+      <circle cx="124" cy="44" r="6" fill="#e2e8f0" />
+      <line x1="130" y1="44" x2="182" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="142" y1="46" x2="136" y2="21" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="165" y1="48" x2="171" y2="21" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={131} y1={21} x2={141} y2={21} />
+      <Dumbbell x1={166} y1={21} x2={176} y2={21} />
+      <line x1="182" y1="50" x2="190" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="182" y1="50" x2="194" y2="57" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   ),
   incline_press: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <line x1="5" y1="70" x2="80" y2="40" stroke="#3f3f46" strokeWidth="6" strokeLinecap="round" />
-      <line x1="80" y1="40" x2="80" y2="70" stroke="#3f3f46" strokeWidth="3" />
-      <circle cx="22" cy="48" r="7" fill="#e2e8f0" />
-      <line x1="28" y1="50" x2="68" y2="38" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="38" y1="44" x2="33" y2="26" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="55" y1="40" x2="60" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={28} y1={26} x2={40} y2={26} />
-      <Dumbbell x1={54} y1={22} x2={66} y2={22} />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: incline bench — HEAD AT HIGH END (right), dumbbells at chest */}
+      <line x1="5" y1="70" x2="85" y2="42" stroke="#3f3f46" strokeWidth="5" strokeLinecap="round" />
+      <line x1="85" y1="42" x2="85" y2="70" stroke="#3f3f46" strokeWidth="2.5" />
+      <circle cx="78" cy="34" r="6" fill="#e2e8f0" />
+      <line x1="72" y1="40" x2="28" y2="62" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="60" y1="44" x2="55" y2="27" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="46" y1="50" x2="49" y2="33" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={50} y1={24} x2={60} y2={24} />
+      <Dumbbell x1={44} y1={30} x2={54} y2={30} />
+      <line x1="28" y1="62" x2="18" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="28" y1="62" x2="22" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: same bench, arms extended upward */}
+      <line x1="115" y1="70" x2="195" y2="42" stroke="#3f3f46" strokeWidth="5" strokeLinecap="round" />
+      <line x1="195" y1="42" x2="195" y2="70" stroke="#3f3f46" strokeWidth="2.5" />
+      <circle cx="188" cy="34" r="6" fill="#e2e8f0" />
+      <line x1="182" y1="40" x2="138" y2="62" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="170" y1="44" x2="162" y2="12" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="156" y1="50" x2="162" y2="15" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={157} y1={9} x2={167} y2={9} />
+      <line x1="138" y1="62" x2="128" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="138" y1="62" x2="132" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   ),
   pull_up: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      {/* Rings bar */}
-      <line x1="15" y1="8" x2="85" y2="8" stroke="#78716c" strokeWidth="3" />
-      <circle cx="30" cy="16" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
-      <circle cx="70" cy="16" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
-      {/* Person hanging */}
-      <circle cx="50" cy="32" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="40" x2="50" y2="62" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="44" x2="36" y2="52" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="44" x2="64" y2="52" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="62" x2="43" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="62" x2="57" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Arms up to rings */}
-      <line x1="36" y1="32" x2="30" y2="21" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="64" y1="32" x2="70" y2="21" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: arms fully extended, hanging */}
+      <line x1="10" y1="6" x2="88" y2="6" stroke="#78716c" strokeWidth="3" />
+      <circle cx="28" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="70" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <line x1="28" y1="19" x2="49" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="70" y1="19" x2="49" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="49" cy="43" r="6" fill="#e2e8f0" />
+      <line x1="49" y1="49" x2="49" y2="67" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="49" y1="55" x2="40" y2="66" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="49" y1="55" x2="58" y2="66" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: chin above rings, arms bent */}
+      <line x1="120" y1="6" x2="198" y2="6" stroke="#78716c" strokeWidth="3" />
+      <circle cx="138" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="180" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="159" cy="20" r="6" fill="#e2e8f0" />
+      <line x1="153" y1="26" x2="138" y2="19" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="165" y1="26" x2="180" y2="19" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="159" y1="26" x2="159" y2="56" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="159" y1="56" x2="150" y2="68" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="159" y1="56" x2="168" y2="68" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   ),
   ring_row: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <line x1="15" y1="8" x2="85" y2="8" stroke="#78716c" strokeWidth="3" />
-      <circle cx="30" cy="18" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
-      <circle cx="70" cy="18" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
-      {/* Person at angle pulling */}
-      <circle cx="50" cy="35" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="43" x2="50" y2="62" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="62" x2="38" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="62" x2="62" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="36" y1="35" x2="30" y2="23" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="64" y1="35" x2="70" y2="23" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: leaning back, arms fully extended */}
+      <line x1="10" y1="6" x2="88" y2="6" stroke="#78716c" strokeWidth="3" />
+      <circle cx="28" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="70" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="22" cy="52" r="6" fill="#e2e8f0" />
+      <line x1="28" y1="48" x2="64" y2="32" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="36" y1="44" x2="28" y2="19" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="50" y1="37" x2="70" y2="19" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="64" y1="32" x2="74" y2="18" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="64" y1="32" x2="80" y2="26" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: chest pulled to rings, elbows back */}
+      <line x1="120" y1="6" x2="198" y2="6" stroke="#78716c" strokeWidth="3" />
+      <circle cx="138" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="180" cy="14" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="135" cy="28" r="6" fill="#e2e8f0" />
+      <line x1="141" y1="30" x2="175" y2="42" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="150" y1="34" x2="138" y2="19" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="162" y1="38" x2="180" y2="19" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="175" y1="42" x2="185" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="175" y1="42" x2="190" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   ),
   ring_dip: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <line x1="15" y1="8" x2="85" y2="8" stroke="#78716c" strokeWidth="3" />
-      <circle cx="25" cy="18" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
-      <circle cx="75" cy="18" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
-      {/* Person between rings, arms bent */}
-      <line x1="25" y1="23" x2="30" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="75" y1="23" x2="70" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <circle cx="50" cy="36" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="44" x2="50" y2="62" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="50" x2="40" y2="58" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="50" x2="60" y2="58" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="62" x2="44" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="62" x2="56" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: arms straight, top position */}
+      <line x1="5" y1="6" x2="88" y2="6" stroke="#78716c" strokeWidth="3" />
+      <circle cx="22" cy="16" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="75" cy="16" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <line x1="22" y1="21" x2="32" y2="32" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="75" y1="21" x2="65" y2="32" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="49" cy="32" r="6" fill="#e2e8f0" />
+      <line x1="49" y1="38" x2="49" y2="60" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="49" y1="46" x2="40" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="49" y1="46" x2="58" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms bent ~90°, body dropped */}
+      <line x1="115" y1="6" x2="198" y2="6" stroke="#78716c" strokeWidth="3" />
+      <circle cx="132" cy="16" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <circle cx="185" cy="16" r="5" fill="none" stroke="#f97316" strokeWidth="2.5" />
+      <line x1="132" y1="21" x2="138" y2="32" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="138" y1="32" x2="159" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="185" y1="21" x2="179" y2="32" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="179" y1="32" x2="159" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="159" cy="44" r="6" fill="#e2e8f0" />
+      <line x1="159" y1="50" x2="159" y2="68" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="159" y1="56" x2="150" y2="66" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="159" y1="56" x2="168" y2="66" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   ),
   single_row: (
@@ -529,15 +597,27 @@ const SVGS = {
     </svg>
   ),
   bent_row: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="22" cy="25" r="7" fill="#e2e8f0" />
-      <line x1="22" y1="32" x2="60" y2="48" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="35" y1="37" x2="32" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="43" x2="47" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={27} y1={22} x2={38} y2={22} />
-      <Dumbbell x1={42} y1={28} x2={53} y2={28} />
-      <line x1="60" y1="48" x2="52" y2="62" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="60" y1="48" x2="68" y2="62" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: bent over, arms hanging down */}
+      <circle cx="18" cy="22" r="6" fill="#e2e8f0" />
+      <line x1="18" y1="28" x2="56" y2="46" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="28" y1="33" x2="26" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="42" y1="40" x2="40" y2="62" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={21} y1={56} x2={31} y2={56} />
+      <Dumbbell x1={35} y1={62} x2={45} y2={62} />
+      <line x1="56" y1="46" x2="47" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="56" y1="46" x2="65" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: bent over, elbows pulled up to ribs */}
+      <circle cx="128" cy="22" r="6" fill="#e2e8f0" />
+      <line x1="128" y1="28" x2="166" y2="46" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="138" y1="33" x2="134" y2="20" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="152" y1="40" x2="148" y2="26" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={129} y1={17} x2={139} y2={17} />
+      <Dumbbell x1={143} y1={23} x2={153} y2={23} />
+      <line x1="166" y1="46" x2="157" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="166" y1="46" x2="175" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   ),
   renegade: (
@@ -555,32 +635,55 @@ const SVGS = {
     </svg>
   ),
   shoulder_press: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <rect x="35" y="52" width="30" height="8" rx="2" fill="#3f3f46" />
-      <line x1="40" y1="60" x2="40" y2="70" stroke="#3f3f46" strokeWidth="3" />
-      <line x1="60" y1="60" x2="60" y2="70" stroke="#3f3f46" strokeWidth="3" />
-      <circle cx="50" cy="22" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="30" x2="50" y2="52" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      {/* Arms raised */}
-      <line x1="50" y1="38" x2="28" y2="30" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="28" y1="30" x2="25" y2="14" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="38" x2="72" y2="30" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="72" y1="30" x2="75" y2="14" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={20} y1={14} x2={30} y2={14} />
-      <Dumbbell x1={70} y1={14} x2={80} y2={14} />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: dumbbells at ear/shoulder height */}
+      <rect x="28" y="57" width="32" height="5" rx="2" fill="#3f3f46" />
+      <circle cx="44" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="44" y1="20" x2="44" y2="57" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="44" y1="57" x2="34" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="44" y1="57" x2="54" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="44" y1="28" x2="22" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="22" y1="28" x2="20" y2="16" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="44" y1="28" x2="66" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="66" y1="28" x2="68" y2="16" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={15} y1={15} x2={25} y2={15} />
+      <Dumbbell x1={63} y1={15} x2={73} y2={15} />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms fully extended overhead */}
+      <rect x="138" y="57" width="32" height="5" rx="2" fill="#3f3f46" />
+      <circle cx="154" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="154" y1="20" x2="154" y2="57" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="154" y1="57" x2="144" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="57" x2="164" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="28" x2="142" y2="10" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="28" x2="166" y2="10" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={137} y1={7} x2={147} y2={7} />
+      <Dumbbell x1={161} y1={7} x2={171} y2={7} />
     </svg>
   ),
   lateral_raise: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="50" cy="18" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="26" x2="50" y2="58" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="42" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="58" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Arms out to sides */}
-      <line x1="50" y1="36" x2="18" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="36" x2="82" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={13} y1={33} x2={13} y2={39} />
-      <Dumbbell x1={87} y1={33} x2={87} y2={39} />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: arms at sides */}
+      <circle cx="45" cy="16" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="22" x2="45" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="37" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="53" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="30" x2="32" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="30" x2="58" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={27} y1={44} x2={27} y2={52} />
+      <Dumbbell x1={62} y1={44} x2={62} y2={52} />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms at shoulder height */}
+      <circle cx="155" cy="16" r="6" fill="#e2e8f0" />
+      <line x1="155" y1="22" x2="155" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="155" y1="54" x2="147" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="54" x2="163" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="30" x2="124" y2="30" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="30" x2="186" y2="30" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={119} y1={27} x2={119} y2={33} />
+      <Dumbbell x1={190} y1={27} x2={190} y2={33} />
     </svg>
   ),
   front_raise: (
@@ -597,65 +700,119 @@ const SVGS = {
     </svg>
   ),
   arnold: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="50" cy="18" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="26" x2="50" y2="56" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="56" x2="42" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="56" x2="58" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Arms mid-rotation */}
-      <line x1="50" y1="34" x2="30" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="30" y1="38" x2="28" y2="24" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="34" x2="70" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="70" y1="38" x2="72" y2="24" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={23} y1={24} x2={33} y2={24} />
-      <Dumbbell x1={67} y1={24} x2={77} y2={24} />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: dumbbells at shoulder, palms facing in */}
+      <rect x="28" y="58" width="32" height="5" rx="2" fill="#3f3f46" />
+      <circle cx="44" cy="16" r="6" fill="#e2e8f0" />
+      <line x1="44" y1="22" x2="44" y2="58" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="44" y1="58" x2="34" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="44" y1="58" x2="54" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="44" y1="30" x2="28" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="28" y1="34" x2="26" y2="20" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="44" y1="30" x2="60" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="60" y1="34" x2="62" y2="20" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={21} y1={17} x2={31} y2={17} />
+      <Dumbbell x1={57} y1={17} x2={67} y2={17} />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms fully extended overhead */}
+      <rect x="138" y="58" width="32" height="5" rx="2" fill="#3f3f46" />
+      <circle cx="154" cy="16" r="6" fill="#e2e8f0" />
+      <line x1="154" y1="22" x2="154" y2="58" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="154" y1="58" x2="144" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="58" x2="164" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="28" x2="142" y2="12" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="28" x2="166" y2="12" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={137} y1={8} x2={147} y2={8} />
+      <Dumbbell x1={161} y1={8} x2={171} y2={8} />
     </svg>
   ),
   rear_fly: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="22" cy="22" r="7" fill="#e2e8f0" />
-      <line x1="22" y1="29" x2="55" y2="48" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      {/* Arms spread wide behind */}
-      <line x1="35" y1="36" x2="16" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="48" y1="43" x2="68" y2="30" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={11} y1={18} x2={20} y2={18} />
-      <Dumbbell x1={63} y1={26} x2={73} y2={26} />
-      <line x1="55" y1="48" x2="48" y2="62" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="55" y1="48" x2="62" y2="62" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: hinged forward, arms hanging down */}
+      <circle cx="18" cy="20" r="6" fill="#e2e8f0" />
+      <line x1="18" y1="26" x2="56" y2="46" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="28" y1="32" x2="26" y2="54" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="42" y1="40" x2="40" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={21} y1={54} x2={31} y2={54} />
+      <Dumbbell x1={35} y1={60} x2={45} y2={60} />
+      <line x1="56" y1="46" x2="47" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="56" y1="46" x2="65" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms spread wide, shoulder blades squeezed */}
+      <circle cx="128" cy="20" r="6" fill="#e2e8f0" />
+      <line x1="128" y1="26" x2="166" y2="46" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="138" y1="32" x2="116" y2="20" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="152" y1="40" x2="174" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={111} y1={16} x2={120} y2={16} />
+      <Dumbbell x1={169} y1={24} x2={178} y2={24} />
+      <line x1="166" y1="46" x2="157" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="166" y1="46" x2="175" y2="63" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   ),
   curl: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="50" cy="18" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="26" x2="50" y2="58" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="42" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="58" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Curl arms up */}
-      <line x1="50" y1="36" x2="30" y2="40" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="30" y1="40" x2="26" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={21} y1={18} x2={31} y2={18} />
-      <line x1="50" y1="36" x2="70" y2="40" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="70" y1="40" x2={74} y2={22} stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <Dumbbell x1={69} y1={18} x2={79} y2={18} />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: arms down, palms forward */}
+      <circle cx="45" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="20" x2="45" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="36" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="54" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="30" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="30" y1="34" x2="28" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="60" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="60" y1="34" x2="62" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={23} y1={53} x2={33} y2={53} />
+      <Dumbbell x1={57} y1={53} x2={67} y2={53} />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms curled to shoulders */}
+      <circle cx="155" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="155" y1="20" x2="155" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="155" y1="54" x2="146" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="54" x2="164" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="28" x2="140" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="140" y1="34" x2="136" y2="16" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="28" x2="170" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="170" y1="34" x2="174" y2="16" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={131} y1={13} x2={141} y2={13} />
+      <Dumbbell x1={169} y1={13} x2={179} y2={13} />
     </svg>
   ),
   hammer_curl: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="50" cy="18" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="26" x2="50" y2="58" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="42" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="58" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="36" x2="30" y2="40" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="30" y1="40" x2="28" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Vertical dumbbell (hammer grip) */}
-      <line x1="28" y1="16" x2="28" y2="28" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
-      <rect x="24" y="14" width="8" height="4" rx="1" fill="#f97316" />
-      <rect x="24" y="26" width="8" height="4" rx="1" fill="#f97316" />
-      <line x1="50" y1="36" x2="70" y2="40" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="70" y1="40" x2="72" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="72" y1="16" x2="72" y2="28" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
-      <rect x="68" y="14" width="8" height="4" rx="1" fill="#f97316" />
-      <rect x="68" y="26" width="8" height="4" rx="1" fill="#f97316" />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: arms down, neutral (hammer) grip */}
+      <circle cx="45" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="20" x2="45" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="36" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="54" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="30" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="30" y1="34" x2="28" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="60" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="60" y1="34" x2="62" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="28" y1="50" x2="28" y2="62" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="24" y="48" width="8" height="4" rx="1" fill="#f97316" />
+      <rect x="24" y="60" width="8" height="4" rx="1" fill="#f97316" />
+      <line x1="62" y1="50" x2="62" y2="62" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="58" y="48" width="8" height="4" rx="1" fill="#f97316" />
+      <rect x="58" y="60" width="8" height="4" rx="1" fill="#f97316" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms curled to shoulders */}
+      <circle cx="155" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="155" y1="20" x2="155" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="155" y1="54" x2="146" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="54" x2="164" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="28" x2="140" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="140" y1="34" x2="136" y2="16" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="28" x2="170" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="170" y1="34" x2="174" y2="16" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="136" y1="10" x2="136" y2="22" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="132" y="8" width="8" height="4" rx="1" fill="#f97316" />
+      <rect x="132" y="20" width="8" height="4" rx="1" fill="#f97316" />
+      <line x1="174" y1="10" x2="174" y2="22" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="170" y="8" width="8" height="4" rx="1" fill="#f97316" />
+      <rect x="170" y="20" width="8" height="4" rx="1" fill="#f97316" />
     </svg>
   ),
   conc_curl: (
@@ -685,17 +842,27 @@ const SVGS = {
     </svg>
   ),
   overhead_ext: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="50" cy="18" r="8" fill="#e2e8f0" />
-      <line x1="50" y1="26" x2="50" y2="58" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="42" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="58" x2="58" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Arms overhead with dumbbell */}
-      <line x1="50" y1="32" x2="40" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="40" y1="22" x2="50" y2="10" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="50" y1="32" x2="60" y2="22" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="60" y1="22" x2="50" y2="10" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <rect x="44" y="5" width="12" height="6" rx="2" fill="#f97316" />
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: arms bent, dumbbell lowered behind head */}
+      <circle cx="45" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="20" x2="45" y2="56" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="56" x2="36" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="56" x2="54" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="26" x2="32" y2="20" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="32" y1="20" x2="38" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="26" x2="58" y2="20" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="58" y1="20" x2="52" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="39" y="36" width="12" height="5" rx="2" fill="#f97316" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms straight overhead */}
+      <circle cx="155" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="155" y1="20" x2="155" y2="56" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="155" y1="56" x2="146" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="56" x2="164" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="26" x2="147" y2="12" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="26" x2="163" y2="12" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="149" y="5" width="12" height="5" rx="2" fill="#f97316" />
     </svg>
   ),
   kickback: (
@@ -762,16 +929,27 @@ const SVGS = {
     </svg>
   ),
   push_up: (
-    <svg viewBox="0 0 100 80" className="w-full h-full">
-      <circle cx="18" cy="28" r="7" fill="#e2e8f0" />
-      <line x1="18" y1="35" x2="76" y2="46" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
-      <line x1="28" y1="37" x2="28" y2="52" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="52" y1="42" x2="52" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="76" y1="46" x2="68" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      <line x1="76" y1="46" x2="82" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
-      {/* Vest indicator */}
-      <rect x="35" y="36" width="22" height="10" rx="3" fill="#f97316" opacity="0.6" />
-      <text x="46" y="44" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold">V</text>
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: chest near floor, arms bent */}
+      <circle cx="12" cy="28" r="6" fill="#e2e8f0" />
+      <line x1="18" y1="30" x2="80" y2="44" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="24" y1="32" x2="24" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="48" y1="38" x2="48" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="80" y1="44" x2="70" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="80" y1="44" x2="86" y2="58" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="30" y="34" width="20" height="8" rx="2" fill="#f97316" opacity="0.7" />
+      <text x="40" y="41" textAnchor="middle" fontSize="5" fill="white" fontWeight="bold">V</text>
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: arms extended, top position */}
+      <circle cx="122" cy="20" r="6" fill="#e2e8f0" />
+      <line x1="128" y1="24" x2="190" y2="42" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="136" y1="26" x2="136" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="158" y1="33" x2="158" y2="52" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="190" y1="42" x2="180" y2="58" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="190" y1="42" x2="196" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="140" y="31" width="20" height="8" rx="2" fill="#f97316" opacity="0.7" />
+      <text x="150" y="38" textAnchor="middle" fontSize="5" fill="white" fontWeight="bold">V</text>
     </svg>
   ),
   // Warmup SVGs
@@ -934,9 +1112,9 @@ function ProgressBar({ progress, color = 'bg-orange-500' }) {
   )
 }
 
-function getDurationLabel(selectedDuration, t) {
-  if (selectedDuration === '30a') return t.dayA
-  if (selectedDuration === '30b') return t.dayB
+function getDurationLabel(selectedDuration, selectedVariation, t) {
+  if (selectedDuration === 30 && selectedVariation === 'a') return t.dayA
+  if (selectedDuration === 30 && selectedVariation === 'b') return t.dayB
   return `${selectedDuration} ${t.min}`
 }
 
@@ -967,31 +1145,56 @@ function HomeScreen({ state, dispatch }) {
         <p className="text-zinc-400 mt-2 text-lg md:text-xl">{t.pickDuration}</p>
       </div>
 
-      {/* Duration picker */}
-      <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-        {[20, '30a', '30b', 45].map(d => {
-          const isDay = d === '30a' || d === '30b'
-          const label = isDay ? (d === '30a' ? t.dayA : t.dayB) : String(d)
-          const sub   = isDay ? (d === '30a' ? t.pushFocus : t.pullFocus) : t.min
-          const isSelected = state.selectedDuration === d
-          return (
-            <button
-              key={d}
-              onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
-              className={`flex flex-col items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-2xl border-2 font-black transition-all active:scale-95
-                ${isSelected
-                  ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
-                  : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
-            >
-              <span className={`leading-none ${isDay ? 'text-2xl md:text-3xl' : 'text-4xl md:text-5xl'}`}>
-                {label}
-              </span>
-              <span className={`mt-1 font-medium text-center px-1 ${isDay ? 'text-xs leading-tight' : 'text-sm md:text-base'}`}>
-                {sub}
-              </span>
-            </button>
-          )
-        })}
+      {/* Step 1: Variation picker */}
+      <div className="w-full max-w-sm space-y-2">
+        <p className="text-zinc-500 text-xs font-bold text-center uppercase tracking-widest">
+          {state.lang === 'he' ? 'בחר וריאציה' : 'Pick Variation'}
+        </p>
+        <div className="flex gap-3">
+          {(['a', 'b']).map(v => {
+            const isSelected = state.selectedVariation === v
+            const label = v === 'a' ? t.dayA : t.dayB
+            const sub   = v === 'a' ? t.pushFocus : t.pullFocus
+            return (
+              <button
+                key={v}
+                onClick={() => dispatch({ type: 'SET_VARIATION', variation: v })}
+                className={`flex-1 flex flex-col items-center py-5 rounded-2xl border-2 font-black transition-all active:scale-95
+                  ${isSelected
+                    ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
+                    : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
+              >
+                <span className="text-2xl leading-none">{label}</span>
+                <span className={`mt-2 text-xs font-medium text-center px-2 leading-tight ${isSelected ? 'text-orange-100' : 'text-zinc-500'}`}>{sub}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Step 2: Duration picker */}
+      <div className="w-full max-w-sm space-y-2">
+        <p className="text-zinc-500 text-xs font-bold text-center uppercase tracking-widest">
+          {state.lang === 'he' ? 'משך אימון' : 'Duration'}
+        </p>
+        <div className="flex gap-3">
+          {[20, 30, 45].map(d => {
+            const isSelected = state.selectedDuration === d
+            return (
+              <button
+                key={d}
+                onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
+                className={`flex-1 flex flex-col items-center py-4 rounded-2xl border-2 font-black transition-all active:scale-95
+                  ${isSelected
+                    ? 'bg-zinc-700 border-zinc-500 text-white'
+                    : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-600'}`}
+              >
+                <span className="text-3xl leading-none">{d}</span>
+                <span className="text-xs font-medium mt-1 text-zinc-500">{t.min}</span>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Preview button */}
@@ -1011,7 +1214,10 @@ function HomeScreen({ state, dispatch }) {
 function PreviewScreen({ state, dispatch }) {
   const t = T[state.lang]
   const isHe = state.lang === 'he'
-  const template = TEMPLATES[state.selectedDuration]
+  const templateKey = state.selectedDuration === 30
+    ? '30' + state.selectedVariation
+    : state.selectedDuration
+  const template = TEMPLATES[templateKey]
   const exList = template.exercises
   const items = []
   let i = 0
@@ -1040,7 +1246,7 @@ function PreviewScreen({ state, dispatch }) {
           {t.back}
         </button>
         <div className="flex-1 text-center">
-          <h2 className="text-white font-black text-xl">{getDurationLabel(state.selectedDuration, t)}</h2>
+          <h2 className="text-white font-black text-xl">{getDurationLabel(state.selectedDuration, state.selectedVariation, t)}</h2>
           <p className="text-zinc-500 text-sm">{items.length} {t.exercises}</p>
         </div>
         <div className="w-16" />
@@ -1151,54 +1357,71 @@ function ActiveWorkoutScreen({ state, dispatch }) {
   // TRANSITION screen
   if (step.type === 'transition') {
     const ex = step.previewExercise
+    const instr = ex ? (isHe ? ex.instrHe : ex.instrEn) : null
     return (
       <div className="flex flex-col h-full bg-zinc-950 relative">
-        {/* Top bar */}
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
-          <span className="text-zinc-500 text-sm font-medium">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
-          <span className="text-zinc-600 text-sm">{currentGroup}/{exerciseCount}</span>
+        {/* Top bar: countdown inline with "Get Ready" */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-2 shrink-0">
+          <div>
+            <p className="text-orange-400 font-black text-lg leading-tight">{t.getReady}</p>
+            <p className="text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</p>
+          </div>
+          <span className="text-7xl font-black text-white tabular-nums leading-none">{state.secondsRemaining}</span>
         </div>
 
-        {/* Center */}
-        <div
-          className="flex-1 flex flex-col items-center justify-center gap-6 px-6"
-          onClick={handleCenterTap}
-        >
-          <p className="text-orange-400 font-black text-2xl md:text-3xl text-center">{t.getReady}</p>
-          {state.lang === 'en' && <p className="text-zinc-500 text-lg md:text-xl">Get Ready</p>}
-          <div className="text-9xl md:text-[10rem] font-black text-white leading-none tabular-nums">
-            {state.secondsRemaining}
-          </div>
-          {/* Next exercise preview */}
+        {/* Scrollable content */}
+        <div className="flex-1 flex flex-col px-4 gap-3 overflow-y-auto pb-2" onClick={handleCenterTap}>
+
+          {/* Diagram */}
           {ex && (
-            <div className="bg-zinc-900 rounded-2xl px-6 py-4 md:px-8 md:py-5 w-full max-w-sm md:max-w-md border border-zinc-800 text-center">
-              {step.isSuperset && step.previewExB && (
-                <p className="text-orange-400 text-xs md:text-sm font-black uppercase mb-2">{t.superset}</p>
+            <div className="w-full rounded-xl overflow-hidden bg-zinc-900/40 border border-zinc-800/50">
+              <div className="w-full" style={{ aspectRatio: '200/80' }}>
+                <ExerciseSvg svgKey={ex.svg} />
+              </div>
+            </div>
+          )}
+
+          {/* Exercise name + sets + weight */}
+          {ex && (
+            <div className="bg-zinc-900 rounded-2xl px-4 py-3 border border-zinc-800">
+              {step.isSuperset && (
+                <p className="text-orange-400 text-xs font-black uppercase tracking-wide mb-1">{t.superset}</p>
               )}
-              <p className="text-white font-black text-xl md:text-2xl">{isHe ? ex.nameHe : ex.nameEn}</p>
+              <p className="text-white font-black text-xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</p>
               {step.isSuperset && step.previewExB && (
-                <p className="text-zinc-400 font-bold text-base md:text-lg mt-1">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
+                <p className="text-zinc-400 font-bold text-base mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
-              <p className="text-zinc-400 text-sm md:text-base mt-2">
-                {step.workoutEx.sets}×{step.workoutEx.reps}
-              </p>
-              <div className="mt-3 flex flex-col items-center gap-1.5">
-                <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 py-2 md:px-5 md:py-2.5">
-                  <span className="text-orange-400 text-sm md:text-base">🏋️</span>
-                  <span className="text-orange-300 font-bold text-sm md:text-base">{step.workoutEx.weight}</span>
+              <div className="flex items-center gap-3 mt-2 flex-wrap">
+                <span className="text-orange-400 font-black text-base">{step.workoutEx.sets}×{step.workoutEx.reps}</span>
+                <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-lg px-3 py-1">
+                  <span className="text-orange-300 font-bold text-sm">🏋️ {step.workoutEx.weight}</span>
                 </div>
                 {step.isSuperset && step.workoutExB && step.workoutExB.weight !== step.workoutEx.weight && (
-                  <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 py-2 md:px-5 md:py-2.5">
-                    <span className="text-orange-400 text-sm md:text-base">🏋️</span>
-                    <span className="text-orange-300 font-bold text-sm md:text-base">{step.workoutExB.weight}</span>
+                  <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-lg px-3 py-1">
+                    <span className="text-orange-300 font-bold text-sm">🏋️ {step.workoutExB.weight}</span>
                   </div>
                 )}
               </div>
             </div>
           )}
+
+          {/* Form instructions */}
+          {instr && (
+            <div className="bg-zinc-900/60 rounded-xl px-4 py-3 border border-zinc-800/50">
+              <p className="text-zinc-400 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? 'הוראות ביצוע' : 'Form cues'}</p>
+              <p className="text-zinc-200 text-sm leading-relaxed">{instr}</p>
+            </div>
+          )}
+
+          {/* Superset B instructions */}
+          {step.isSuperset && step.previewExB && (
+            <div className="bg-zinc-900/60 rounded-xl px-4 py-3 border border-zinc-800/50">
+              <p className="text-zinc-400 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
+              <p className="text-zinc-200 text-sm leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
+            </div>
+          )}
         </div>
 
-        {/* Nav */}
         <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} isTransition />
         <ProgressBar progress={progress} />
       </div>
@@ -1336,8 +1559,8 @@ function ActiveWorkoutScreen({ state, dispatch }) {
       {/* Main content — tappable for pause */}
       <div className="flex-1 flex flex-col px-5 gap-3 md:gap-4 overflow-hidden min-h-0" onClick={handleCenterTap}>
         {/* Diagram */}
-        <div className="flex items-center justify-center" style={{ height: '30%', minHeight: 100, maxHeight: 200 }}>
-          <div className="w-[130px] h-[130px] md:w-[180px] md:h-[180px]">
+        <div className="w-full px-1 shrink-0">
+          <div className="w-full" style={{ aspectRatio: '200/80' }}>
             <ExerciseSvg svgKey={ex.svg} />
           </div>
         </div>
@@ -1442,7 +1665,7 @@ function CompleteScreen({ state, dispatch }) {
       <div className="text-8xl md:text-9xl">🏆</div>
       <div>
         <h1 className="text-5xl md:text-6xl font-black text-white">{t.complete}</h1>
-        <p className="text-zinc-400 text-xl md:text-2xl mt-2">{getDurationLabel(state.selectedDuration, t)} {state.lang === 'he' ? 'אימון הושלם' : 'workout done'}</p>
+        <p className="text-zinc-400 text-xl md:text-2xl mt-2">{getDurationLabel(state.selectedDuration, state.selectedVariation, t)} {state.lang === 'he' ? 'אימון הושלם' : 'workout done'}</p>
       </div>
       <div className="bg-zinc-900 rounded-2xl px-10 md:px-14 py-6 md:py-8 border border-zinc-800">
         <p className="text-zinc-500 text-sm md:text-base uppercase tracking-wide mb-1">{t.totalTime}</p>
