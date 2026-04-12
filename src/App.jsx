@@ -120,14 +120,14 @@ const COOLDOWN = [
 const TEMPLATES = {
   20: {
     duration: 20,
-    warmupSecs: 3 * 30,   // 6 warmup moves × 30s
+    warmupSecs: 3 * 30,
     cooldownSecs: 40 + 40 + 40 + 30,
     exercises: [
-      { exerciseId: '7',  sets: 3, reps: 8,  rest: 90, setDuration: 25, weight: 'אפוד 0–16 ק"ג' },
-      { exerciseId: '1',  sets: 3, reps: 10, rest: 75, setDuration: 30, weight: '2×10 ק"ג' },
-      { exerciseId: '12', sets: 3, reps: 10, rest: 75, setDuration: 30, weight: '2×10 ק"ג' },
-      { exerciseId: '17', sets: 3, reps: 10, rest: 60, setDuration: 30, weight: '2×10 ק"ג', supersetWith: '21' },
-      { exerciseId: '21', sets: 3, reps: 10, rest: 60, setDuration: 30, weight: '17.5 ק"ג' },
+      { exerciseId: '7',  sets: 3, reps: 8,  rest: 90,  setDuration: 35, weight: 'אפוד 0–16 ק"ג' },
+      { exerciseId: '1',  sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
+      { exerciseId: '12', sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
+      { exerciseId: '17', sets: 3, reps: 10, rest: 75,  setDuration: 30, weight: '2×10 ק"ג', supersetWith: '21' },
+      { exerciseId: '21', sets: 3, reps: 10, rest: 75,  setDuration: 30, weight: '17.5 ק"ג' },
     ],
   },
   30: {
@@ -135,13 +135,13 @@ const TEMPLATES = {
     warmupSecs: 3 * 30,
     cooldownSecs: 40 + 40 + 40 + 30,
     exercises: [
-      { exerciseId: '7',  sets: 3, reps: 8,      rest: 90, setDuration: 25, weight: 'אפוד 0–16 ק"ג' },
-      { exerciseId: '2',  sets: 3, reps: 10,     rest: 75, setDuration: 30, weight: '2×10 ק"ג' },
-      { exerciseId: '9',  sets: 3, reps: 10,     rest: 75, setDuration: 60, weight: '17.5 ק"ג' },
-      { exerciseId: '6',  sets: 3, reps: 12,     rest: 60, setDuration: 35, weight: 'אפוד 10–20 ק"ג' },
-      { exerciseId: '13', sets: 3, reps: 12,     rest: 45, setDuration: 35, weight: '2×5 ק"ג' },
-      { exerciseId: '18', sets: 3, reps: 10,     rest: 60, setDuration: 30, weight: '2×10 ק"ג', supersetWith: '22' },
-      { exerciseId: '22', sets: 3, reps: 12,     rest: 60, setDuration: 35, weight: '2×5 ק"ג' },
+      { exerciseId: '7',  sets: 3, reps: 8,      rest: 90,  setDuration: 35, weight: 'אפוד 0–16 ק"ג' },
+      { exerciseId: '2',  sets: 3, reps: 10,     rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
+      { exerciseId: '9',  sets: 3, reps: 10,     rest: 90,  setDuration: 70, weight: '17.5 ק"ג' },
+      { exerciseId: '6',  sets: 3, reps: 12,     rest: 60,  setDuration: 40, weight: 'אפוד 10–20 ק"ג' },
+      { exerciseId: '13', sets: 3, reps: 12,     rest: 45,  setDuration: 35, weight: '2×5 ק"ג' },
+      { exerciseId: '18', sets: 3, reps: 10,     rest: 75,  setDuration: 30, weight: '2×10 ק"ג', supersetWith: '22' },
+      { exerciseId: '22', sets: 3, reps: 12,     rest: 75,  setDuration: 35, weight: '2×5 ק"ג' },
     ],
   },
   45: {
@@ -149,15 +149,15 @@ const TEMPLATES = {
     warmupSecs: 3 * 30,
     cooldownSecs: 40 + 40 + 40 + 30,
     exercises: [
-      { exerciseId: '7',  sets: 4, reps: 8,  rest: 90, setDuration: 25, weight: 'אפוד 0–16 ק"ג' },
-      { exerciseId: '2',  sets: 4, reps: 10, rest: 75, setDuration: 30, weight: '2×10 ק"ג' },
-      { exerciseId: '8',  sets: 3, reps: 10, rest: 75, setDuration: 30, weight: 'אפוד 0–10 ק"ג' },
-      { exerciseId: '3',  sets: 3, reps: 8,  rest: 90, setDuration: 25, weight: 'אפוד 10–16 ק"ג' },
-      { exerciseId: '15', sets: 3, reps: 10, rest: 60, setDuration: 30, weight: '2×10 ק"ג' },
-      { exerciseId: '16', sets: 3, reps: 12, rest: 45, setDuration: 35, weight: '2×5 ק"ג' },
-      { exerciseId: '17', sets: 3, reps: 10, rest: 60, setDuration: 30, weight: '2×10 ק"ג' },
-      { exerciseId: '21', sets: 3, reps: 10, rest: 60, setDuration: 30, weight: '17.5 ק"ג' },
-      { exerciseId: '6',  sets: 2, reps: 15, rest: 0,  setDuration: 40, weight: 'אפוד 10–20 ק"ג' },
+      { exerciseId: '7',  sets: 4, reps: 8,  rest: 90,  setDuration: 35, weight: 'אפוד 0–16 ק"ג' },
+      { exerciseId: '2',  sets: 4, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
+      { exerciseId: '8',  sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: 'אפוד 0–10 ק"ג' },
+      { exerciseId: '3',  sets: 3, reps: 8,  rest: 90,  setDuration: 35, weight: 'אפוד 10–16 ק"ג' },
+      { exerciseId: '15', sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
+      { exerciseId: '16', sets: 3, reps: 12, rest: 45,  setDuration: 35, weight: '2×5 ק"ג' },
+      { exerciseId: '17', sets: 3, reps: 10, rest: 60,  setDuration: 30, weight: '2×10 ק"ג' },
+      { exerciseId: '21', sets: 3, reps: 10, rest: 60,  setDuration: 30, weight: '17.5 ק"ג' },
+      { exerciseId: '6',  sets: 2, reps: 15, rest: 0,   setDuration: 45, weight: 'אפוד 10–20 ק"ג' },
     ],
   },
 }
@@ -192,8 +192,7 @@ function buildSteps(template, skipWarmup) {
       const exDataB = EXERCISES[exB.exerciseId]
 
       groupStarts.push(steps.length)
-      // Transition showing exercise A
-      steps.push({ type: 'transition', duration: 10, previewExercise: exData, previewExB: exDataB, isSuperset: true, groupIndex })
+      steps.push({ type: 'transition', duration: 10, previewExercise: exData, workoutEx: ex, previewExB: exDataB, workoutExB: exB, isSuperset: true, groupIndex })
 
       for (let set = 1; set <= ex.sets; set++) {
         steps.push({ type: 'exercise', exercise: exData, workoutEx: ex, set, totalSets: ex.sets, supersetPart: 'A', duration: ex.setDuration, groupIndex })
@@ -206,7 +205,7 @@ function buildSteps(template, skipWarmup) {
       i += 2
     } else {
       groupStarts.push(steps.length)
-      steps.push({ type: 'transition', duration: 10, previewExercise: exData, groupIndex })
+      steps.push({ type: 'transition', duration: 10, previewExercise: exData, workoutEx: ex, groupIndex })
 
       for (let set = 1; set <= ex.sets; set++) {
         steps.push({ type: 'exercise', exercise: exData, workoutEx: ex, set, totalSets: ex.sets, duration: ex.setDuration, groupIndex })
@@ -906,9 +905,9 @@ function ExerciseSvg({ svgKey }) {
 
 function ProgressBar({ progress, color = 'bg-orange-500' }) {
   return (
-    <div className="w-full bg-zinc-800 rounded-full h-4 overflow-hidden">
+    <div className="w-full bg-zinc-800 rounded-full h-4 md:h-5 overflow-hidden">
       <div
-        className={`h-4 rounded-full transition-all duration-1000 ease-linear ${color}`}
+        className={`h-4 md:h-5 rounded-full transition-all duration-1000 ease-linear ${color}`}
         style={{ width: `${Math.max(0, Math.min(100, progress * 100))}%` }}
       />
     </div>
@@ -937,24 +936,24 @@ function HomeScreen({ state, dispatch }) {
 
       {/* Title */}
       <div className="text-center">
-        <div className="text-6xl mb-3">💪</div>
-        <h1 className="text-5xl font-black text-white tracking-tight">{t.appTitle}</h1>
-        <p className="text-zinc-400 mt-2 text-lg">{t.pickDuration}</p>
+        <div className="text-6xl md:text-7xl mb-3">💪</div>
+        <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight">{t.appTitle}</h1>
+        <p className="text-zinc-400 mt-2 text-lg md:text-xl">{t.pickDuration}</p>
       </div>
 
       {/* Duration picker */}
-      <div className="flex gap-4">
+      <div className="flex gap-4 md:gap-6">
         {[20, 30, 45].map(d => (
           <button
             key={d}
             onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
-            className={`flex flex-col items-center justify-center w-28 h-28 rounded-2xl border-2 font-black transition-all active:scale-95
+            className={`flex flex-col items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-2xl border-2 font-black transition-all active:scale-95
               ${state.selectedDuration === d
                 ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
                 : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
           >
-            <span className="text-4xl leading-none">{d}</span>
-            <span className="text-sm mt-1 font-medium">{t.min}</span>
+            <span className="text-4xl md:text-5xl leading-none">{d}</span>
+            <span className="text-sm md:text-base mt-1 font-medium">{t.min}</span>
           </button>
         ))}
       </div>
@@ -962,7 +961,7 @@ function HomeScreen({ state, dispatch }) {
       {/* Preview button */}
       <button
         onClick={() => dispatch({ type: 'GO_PREVIEW' })}
-        className="w-full max-w-xs bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl py-5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/30"
+        className="w-full max-w-xs md:max-w-sm bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/30"
       >
         {t.preview}
       </button>
@@ -1086,7 +1085,7 @@ function PreviewScreen({ state, dispatch }) {
         </label>
         <button
           onClick={() => dispatch({ type: 'START_WORKOUT' })}
-          className="w-full bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl py-5 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/30"
+          className="w-full bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/30"
         >
           {t.start}
         </button>
@@ -1129,28 +1128,42 @@ function ActiveWorkoutScreen({ state, dispatch }) {
           className="flex-1 flex flex-col items-center justify-center gap-6 px-6"
           onClick={handleCenterTap}
         >
-          <p className="text-orange-400 font-black text-2xl text-center">{t.getReady}</p>
-          {state.lang === 'en' && <p className="text-zinc-500 text-lg">Get Ready</p>}
-          <div className="text-9xl font-black text-white leading-none tabular-nums">
+          <p className="text-orange-400 font-black text-2xl md:text-3xl text-center">{t.getReady}</p>
+          {state.lang === 'en' && <p className="text-zinc-500 text-lg md:text-xl">Get Ready</p>}
+          <div className="text-9xl md:text-[10rem] font-black text-white leading-none tabular-nums">
             {state.secondsRemaining}
           </div>
           {/* Next exercise preview */}
           {ex && (
-            <div className="bg-zinc-900 rounded-2xl px-6 py-4 w-full max-w-sm border border-zinc-800 text-center">
+            <div className="bg-zinc-900 rounded-2xl px-6 py-4 md:px-8 md:py-5 w-full max-w-sm md:max-w-md border border-zinc-800 text-center">
               {step.isSuperset && step.previewExB && (
-                <p className="text-orange-400 text-xs font-black uppercase mb-2">{t.superset}</p>
+                <p className="text-orange-400 text-xs md:text-sm font-black uppercase mb-2">{t.superset}</p>
               )}
-              <p className="text-white font-black text-xl">{isHe ? ex.nameHe : ex.nameEn}</p>
+              <p className="text-white font-black text-xl md:text-2xl">{isHe ? ex.nameHe : ex.nameEn}</p>
               {step.isSuperset && step.previewExB && (
-                <p className="text-zinc-400 font-bold text-base mt-1">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
+                <p className="text-zinc-400 font-bold text-base md:text-lg mt-1">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
-              <p className="text-zinc-500 text-sm mt-2">{step.workoutEx?.sets ?? ex.sets}×{step.workoutEx?.reps ?? ex.reps} · {step.workoutEx?.weight ?? ''}</p>
+              <p className="text-zinc-400 text-sm md:text-base mt-2">
+                {step.workoutEx.sets}×{step.workoutEx.reps}
+              </p>
+              <div className="mt-3 flex flex-col items-center gap-1.5">
+                <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 py-2 md:px-5 md:py-2.5">
+                  <span className="text-orange-400 text-sm md:text-base">🏋️</span>
+                  <span className="text-orange-300 font-bold text-sm md:text-base">{step.workoutEx.weight}</span>
+                </div>
+                {step.isSuperset && step.workoutExB && step.workoutExB.weight !== step.workoutEx.weight && (
+                  <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-xl px-4 py-2 md:px-5 md:py-2.5">
+                    <span className="text-orange-400 text-sm md:text-base">🏋️</span>
+                    <span className="text-orange-300 font-bold text-sm md:text-base">{step.workoutExB.weight}</span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
 
         {/* Nav */}
-        <NavBar t={t} dispatch={dispatch} isTransition />
+        <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} isTransition />
         <ProgressBar progress={progress} />
       </div>
     )
@@ -1168,31 +1181,31 @@ function ActiveWorkoutScreen({ state, dispatch }) {
 
         <div className="flex-1 flex flex-col px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
           {/* Diagram */}
-          <div className="h-36 flex items-center justify-center">
-            <div className="w-32 h-32">
+          <div className="h-36 md:h-48 flex items-center justify-center">
+            <div className="w-32 h-32 md:w-44 md:h-44">
               <ExerciseSvg svgKey={ex.svg} />
             </div>
           </div>
 
           {/* Name */}
           <div className="text-center">
-            <h2 className="text-white font-black text-4xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</h2>
-            {isHe && <p className="text-zinc-500 text-base mt-1">{ex.nameEn}</p>}
+            <h2 className="text-white font-black text-4xl md:text-5xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</h2>
+            {isHe && <p className="text-zinc-500 text-base md:text-lg mt-1">{ex.nameEn}</p>}
           </div>
 
           {/* Instruction */}
-          <p className="text-zinc-400 text-base leading-relaxed text-center px-2">
+          <p className="text-zinc-400 text-base md:text-lg leading-relaxed text-center px-2">
             {isHe ? ex.instrHe : ex.instrEn}
           </p>
 
           {/* Countdown */}
           <div className="flex flex-col items-center gap-3 mt-auto pb-4">
-            <span className="text-7xl font-black text-orange-400 tabular-nums">{state.secondsRemaining}</span>
+            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums">{state.secondsRemaining}</span>
             <ProgressBar progress={progress} />
           </div>
         </div>
 
-        <NavBar t={t} dispatch={dispatch} />
+        <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
       </div>
     )
   }
@@ -1208,8 +1221,8 @@ function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6" onClick={handleCenterTap}>
-          <p className="text-orange-400 font-black text-3xl">{t.rest}</p>
-          <div className="text-9xl font-black text-white leading-none tabular-nums">
+          <p className="text-orange-400 font-black text-3xl md:text-4xl">{t.rest}</p>
+          <div className="text-9xl md:text-[10rem] font-black text-white leading-none tabular-nums">
             {state.secondsRemaining}
           </div>
           {ex && (
@@ -1224,7 +1237,7 @@ function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         <ProgressBar progress={progress} color="bg-blue-500" />
-        <NavBar t={t} dispatch={dispatch} />
+        <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
       </div>
     )
   }
@@ -1240,23 +1253,23 @@ function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         <div className="flex-1 flex flex-col px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
-          <div className="h-36 flex items-center justify-center">
-            <div className="w-32 h-32">
+          <div className="h-36 md:h-48 flex items-center justify-center">
+            <div className="w-32 h-32 md:w-44 md:h-44">
               <ExerciseSvg svgKey={ex.svg} />
             </div>
           </div>
           <div className="text-center">
-            <h2 className="text-white font-black text-4xl">{isHe ? ex.nameHe : ex.nameEn}</h2>
-            {isHe && <p className="text-zinc-500 text-base mt-1">{ex.nameEn}</p>}
+            <h2 className="text-white font-black text-4xl md:text-5xl">{isHe ? ex.nameHe : ex.nameEn}</h2>
+            {isHe && <p className="text-zinc-500 text-base md:text-lg mt-1">{ex.nameEn}</p>}
           </div>
-          <p className="text-zinc-400 text-base leading-relaxed text-center px-2">{isHe ? ex.instrHe : ex.instrEn}</p>
+          <p className="text-zinc-400 text-base md:text-lg leading-relaxed text-center px-2">{isHe ? ex.instrHe : ex.instrEn}</p>
           <div className="flex flex-col items-center gap-3 mt-auto pb-4">
-            <span className="text-7xl font-black text-orange-400 tabular-nums">{state.secondsRemaining}</span>
+            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums">{state.secondsRemaining}</span>
             <ProgressBar progress={progress} color="bg-teal-500" />
           </div>
         </div>
 
-        <NavBar t={t} dispatch={dispatch} />
+        <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
       </div>
     )
   }
@@ -1285,65 +1298,65 @@ function ActiveWorkoutScreen({ state, dispatch }) {
       )}
 
       {/* Main content — tappable for pause */}
-      <div className="flex-1 flex flex-col px-5 gap-3 overflow-hidden min-h-0" onClick={handleCenterTap}>
+      <div className="flex-1 flex flex-col px-5 gap-3 md:gap-4 overflow-hidden min-h-0" onClick={handleCenterTap}>
         {/* Diagram */}
-        <div className="flex items-center justify-center" style={{ height: '30%', minHeight: 100, maxHeight: 160 }}>
-          <div style={{ width: 130, height: 130 }}>
+        <div className="flex items-center justify-center" style={{ height: '30%', minHeight: 100, maxHeight: 200 }}>
+          <div className="w-[130px] h-[130px] md:w-[180px] md:h-[180px]">
             <ExerciseSvg svgKey={ex.svg} />
           </div>
         </div>
 
         {/* Exercise name */}
         <div className="text-center shrink-0">
-          <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)' }}>
+          <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 5vw, 3rem)' }}>
             {name}
           </h2>
-          {isHe && <p className="text-zinc-500 text-sm mt-0.5">{ex.nameEn}</p>}
+          {isHe && <p className="text-zinc-500 text-sm md:text-base mt-0.5">{ex.nameEn}</p>}
         </div>
 
         {/* Set / reps / weight */}
-        <div className="flex items-center justify-center gap-4 shrink-0">
+        <div className="flex items-center justify-center gap-4 md:gap-8 shrink-0">
           <div className="text-center">
-            <p className="text-zinc-500 text-xs uppercase tracking-wide">{t.set}</p>
-            <p className="text-white font-black text-3xl">{step.set}{t.of}{step.totalSets}</p>
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">{t.set}</p>
+            <p className="text-white font-black text-3xl md:text-4xl">{step.set}{t.of}{step.totalSets}</p>
           </div>
-          <div className="w-px h-10 bg-zinc-800" />
+          <div className="w-px h-10 md:h-12 bg-zinc-800" />
           <div className="text-center">
-            <p className="text-zinc-500 text-xs uppercase tracking-wide">{t.reps}</p>
-            <p className="text-orange-400 font-black text-3xl">{wo.reps}</p>
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">{t.reps}</p>
+            <p className="text-orange-400 font-black text-3xl md:text-4xl">{wo.reps}</p>
           </div>
-          <div className="w-px h-10 bg-zinc-800" />
+          <div className="w-px h-10 md:h-12 bg-zinc-800" />
           <div className="text-center">
-            <p className="text-zinc-500 text-xs uppercase tracking-wide">{t.weight}</p>
-            <p className="text-zinc-300 font-bold text-base">{wo.weight}</p>
+            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">{t.weight}</p>
+            <p className="text-zinc-300 font-bold text-base md:text-lg">{wo.weight}</p>
           </div>
         </div>
 
         {/* Instruction */}
-        <p className="text-zinc-400 text-sm leading-relaxed text-center px-2 shrink-0 line-clamp-3">
+        <p className="text-zinc-400 text-sm md:text-base leading-relaxed text-center px-2 shrink-0 line-clamp-3">
           {instr}
         </p>
 
         {/* Countdown + progress */}
         <div className="mt-auto pb-2 shrink-0 space-y-3">
           <div className="flex items-center justify-center">
-            <span className="text-7xl font-black text-orange-400 tabular-nums leading-none">{state.secondsRemaining}</span>
+            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums leading-none">{state.secondsRemaining}</span>
           </div>
           <ProgressBar progress={progress} />
         </div>
       </div>
 
       {/* Nav */}
-      <NavBar t={t} dispatch={dispatch} />
+      <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
 
       {/* Pause overlay */}
       {state.isPaused && (
         <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-4 z-10">
-          <p className="text-white font-black text-5xl">{t.paused}</p>
-          <p className="text-zinc-400 text-lg">{t.tapResume}</p>
+          <p className="text-white font-black text-5xl md:text-6xl">{t.paused}</p>
+          <p className="text-zinc-400 text-lg md:text-xl">{t.tapResume}</p>
           <button
             onClick={() => dispatch({ type: 'PAUSE_RESUME' })}
-            className="mt-4 bg-orange-500 text-white font-black text-2xl px-12 py-5 rounded-2xl active:scale-95"
+            className="mt-4 bg-orange-500 text-white font-black text-2xl md:text-3xl px-12 md:px-16 py-5 md:py-6 rounded-2xl active:scale-95"
           >
             {t.resume}
           </button>
@@ -1353,18 +1366,28 @@ function ActiveWorkoutScreen({ state, dispatch }) {
   )
 }
 
-function NavBar({ t, dispatch, isTransition = false }) {
+function NavBar({ t, dispatch, isPaused = false, isTransition = false }) {
   return (
-    <div className="flex items-center justify-between px-5 py-4 shrink-0 border-t border-zinc-900">
+    <div className="flex items-center justify-between px-5 py-4 md:py-5 shrink-0 border-t border-zinc-900">
       <button
         onClick={() => dispatch({ type: 'SKIP_BACKWARD' })}
-        className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-300 font-bold px-5 py-3 rounded-xl active:scale-95 text-sm"
+        className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-300 font-bold px-5 py-3 md:px-7 md:py-4 rounded-xl active:scale-95 text-sm md:text-base"
       >
         ◀ {t.prev}
       </button>
       <button
+        onClick={() => dispatch({ type: 'PAUSE_RESUME' })}
+        className={`flex items-center gap-2 font-bold px-6 py-3 md:px-8 md:py-4 rounded-xl active:scale-95 text-sm md:text-base transition-all ${
+          isPaused
+            ? 'bg-orange-500 hover:bg-orange-400 text-white'
+            : 'bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-300'
+        }`}
+      >
+        {isPaused ? t.resume : t.pause}
+      </button>
+      <button
         onClick={() => dispatch({ type: 'SKIP_FORWARD' })}
-        className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-300 font-bold px-5 py-3 rounded-xl active:scale-95 text-sm"
+        className="flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-300 font-bold px-5 py-3 md:px-7 md:py-4 rounded-xl active:scale-95 text-sm md:text-base"
       >
         {isTransition ? t.skip : t.next} ▶
       </button>
@@ -1379,19 +1402,19 @@ function CompleteScreen({ state, dispatch }) {
   const t = T[state.lang]
   const elapsed = state.completedSeconds
   return (
-    <div className="flex flex-col h-full items-center justify-center px-8 gap-8 text-center">
-      <div className="text-8xl">🏆</div>
+    <div className="flex flex-col h-full items-center justify-center px-8 gap-8 md:gap-10 text-center">
+      <div className="text-8xl md:text-9xl">🏆</div>
       <div>
-        <h1 className="text-5xl font-black text-white">{t.complete}</h1>
-        <p className="text-zinc-400 text-xl mt-2">{state.selectedDuration} {t.min} {state.lang === 'he' ? 'אימון הושלם' : 'workout done'}</p>
+        <h1 className="text-5xl md:text-6xl font-black text-white">{t.complete}</h1>
+        <p className="text-zinc-400 text-xl md:text-2xl mt-2">{state.selectedDuration} {t.min} {state.lang === 'he' ? 'אימון הושלם' : 'workout done'}</p>
       </div>
-      <div className="bg-zinc-900 rounded-2xl px-10 py-6 border border-zinc-800">
-        <p className="text-zinc-500 text-sm uppercase tracking-wide mb-1">{t.totalTime}</p>
-        <p className="text-orange-400 font-black text-5xl">{formatTime(elapsed)}</p>
+      <div className="bg-zinc-900 rounded-2xl px-10 md:px-14 py-6 md:py-8 border border-zinc-800">
+        <p className="text-zinc-500 text-sm md:text-base uppercase tracking-wide mb-1">{t.totalTime}</p>
+        <p className="text-orange-400 font-black text-5xl md:text-6xl">{formatTime(elapsed)}</p>
       </div>
       <button
         onClick={() => dispatch({ type: 'GO_HOME' })}
-        className="w-full max-w-xs bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl py-5 rounded-2xl transition-all active:scale-95"
+        className="w-full max-w-xs md:max-w-sm bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95"
       >
         {t.backHome}
       </button>
@@ -1437,7 +1460,7 @@ export default function App() {
   return (
     <div
       dir={lang === 'he' ? 'rtl' : 'ltr'}
-      className="h-full bg-zinc-950 text-white max-w-lg mx-auto relative overflow-hidden"
+      className="h-full bg-zinc-950 text-white max-w-2xl mx-auto relative overflow-hidden"
     >
       {state.screen === 'home' && <HomeScreen state={state} dispatch={dispatch} />}
       {state.screen === 'preview' && <PreviewScreen state={state} dispatch={dispatch} />}
