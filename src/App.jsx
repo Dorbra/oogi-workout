@@ -1599,9 +1599,13 @@ function ActiveWorkoutScreen({ state, dispatch }) {
         {/* Countdown + progress */}
         <div className="mt-auto pb-2 shrink-0 space-y-3">
           <div className="flex items-center justify-center">
-            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums leading-none">{state.secondsRemaining}</span>
+            <span className={`text-7xl md:text-8xl font-black tabular-nums leading-none transition-colors ${
+              state.secondsRemaining <= 10 ? 'text-red-500' : 'text-orange-400'
+            }${state.secondsRemaining <= 5 ? ' animate-pulse' : ''}`}>
+              {state.secondsRemaining}
+            </span>
           </div>
-          <ProgressBar progress={progress} />
+          <ProgressBar progress={progress} color={state.secondsRemaining <= 10 ? 'bg-red-500' : 'bg-orange-500'} />
         </div>
       </div>
 
@@ -1704,6 +1708,11 @@ export default function App() {
     // Beep on countdown 3-2-1 during transition or rest
     if ((step.type === 'transition' || step.type === 'rest') && state.secondsRemaining <= 3 && state.secondsRemaining > 0) {
       playBeep(state.secondsRemaining === 1 ? 1200 : 880, 0.1)
+    }
+
+    // Beep on last 5 seconds during exercise (work) sets
+    if (step.type === 'exercise' && state.secondsRemaining <= 5 && state.secondsRemaining > 0) {
+      playBeep(state.secondsRemaining === 1 ? 1200 : 660, 0.12, 0.2)
     }
 
     // Tone on new step
