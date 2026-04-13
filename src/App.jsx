@@ -2008,6 +2008,34 @@ export default function App() {
     return () => clearInterval(id)
   }, [state.screen, state.isPaused])
 
+  // Wake Lock — keep screen on during active workout
+  useEffect(() => {
+    if (!('wakeLock' in navigator)) return
+    if (state.screen !== 'active') return
+
+    let wakeLock = null
+
+    const acquire = async () => {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen')
+      } catch (_) {
+        // silently ignore — wake lock is a best-effort feature
+      }
+    }
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') acquire()
+    }
+
+    acquire()
+    document.addEventListener('visibilitychange', onVisibilityChange)
+
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+      if (wakeLock) wakeLock.release()
+    }
+  }, [state.screen])
+
   // Sound effects
   const prevStep = useRef(null)
   useEffect(() => {
