@@ -3,7 +3,7 @@
   "meta": {
     "name": "Home Workout — Upper Body",
     "author": "",
-    "description": "Push/pull upper-body split using rings and dumbbells. Four templates: 20 min, 30 min Day A (push + vertical pull), 30 min Day B (horizontal pull + push), 45 min full."
+    "description": "Push/pull upper-body split + abs & legs. Template key format: {category}_{duration} or {category}_{duration}{a|b}."
   },
   "warmup": [
     { "id": "W1", "nameHe": "מעגלי זרועות",       "nameEn": "Arm Circles",          "duration": 30, "svg": "warmup_circles",  "instrHe": "עמוד זקוף, פרוש זרועות לצדדים. בצע מעגלים קטנים קדימה 15 שניות, ואז אחורה 15 שניות. הגדל את המעגלים בהדרגה.",                  "instrEn": "Stand tall, arms out to sides. Make small circles forward for 15s, then backward for 15s. Gradually make the circles bigger." },
@@ -20,7 +20,7 @@
     { "id": "C4", "nameHe": "נשימות עמוקות",     "nameEn": "Deep Breaths",            "duration": 30, "svg": "cool_breathe",    "instrHe": "עצום עיניים. נשום עמוק דרך האף — 4 שניות. עצור — 2 שניות. נשוף לאט דרך הפה — 6 שניות. נענע ידיים ורגליים בנחת בין נשימות.",                     "instrEn": "Close your eyes. Breathe in deeply through your nose — 4 seconds. Hold — 2 seconds. Exhale slowly through your mouth — 6 seconds. Gently shake out your hands and feet between breaths." }
   ],
   "templates": {
-    "20": {
+    "upper_20": {
       "duration": 20,
       "warmupSecs": 90,
       "cooldownSecs": 150,
@@ -32,7 +32,7 @@
         { "exerciseId": "21", "sets": 3, "reps": 10, "rest": 75, "setDuration": 30, "weight": "17.5 ק\"ג" }
       ]
     },
-    "30a": {
+    "upper_30a": {
       "duration": 30,
       "warmupSecs": 90,
       "cooldownSecs": 150,
@@ -45,7 +45,7 @@
         { "exerciseId": "16", "sets": 2, "reps": 12, "rest": 45, "setDuration": 30, "weight": "2×5 ק\"ג" }
       ]
     },
-    "30b": {
+    "upper_30b": {
       "duration": 30,
       "warmupSecs": 90,
       "cooldownSecs": 150,
@@ -58,7 +58,7 @@
         { "exerciseId": "21", "sets": 3, "reps": 10, "rest": 75, "setDuration": 30, "weight": "17.5 ק\"ג" }
       ]
     },
-    "45": {
+    "upper_45": {
       "duration": 45,
       "warmupSecs": 90,
       "cooldownSecs": 150,
@@ -72,6 +72,50 @@
         { "exerciseId": "17", "sets": 3, "reps": 10, "rest": 60, "setDuration": 30, "weight": "2×10 ק\"ג" },
         { "exerciseId": "21", "sets": 3, "reps": 10, "rest": 60, "setDuration": 30, "weight": "17.5 ק\"ג" },
         { "exerciseId": "6",  "sets": 2, "reps": 15, "rest": 0,  "setDuration": 45, "weight": "אפוד 10–20 ק\"ג" }
+      ]
+    },
+
+    "abs_legs_20": {
+      "duration": 20,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "31", "sets": 3, "reps": 12, "rest": 60, "setDuration": 35, "weight": "12–20 ק\"ג" },
+        { "exerciseId": "34", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף" },
+        { "exerciseId": "25", "sets": 3, "reps": 1,  "rest": 40, "setDuration": 30, "weight": "30 שנ׳" },
+        { "exerciseId": "26", "sets": 2, "reps": 15, "rest": 40, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "27" },
+        { "exerciseId": "27", "sets": 2, "reps": 12, "rest": 40, "setDuration": 30, "weight": "משקל גוף" }
+      ]
+    },
+    "abs_legs_30": {
+      "duration": 30,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "31", "sets": 4, "reps": 12, "rest": 60, "setDuration": 35, "weight": "14–20 ק\"ג" },
+        { "exerciseId": "33", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
+        { "exerciseId": "32", "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
+        { "exerciseId": "34", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף" },
+        { "exerciseId": "25", "sets": 3, "reps": 1,  "rest": 40, "setDuration": 40, "weight": "40 שנ׳" },
+        { "exerciseId": "26", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "27" },
+        { "exerciseId": "27", "sets": 3, "reps": 12, "rest": 45, "setDuration": 30, "weight": "משקל גוף" }
+      ]
+    },
+    "abs_legs_45": {
+      "duration": 45,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "36", "sets": 4, "reps": 10, "rest": 60, "setDuration": 40, "weight": "20–28 ק\"ג" },
+        { "exerciseId": "31", "sets": 3, "reps": 12, "rest": 60, "setDuration": 35, "weight": "16–20 ק\"ג" },
+        { "exerciseId": "33", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
+        { "exerciseId": "35", "sets": 3, "reps": 8,  "rest": 75, "setDuration": 40, "weight": "2×8 ק\"ג" },
+        { "exerciseId": "32", "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
+        { "exerciseId": "34", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "אפוד / משקל גוף" },
+        { "exerciseId": "25", "sets": 3, "reps": 1,  "rest": 40, "setDuration": 45, "weight": "45 שנ׳" },
+        { "exerciseId": "27", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "26" },
+        { "exerciseId": "26", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף" },
+        { "exerciseId": "28", "sets": 3, "reps": 20, "rest": 30, "setDuration": 30, "weight": "5–8 ק\"ג" }
       ]
     }
   }

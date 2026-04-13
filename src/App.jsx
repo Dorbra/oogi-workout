@@ -40,6 +40,9 @@ const T = {
     dayB: 'יום ב׳',
     pushFocus: 'דחיפה + משיכה אנכית',
     pullFocus: 'משיכה אופקית + דחיפה',
+    upperBody: 'גוף עליון',
+    absLegs: 'בטן + רגליים',
+    category: 'קטגוריה',
   },
   en: {
     appTitle: 'Workout',
@@ -75,6 +78,9 @@ const T = {
     dayB: 'Day B',
     pushFocus: 'Push + Vertical Pull',
     pullFocus: 'Horizontal Pull + Push',
+    upperBody: 'Upper Body',
+    absLegs: 'Abs & Legs',
+    category: 'Category',
   },
 }
 
@@ -222,8 +228,9 @@ function playRestTone() {
 const initialState = {
   lang: 'he',
   screen: 'home',        // home | preview | active | complete
+  selectedCategory: 'upper',           // derived from plan template key prefix
   selectedDuration: 30,
-  selectedVariation: 'a',  // 'a' | 'b'  (only used when duration === 30)
+  selectedVariation: 'a',              // only used when category+duration has a/b variants
   skipWarmup: false,
   plan: DEFAULT_PLAN,    // active workout plan (can be swapped by LOAD_PLAN)
   steps: [],
@@ -253,6 +260,13 @@ function advanceStep(state) {
 
 function reducer(state, action) {
   switch (action.type) {
+    case 'SET_CATEGORY':
+      return {
+        ...state,
+        selectedCategory: action.category,
+        selectedDuration: getAvailableDurations(state.plan.templates, action.category)[0] ?? 30,
+      }
+
     case 'SET_DURATION':
       return { ...state, selectedDuration: action.duration }
 
@@ -269,18 +283,20 @@ function reducer(state, action) {
       return { ...state, screen: 'preview' }
 
     case 'GO_HOME':
-      return { ...initialState, lang: state.lang, plan: state.plan }
+      return { ...initialState, lang: state.lang, plan: state.plan, selectedCategory: state.selectedCategory }
 
     case 'LOAD_PLAN': {
       const loaded = resolvePlan(action.plan)
-      const firstDuration = getAvailableDurations(loaded.templates)[0] ?? 30
-      return { ...initialState, lang: state.lang, plan: loaded, selectedDuration: firstDuration }
+      const firstCat = getAvailableCategories(loaded.templates)[0] ?? 'upper'
+      const firstDuration = getAvailableDurations(loaded.templates, firstCat)[0] ?? 30
+      return { ...initialState, lang: state.lang, plan: loaded, selectedCategory: firstCat, selectedDuration: firstDuration }
     }
 
     case 'START_WORKOUT': {
-      const templateKey = state.selectedDuration === 30
-        ? '30' + state.selectedVariation
-        : state.selectedDuration
+      const hasVariants = state.plan.templates[`${state.selectedCategory}_${state.selectedDuration}a`] !== undefined
+      const templateKey = hasVariants
+        ? `${state.selectedCategory}_${state.selectedDuration}${state.selectedVariation}`
+        : `${state.selectedCategory}_${state.selectedDuration}`
       const template = state.plan.templates[templateKey]
       const { steps, groupStarts } = buildSteps(template, state.skipWarmup, state.plan)
       const firstStep = steps[0]
@@ -996,6 +1012,314 @@ const SVGS = {
       <path d="M 40 5 Q 44 1 48 5 Q 52 9 56 5" stroke="#f97316" strokeWidth="1.5" fill="none" opacity="0.4" />
     </svg>
   ),
+
+  // ── ABS ──────────────────────────────────────
+  plank: (
+    <svg viewBox="0 0 100 80" className="w-full h-full">
+      {/* Forearm plank — single position */}
+      <circle cx="12" cy="27" r="6" fill="#e2e8f0" />
+      <line x1="18" y1="30" x2="80" y2="43" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      {/* Left forearm on floor */}
+      <line x1="22" y1="32" x2="20" y2="43" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="10" y1="43" x2="28" y2="43" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Right forearm on floor */}
+      <line x1="44" y1="37" x2="42" y2="48" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="32" y1="48" x2="50" y2="48" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Feet */}
+      <line x1="80" y1="43" x2="72" y2="57" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="80" y1="43" x2="86" y2="57" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Hold-timer arc */}
+      <path d="M56 18 A9 9 0 1 1 56.1 18" stroke="#f97316" strokeWidth="2" fill="none" strokeDasharray="4 3" strokeLinecap="round" />
+    </svg>
+  ),
+  crunch: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: lying flat, knees bent */}
+      <circle cx="10" cy="50" r="5" fill="#e2e8f0" />
+      <line x1="15" y1="50" x2="55" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="18" y1="46" x2="10" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="24" y1="46" x2="30" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="55" y1="50" x2="65" y2="42" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="65" y1="42" x2="76" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="55" y1="50" x2="63" y2="57" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="63" y1="57" x2="76" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: upper body crunched up */}
+      <circle cx="120" cy="33" r="5" fill="#e2e8f0" />
+      <line x1="125" y1="36" x2="154" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="120" y1="28" x2="113" y2="21" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="125" y1="31" x2="130" y2="23" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="50" x2="164" y2="42" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="164" y1="42" x2="175" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="50" x2="162" y2="57" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="162" y1="57" x2="175" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  ),
+  leg_raise: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: lying flat, legs low */}
+      <circle cx="10" cy="46" r="5" fill="#e2e8f0" />
+      <line x1="15" y1="46" x2="60" y2="48" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="22" y1="44" x2="22" y2="55" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="40" y1="45" x2="40" y2="55" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="60" y1="48" x2="80" y2="47" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="60" y1="50" x2="80" y2="51" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: legs raised ~90° */}
+      <circle cx="115" cy="46" r="5" fill="#e2e8f0" />
+      <line x1="120" y1="46" x2="164" y2="48" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="128" y1="44" x2="128" y2="55" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="146" y1="45" x2="146" y2="55" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="164" y1="48" x2="158" y2="14" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="164" y1="48" x2="170" y2="14" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  ),
+  russian_twist: (
+    <svg viewBox="0 0 100 80" className="w-full h-full">
+      {/* Seated, leaning back 45°, dumbbell to side */}
+      <circle cx="46" cy="20" r="6" fill="#e2e8f0" />
+      <line x1="46" y1="26" x2="58" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      {/* Arms extended to right */}
+      <line x1="50" y1="34" x2="70" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={66} y1={24} x2={76} y2={24} />
+      {/* Bent legs */}
+      <line x1="58" y1="50" x2="44" y2="62" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="44" y1="62" x2="36" y2="72" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="58" y1="50" x2="72" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="72" y1="60" x2="80" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Rotation arc */}
+      <path d="M40 30 A14 14 0 0 1 56 20" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" />
+    </svg>
+  ),
+  mountain_climber: (
+    <svg viewBox="0 0 100 80" className="w-full h-full">
+      {/* High plank, one knee driven forward */}
+      <circle cx="14" cy="22" r="6" fill="#e2e8f0" />
+      <line x1="20" y1="25" x2="76" y2="38" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="24" y1="27" x2="24" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="46" y1="32" x2="46" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Driven knee under chest */}
+      <line x1="76" y1="38" x2="58" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="58" y1="46" x2="50" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Back leg straight */}
+      <line x1="76" y1="38" x2="84" y2="52" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="84" y1="52" x2="90" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Knee-drive arrow */}
+      <path d="M66 38 L56 46 M58 42 L56 46 L60 47" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  dead_bug: (
+    <svg viewBox="0 0 100 80" className="w-full h-full">
+      {/* Lying on back — arm + opposite leg extended */}
+      <circle cx="12" cy="44" r="5" fill="#e2e8f0" />
+      <line x1="17" y1="44" x2="65" y2="44" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      {/* Left arm extended overhead (orange = the moving limb) */}
+      <line x1="22" y1="41" x2="14" y2="22" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Right arm up (static, tabletop) */}
+      <line x1="36" y1="41" x2="40" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="40" y1="28" x2="50" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Right leg tabletop (bent) */}
+      <line x1="55" y1="44" x2="56" y2="30" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="56" y1="30" x2="68" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Left leg extended (orange = opposite to extended arm) */}
+      <line x1="65" y1="44" x2="84" y2="43" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  ),
+
+  // ── LEGS ─────────────────────────────────────
+  goblet_squat: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: standing, DB at chest */}
+      <circle cx="45" cy="12" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="18" x2="45" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="37" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="53" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="30" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="60" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="30" y="32" width="30" height="6" rx="2" fill="#f97316" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: deep squat, DB at chest */}
+      <circle cx="155" cy="26" r="6" fill="#e2e8f0" />
+      <line x1="155" y1="32" x2="155" y2="52" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="155" y1="40" x2="140" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="40" x2="170" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="140" y="44" width="30" height="6" rx="2" fill="#f97316" />
+      <line x1="155" y1="52" x2="140" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="140" y1="60" x2="134" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="52" x2="170" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="170" y1="60" x2="176" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  ),
+  reverse_lunge: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: standing, DBs at sides */}
+      <circle cx="45" cy="12" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="18" x2="45" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="37" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="53" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="28" y2="34" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={24} y1={34} x2={24} y2={46} />
+      <line x1="45" y1="28" x2="62" y2={34} stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={66} y1={34} x2={66} y2={46} />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: back lunge — front knee 90°, rear knee near floor */}
+      <circle cx="148" cy="18" r="6" fill="#e2e8f0" />
+      <line x1="148" y1="24" x2="148" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="148" y1="32" x2="132" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={128} y1={38} x2={128} y2={50} />
+      <line x1="148" y1="32" x2="164" y2={38} stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={168} y1={38} x2={168} y2={50} />
+      {/* Front leg bent 90° */}
+      <line x1="148" y1="50" x2="136" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="136" y1="60" x2="130" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Back leg, knee near floor */}
+      <line x1="148" y1="50" x2="166" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="166" y1="56" x2="172" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  ),
+  rdl: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: standing, DBs at hips */}
+      <circle cx="45" cy="12" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="18" x2="45" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="37" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="53" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="32" x2="26" y2="38" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={22} y1={38} x2={22} y2={50} />
+      <line x1="45" y1="32" x2="64" y2={38} stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={68} y1={38} x2={68} y2={50} />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: hinged forward, back straight, DBs near shins */}
+      <circle cx="130" cy="30" r="6" fill="#e2e8f0" />
+      <line x1="136" y1="32" x2="170" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="148" y1="38" x2="140" y2="18" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={134} y1={14} x2={146} y2={14} />
+      <line x1="158" y1="44" x2={152} y2={26} stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={146} y1={22} x2={158} y2={22} />
+      <line x1="170" y1="50" x2="162" y2="68" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="170" y1="50" x2="178" y2="68" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  ),
+  glute_bridge: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: lying on back, knees bent, hips on floor */}
+      <circle cx="10" cy="44" r="5" fill="#e2e8f0" />
+      <line x1="15" y1="44" x2="48" y2="46" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="22" y1="43" x2="22" y2="54" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="38" y1="44" x2="38" y2="54" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="48" y1="46" x2="60" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="60" y1="36" x2="72" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="48" y1="46" x2="56" y2="54" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="56" y1="54" x2="72" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: hips raised, body like a ramp */}
+      <circle cx="115" cy="44" r="5" fill="#e2e8f0" />
+      <line x1="120" y1="44" x2="148" y2="28" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="126" y1="42" x2="126" y2="53" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="138" y1="36" x2="138" y2="47" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+      <line x1="148" y1="28" x2="158" y2="40" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="158" y1="40" x2="170" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="148" y1="28" x2="154" y2="46" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="154" y1="46" x2="170" y2="28" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  ),
+  split_squat: (
+    <svg viewBox="0 0 100 80" className="w-full h-full">
+      {/* Bulgarian split squat — down position, rear foot on bench */}
+      {/* Bench */}
+      <rect x="54" y="44" width="38" height="6" rx="2" fill="#3f3f46" />
+      <line x1="60" y1="50" x2="60" y2="60" stroke="#3f3f46" strokeWidth="2.5" />
+      <line x1="86" y1="50" x2="86" y2="60" stroke="#3f3f46" strokeWidth="2.5" />
+      {/* Person */}
+      <circle cx="38" cy="18" r="6" fill="#e2e8f0" />
+      <line x1="38" y1="24" x2="38" y2="52" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      {/* Front leg bent ~90° */}
+      <line x1="38" y1="52" x2="26" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="26" y1="60" x2="20" y2="74" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Rear leg — foot on bench */}
+      <line x1="38" y1="52" x2="56" y2="44" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Rear knee near floor */}
+      <line x1="38" y1="52" x2="52" y2="62" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  ),
+  sumo_squat: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: wide stance standing, DB between legs */}
+      <circle cx="45" cy="12" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="18" x2="45" y2="50" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="28" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="28" y1="36" x2="45" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="28" x2="62" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="62" y1="36" x2="45" y2="50" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="50" x2="28" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="50" x2="62" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="39" y="48" width="12" height="5" rx="2" fill="#f97316" />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: wide squat, thighs parallel */}
+      <circle cx="155" cy="22" r="6" fill="#e2e8f0" />
+      <line x1="155" y1="28" x2="155" y2="48" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="155" y1="36" x2="136" y2="44" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="136" y1="44" x2="128" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="36" x2="174" y2="44" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="174" y1="44" x2="182" y2="60" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="48" x2="136" y2="44" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="48" x2="174" y2="44" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="149" y="46" width="12" height="5" rx="2" fill="#f97316" />
+    </svg>
+  ),
+  step_up: (
+    <svg viewBox="0 0 100 80" className="w-full h-full">
+      {/* Step/box */}
+      <rect x="42" y="44" width="50" height="20" rx="2" fill="#3f3f46" />
+      {/* Person stepping up — one foot on box, one on floor */}
+      <circle cx="44" cy="14" r="6" fill="#e2e8f0" />
+      <line x1="44" y1="20" x2="44" y2="44" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="44" y1="30" x2="28" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={24} y1={36} x2={24} y2={48} />
+      <line x1="44" y1="30" x2="60" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={64} y1={36} x2={64} y2={48} />
+      {/* Front foot on box */}
+      <line x1="44" y1="44" x2="52" y2="44" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Back foot on floor */}
+      <line x1="44" y1="44" x2="30" y2="56" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="30" y1="56" x2="18" y2="64" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Up arrow */}
+      <path d="M44 40 L44 28 M40 32 L44 28 L48 32" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  calf_raise: (
+    <svg viewBox="0 0 200 80" className="w-full h-full">
+      {/* START: standing flat */}
+      <circle cx="45" cy="12" r="6" fill="#e2e8f0" />
+      <line x1="45" y1="18" x2="45" y2="54" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="36" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="54" x2="54" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="45" y1="30" x2="26" y2="36" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={22} y1={36} x2={22} y2={48} />
+      <line x1="45" y1="30" x2="64" y2={36} stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={68} y1={36} x2={68} y2={48} />
+      {/* Arrow */}
+      <path d="M93,39 L107,39 M102,34 L108,39 L102,44" stroke="#f97316" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      {/* END: raised on toes */}
+      <circle cx="155" cy="6" r="6" fill="#e2e8f0" />
+      <line x1="155" y1="12" x2="155" y2="48" stroke="#e2e8f0" strokeWidth="3" strokeLinecap="round" />
+      <line x1="155" y1="48" x2="148" y2="58" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="148" y1="58" x2="144" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="48" x2="162" y2="58" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="162" y1="58" x2="166" y2="70" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="155" y1="24" x2="136" y2="30" stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={132} y1={30} x2={132} y2={42} />
+      <line x1="155" y1="24" x2="174" y2={30} stroke="#e2e8f0" strokeWidth="2.5" strokeLinecap="round" />
+      <Dumbbell x1={178} y1={30} x2={178} y2={42} />
+    </svg>
+  ),
 }
 
 // ─────────────────────────────────────────────
@@ -1039,22 +1363,47 @@ function getDurationLabel(selectedDuration, selectedVariation, t) {
 // ─────────────────────────────────────────────
 // SCREEN: HOME
 // ─────────────────────────────────────────────
-// Derive unique numeric durations from template keys (e.g. "30a","30b","45" → [30,45])
-function getAvailableDurations(templates) {
+// Derive unique category prefixes from template keys (e.g. "upper_20" → ["upper"])
+function getAvailableCategories(templates) {
+  const cats = new Set()
+  Object.keys(templates).forEach(k => {
+    const m = k.match(/^(.+)_\d/)
+    if (m) cats.add(m[1])
+  })
+  return Array.from(cats)
+}
+
+// Derive unique numeric durations for a given category (e.g. category="upper" → [20,30,45])
+function getAvailableDurations(templates, category) {
+  const prefix = category + '_'
   const seen = new Set()
   return Object.keys(templates)
-    .map(k => parseInt(k, 10))
+    .filter(k => k.startsWith(prefix))
+    .map(k => parseInt(k.slice(prefix.length), 10))
     .filter(d => !isNaN(d) && !seen.has(d) && seen.add(d))
     .sort((a, b) => a - b)
+}
+
+function categoryLabel(cat, t) {
+  if (cat === 'upper') return t.upperBody
+  if (cat === 'abs_legs') return t.absLegs
+  return cat
+}
+
+function categoryIcon(cat) {
+  if (cat === 'upper') return '💪'
+  if (cat === 'abs_legs') return '🦵'
+  return '🏋️'
 }
 
 function HomeScreen({ state, dispatch }) {
   const t = T[state.lang]
   const { templates, meta } = state.plan
-  const durations = getAvailableDurations(templates)
+  const categories = getAvailableCategories(templates)
+  const durations = getAvailableDurations(templates, state.selectedCategory)
   const hasVariations =
-    templates[`${state.selectedDuration}a`] !== undefined &&
-    templates[`${state.selectedDuration}b`] !== undefined
+    templates[`${state.selectedCategory}_${state.selectedDuration}a`] !== undefined &&
+    templates[`${state.selectedCategory}_${state.selectedDuration}b`] !== undefined
   const planName = meta?.name ?? ''
   const fileInputRef = useRef(null)
   const [loadError, setLoadError] = useState(null)
@@ -1105,6 +1454,33 @@ function HomeScreen({ state, dispatch }) {
         )}
         <p className="text-zinc-400 mt-2 text-lg md:text-xl">{t.pickDuration}</p>
       </div>
+
+      {/* Category picker */}
+      {categories.length > 1 && (
+        <div className="w-full max-w-sm space-y-2">
+          <p className="text-zinc-500 text-xs font-bold text-center uppercase tracking-widest">{t.category}</p>
+          <div className="flex gap-3">
+            {categories.map(cat => {
+              const isSelected = state.selectedCategory === cat
+              return (
+                <button
+                  key={cat}
+                  onClick={() => dispatch({ type: 'SET_CATEGORY', category: cat })}
+                  className={`flex-1 flex flex-col items-center py-4 rounded-2xl border-2 font-black transition-all active:scale-95
+                    ${isSelected
+                      ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
+                      : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
+                >
+                  <span className="text-2xl leading-none">{categoryIcon(cat)}</span>
+                  <span className={`mt-1 text-xs font-semibold text-center ${isSelected ? 'text-orange-100' : 'text-zinc-400'}`}>
+                    {categoryLabel(cat, t)}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Variation picker — only shown when selected duration has a/b variants */}
       {hasVariations && (
@@ -1206,9 +1582,10 @@ function PreviewScreen({ state, dispatch }) {
   const t = T[state.lang]
   const isHe = state.lang === 'he'
   const { exercises, templates } = state.plan
-  const templateKey = state.selectedDuration === 30
-    ? '30' + state.selectedVariation
-    : state.selectedDuration
+  const hasVariants = templates[`${state.selectedCategory}_${state.selectedDuration}a`] !== undefined
+  const templateKey = hasVariants
+    ? `${state.selectedCategory}_${state.selectedDuration}${state.selectedVariation}`
+    : `${state.selectedCategory}_${state.selectedDuration}`
   const template = templates[templateKey]
   const exList = template.exercises
   const items = []
