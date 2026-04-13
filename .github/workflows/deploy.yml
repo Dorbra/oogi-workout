@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -6,9 +6,8 @@ on:
       - main
 
 permissions:
-  contents: write   # push version tags
-  pages: write
-  id-token: write
+  contents: write      # push version tags
+  deployments: write   # Cloudflare Pages deployment status on GitHub
 
 concurrency:
   group: pages
@@ -18,17 +17,11 @@ jobs:
   build-and-deploy:
     name: Build & Deploy
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0   # full history required to read all tags
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -58,14 +51,12 @@ jobs:
         env:
           VITE_APP_VERSION: ${{ steps.version.outputs.plain }}
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=oogi-workout
 
       - name: Tag release
         run: |

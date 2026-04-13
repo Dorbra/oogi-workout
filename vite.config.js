@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/oogi-workout/',
+  base: '/',
   plugins: [
     react(),
     tailwindcss(),
@@ -19,8 +19,8 @@ export default defineConfig({
         background_color: '#09090b',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/oogi-workout/',
-        scope: '/oogi-workout/',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'icon.svg',
@@ -38,8 +38,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,json,woff2}'],
-        navigateFallback: '/oogi-workout/',
-        navigateFallbackDenylist: [/^\/(?!oogi-workout)/],
+        navigateFallback: 'index.html',
       },
     }),
   ],
