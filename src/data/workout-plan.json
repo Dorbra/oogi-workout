@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "meta": {
+    "name": "Home Workout — Upper Body",
+    "author": "",
+    "description": "Push/pull upper-body split using rings and dumbbells. Four templates: 20 min, 30 min Day A (push + vertical pull), 30 min Day B (horizontal pull + push), 45 min full."
+  },
+  "warmup": [
+    { "id": "W1", "nameHe": "מעגלי זרועות",       "nameEn": "Arm Circles",          "duration": 30, "svg": "warmup_circles",  "instrHe": "עמוד זקוף, פרוש זרועות לצדדים. בצע מעגלים קטנים קדימה 15 שניות, ואז אחורה 15 שניות. הגדל את המעגלים בהדרגה.",                  "instrEn": "Stand tall, arms out to sides. Make small circles forward for 15s, then backward for 15s. Gradually make the circles bigger." },
+    { "id": "W2", "nameHe": "סיבובי כתפיים",      "nameEn": "Shoulder Rotations",   "duration": 30, "svg": "warmup_shoulder", "instrHe": "עמוד זקוף, הנח ידיים על הכתפיים. בצע סיבובים גדולים עם המרפקים — קדימה 15 שניות, אחורה 15 שניות.",                     "instrEn": "Stand tall, place hands on shoulders. Make big circles with your elbows — forward 15s, then backward 15s." },
+    { "id": "W3", "nameHe": "כלב מוריד ראש",      "nameEn": "Push-Up to Down Dog",  "duration": 30, "svg": "warmup_downdog",  "instrHe": "התחל בתנוחת שכיבות סמיכה. דחוף את הישבן למעלה ליצירת צורת V הפוך (כף רגל שטוחה, ראש בין הזרועות). חזור לשכיבות סמיכה. חזור על התנועה.",            "instrEn": "Start in push-up position. Push your hips up to form an upside-down V shape (feet flat, head between arms). Return to push-up. Repeat the movement." },
+    { "id": "W4", "nameHe": "קפצנים",             "nameEn": "Jumping Jacks",        "duration": 30, "svg": "warmup_jj",       "instrHe": "עמוד עם רגליים צמודות, ידיים לצד הגוף. קפוץ — פתח רגליים לרוחב ובו-זמנית הרם ידיים מעל הראש. קפוץ חזרה. קצב מהיר.",                   "instrEn": "Stand with feet together, arms at sides. Jump — spread your legs wide while raising your arms overhead. Jump back to start. Keep a quick pace." },
+    { "id": "W5", "nameHe": "שכיבות שכמות",       "nameEn": "Scapular Push-Ups",    "duration": 30, "svg": "warmup_scap",     "instrHe": "תנוחת שכיבות סמיכה עם זרועות ישרות. בלי לכופף מרפקים — רק קרב את השכמות זו לזו (הגב שוקע) ואז רחק אותן (הגב עולה). תנועה קטנה אך חשובה.",      "instrEn": "Push-up position with straight arms. Without bending elbows — only squeeze shoulder blades together (back dips down) then push them apart (back rises up). Small but important movement." },
+    { "id": "W6", "nameHe": "סקוואטים בסיסיים",   "nameEn": "Bodyweight Squats",    "duration": 30, "svg": "warmup_squat",    "instrHe": "עמוד עם רגליים ברוחב כתפיים, כפות רגליים מופנות מעט החוצה. כופף ברכיים ושב למטה כאילו אתה מתיישב על כיסא. ירד עד שהירכיים מקבילות לרצפה, ואז עלה.",        "instrEn": "Stand with feet shoulder-width apart, toes slightly outward. Bend your knees and sit down as if sitting into a chair. Go down until thighs are parallel to the floor, then stand back up." }
+  ],
+  "cooldown": [
+    { "id": "C1", "nameHe": "מתיחת חזה בדלת",    "nameEn": "Chest Doorway Stretch",   "duration": 40, "svg": "cool_chest",     "instrHe": "עמוד ליד קיר או מסגרת דלת. הנח יד אחת על הקיר בגובה כתף, כף יד על הקיר. סובב את הגוף הצידה השני עד שמרגישים מתיחה בחזה. 20 שניות, ואז החלף צד.", "instrEn": "Stand next to a wall or doorframe. Place one hand on the wall at shoulder height. Rotate your body away until you feel a stretch across your chest. Hold 20s, then switch sides." },
+    { "id": "C2", "nameHe": "מתיחת כתף צולבת",   "nameEn": "Cross-Body Stretch",      "duration": 40, "svg": "cool_shoulder",   "instrHe": "הושט זרוע ישרה לפניך. עם היד השנייה, משוך אותה לרוחב הגוף לכיוון הכתף הנגדית. תרגיש מתיחה בכתף האחורית. 20 שניות לכל צד.",         "instrEn": "Extend one arm straight in front of you. With your other hand, pull it across your body toward the opposite shoulder. Feel the stretch in the back of your shoulder. 20s each side." },
+    { "id": "C3", "nameHe": "מתיחת תלת-ראשי",    "nameEn": "Tricep Overhead Stretch", "duration": 40, "svg": "cool_tricep",     "instrHe": "הרם יד אחת מעל הראש, כופף את המרפק כך שהיד נופלת מאחורי הראש. עם היד השנייה, לחץ בעדינות על המרפק כלפי מטה. תרגיש מתיחה בגב הזרוע. 20 שניות לכל צד.", "instrEn": "Raise one arm overhead and bend the elbow so your hand drops behind your head. With the other hand, gently push the elbow down. Feel the stretch in the back of your arm. 20s each side." },
+    { "id": "C4", "nameHe": "נשימות עמוקות",     "nameEn": "Deep Breaths",            "duration": 30, "svg": "cool_breathe",    "instrHe": "עצום עיניים. נשום עמוק דרך האף — 4 שניות. עצור — 2 שניות. נשוף לאט דרך הפה — 6 שניות. נענע ידיים ורגליים בנחת בין נשימות.",                     "instrEn": "Close your eyes. Breathe in deeply through your nose — 4 seconds. Hold — 2 seconds. Exhale slowly through your mouth — 6 seconds. Gently shake out your hands and feet between breaths." }
+  ],
+  "templates": {
+    "20": {
+      "duration": 20,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "7",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד 0–16 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "12", "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "17", "sets": 3, "reps": 10, "rest": 75, "setDuration": 30, "weight": "2×10 ק\"ג", "supersetWith": "21" },
+        { "exerciseId": "21", "sets": 3, "reps": 10, "rest": 75, "setDuration": 30, "weight": "17.5 ק\"ג" }
+      ]
+    },
+    "30a": {
+      "duration": 30,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "7",  "sets": 4, "reps": 6,  "rest": 90, "setDuration": 35, "weight": "אפוד 8–16 ק\"ג" },
+        { "exerciseId": "2",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "15", "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×8 ק\"ג" },
+        { "exerciseId": "3",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד / משקל גוף" },
+        { "exerciseId": "13", "sets": 2, "reps": 12, "rest": 45, "setDuration": 30, "weight": "2×5 ק\"ג", "supersetWith": "16" },
+        { "exerciseId": "16", "sets": 2, "reps": 12, "rest": 45, "setDuration": 30, "weight": "2×5 ק\"ג" }
+      ]
+    },
+    "30b": {
+      "duration": 30,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "8",  "sets": 4, "reps": 10, "rest": 60, "setDuration": 35, "weight": "אפוד 8–16 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×12.5 ק\"ג" },
+        { "exerciseId": "10", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12.5 ק\"ג" },
+        { "exerciseId": "6",  "sets": 3, "reps": 12, "rest": 60, "setDuration": 40, "weight": "אפוד 10–20 ק\"ג" },
+        { "exerciseId": "18", "sets": 3, "reps": 10, "rest": 75, "setDuration": 30, "weight": "2×10 ק\"ג", "supersetWith": "21" },
+        { "exerciseId": "21", "sets": 3, "reps": 10, "rest": 75, "setDuration": 30, "weight": "17.5 ק\"ג" }
+      ]
+    },
+    "45": {
+      "duration": 45,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "7",  "sets": 4, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד 0–16 ק\"ג" },
+        { "exerciseId": "2",  "sets": 4, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "8",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "אפוד 0–10 ק\"ג" },
+        { "exerciseId": "3",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד 10–16 ק\"ג" },
+        { "exerciseId": "15", "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "16", "sets": 3, "reps": 12, "rest": 45, "setDuration": 35, "weight": "2×5 ק\"ג" },
+        { "exerciseId": "17", "sets": 3, "reps": 10, "rest": 60, "setDuration": 30, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "21", "sets": 3, "reps": 10, "rest": 60, "setDuration": 30, "weight": "17.5 ק\"ג" },
+        { "exerciseId": "6",  "sets": 2, "reps": 15, "rest": 0,  "setDuration": 45, "weight": "אפוד 10–20 ק\"ג" }
+      ]
+    }
+  }
+}

@@ -1,4 +1,6 @@
-import { useReducer, useEffect, useRef, useCallback } from 'react'
+import { useReducer, useEffect, useRef, useCallback, useState } from 'react'
+import exercisesData from './data/exercises.json'
+import defaultPlanData from './data/workout-plan.json'
 
 // ─────────────────────────────────────────────
 // TRANSLATIONS
@@ -77,115 +79,24 @@ const T = {
 }
 
 // ─────────────────────────────────────────────
-// EXERCISE LIBRARY
+// PLAN RESOLVER
+// Merges the built-in exercise library with any
+// extra exercises defined inside a custom plan.
 // ─────────────────────────────────────────────
-const EXERCISES = {
-  1:  { id: '1',  nameHe: 'לחיצת רצפה',          nameEn: 'Floor Press',               svg: 'bench_press',    instrHe: 'שכב על הגב על הספסל השטוח. החזק משקולת בכל יד בגובה החזה, כפות ידיים קדימה. דחוף למעלה עד שהזרועות ישרות, ואז הורד לאט חזרה. אל תנעל מרפקים למעלה.',         instrEn: 'Lie flat on your back on the bench. Hold one dumbbell in each hand at chest level, palms facing forward (toward your feet). Push straight up until arms are extended, then lower slowly back down. Don\'t lock your elbows at the top.' },
-  2:  { id: '2',  nameHe: 'לחיצה משופעת',         nameEn: 'Incline DB Press',          svg: 'incline_press',  instrHe: 'הגבה את משענת הספסל כלפי מעלה (ראש גבוה מהירכיים) לזווית 30–45 מעלות. שכב עם הגב צמוד לספסל. דחוף את המשקולות מהחזה כלפי מעלה ואז הורד לאט.',                        instrEn: 'Raise the bench backrest upward (head higher than hips) to about 30–45°. Lie back with your back flat against the bench. Press dumbbells up from chest level, then lower them slowly. Keep your feet flat on the floor.' },
-  3:  { id: '3',  nameHe: 'מתח בטבעות (דחיפה)',   nameEn: 'Ring Dips',                 svg: 'ring_dip',       instrHe: 'אחוז בטבעות ותלה את עצמך עם זרועות ישרות. כופף מרפקים לאט עד שהזרועות בזווית 90 מעלות, ואז דחוף חזרה למעלה. שמור גוף ישר, אל תתנדנד.',          instrEn: 'Grab the rings and hold yourself up with straight arms. Slowly bend your elbows until your upper arms are roughly parallel to the floor (90° bend), then push back up. Keep your body straight and avoid swinging.' },
-  4:  { id: '4',  nameHe: 'לחיצת סיחוט',          nameEn: 'DB Squeeze Press',          svg: 'squeeze_press',  instrHe: 'שכב על הספסל, החזק שתי משקולות צמודות זו לזו מעל החזה. לחץ אותן יחד בכוח לאורך כל התנועה — דחוף למעלה והורד לאט תוך שמירה על לחץ.',                                instrEn: 'Lie on the bench, hold two dumbbells touching each other above your chest. Press them firmly together throughout the entire movement — push up and lower slowly while keeping the dumbbells squeezed together.' },
-  5:  { id: '5',  nameHe: 'לחיצה חד-צדדית',       nameEn: 'Single-Arm DB Press',       svg: 'single_press',   instrHe: 'שכב על הספסל עם משקולת אחת ביד. דחוף למעלה עד שהזרוע ישרה, הורד לאט. בצע את כל החזרות ביד אחת ואז החלף.',                                  instrEn: 'Lie on the bench holding one dumbbell. Press it up until your arm is straight, then lower it slowly. Complete all reps with one arm, then switch to the other.' },
-  6:  { id: '6',  nameHe: 'שכיבות סמיכה עם אפוד', nameEn: 'Weighted Push-Ups',         svg: 'push_up',        instrHe: 'לבש את האפוד המשוקלל. תנוחת שכיבות סמיכה: ידיים ברוחב כתפיים, גוף ישר מהראש ועד הרגליים. כופף מרפקים עד שהחזה כמעט נוגע ברצפה, ודחוף חזרה למעלה.',                        instrEn: 'Wear the weighted vest. Get into push-up position: hands shoulder-width apart, body in a straight line from head to toes. Bend your elbows until your chest nearly touches the floor, then push back up.' },
-  7:  { id: '7',  nameHe: 'מתח בטבעות',           nameEn: 'Ring Pull-Ups',             svg: 'pull_up',        instrHe: 'אחוז בטבעות ותלה עם זרועות ישרות לגמרי. משוך את עצמך כלפי מעלה עד שהסנטר מעל הטבעות. הורד לאט חזרה לתלייה מלאה. אל תבעט ברגליים.',          instrEn: 'Grab the rings and hang with arms fully extended. Pull yourself up until your chin is above the rings. Lower slowly back to a full hang. Don\'t kick your legs — use only your arms and back.' },
-  8:  { id: '8',  nameHe: 'חתירה בטבעות',         nameEn: 'Ring Rows',                 svg: 'ring_row',       instrHe: 'אחוז בטבעות, הרגליים על הרצפה, הגוף באלכסון (כמו שכיבת סמיכה הפוכה). משוך את החזה לכיוון הטבעות, שמור על גוף ישר כמו קרש. הורד לאט.',                    instrEn: 'Grab the rings with your feet on the floor, body at an angle (like an upside-down push-up). Pull your chest toward the rings while keeping your body stiff like a plank. Lower slowly back down.' },
-  9:  { id: '9',  nameHe: 'חתירה חד-צדדית',       nameEn: 'Single-Arm DB Row',         svg: 'single_row',     instrHe: 'הנח יד שמאל וברך שמאל על הספסל. ביד ימין אחוז במשקולת, הורד את הזרוע למטה, ומשוך למעלה עד שהמרפק עובר את הגב. שמור גב ישר. בצע את כל החזרות ואז החלף צד.',                         instrEn: 'Place your left hand and left knee on the bench for support. Hold the dumbbell in your right hand, let it hang straight down, then pull it up until your elbow passes your back. Keep your back flat. Do all reps, then switch sides.' },
-  10: { id: '10', nameHe: 'חתירה רחבה',           nameEn: 'Bent-Over DB Row',          svg: 'bent_row',       instrHe: 'עמוד עם רגליים ברוחב כתפיים, כופף את הגוף קדימה (מותניים) בזווית 45 מעלות. החזק משקולת בכל יד, משוך שתיהן כלפי מעלה אל הבטן, ואז הורד לאט.',                      instrEn: 'Stand with feet shoulder-width apart, bend forward at the waist to about 45° (halfway between standing and horizontal). Hold a dumbbell in each hand, pull both up toward your belly, then lower slowly.' },
-  11: { id: '11', nameHe: 'חתירת רנגייד',         nameEn: 'Renegade Rows',             svg: 'renegade',       instrHe: 'תנוחת שכיבות סמיכה כשהידיים אוחזות במשקולות. משוך משקולת אחת למעלה (מרפק כלפי התקרה), הורד, ואז החלף צד. שמור על הירכיים יציבות — אל תסתובב.',    instrEn: 'Get in push-up position with your hands gripping the dumbbells on the floor. Row one dumbbell up (elbow toward ceiling), lower it, then do the other side. Keep your hips level — don\'t rotate your body.' },
-  12: { id: '12', nameHe: 'לחיצת כתפיים',         nameEn: 'DB Shoulder Press',         svg: 'shoulder_press', instrHe: 'שב על הספסל עם הגב ישר וצמוד למשענת. החזק משקולת בכל יד בגובה האוזניים, כפות ידיים קדימה. דחוף למעלה עד שהזרועות ישרות מעל הראש, ואז הורד לאט.',                                     instrEn: 'Sit on the bench with your back straight against the backrest. Hold a dumbbell in each hand at ear height, palms facing forward. Press up until arms are straight overhead, then lower slowly back to ear level.' },
-  13: { id: '13', nameHe: 'הרמה צדדית',           nameEn: 'Lateral Raise',             svg: 'lateral_raise',  instrHe: 'עמוד זקוף, משקולת בכל יד לצד הגוף. הרם את הזרועות לצדדים עד גובה הכתפיים (כמו ציפור פורשת כנפיים). שמור על מרפקים מעט כפופים. הורד לאט.',                 instrEn: 'Stand tall with a dumbbell in each hand at your sides. Raise your arms out to the sides until they reach shoulder height (like a bird spreading its wings). Keep a slight bend in your elbows. Lower slowly.' },
-  14: { id: '14', nameHe: 'הרמה קדמית',           nameEn: 'Front Raise',               svg: 'front_raise',    instrHe: 'עמוד זקוף, משקולת בכל יד מול הירכיים. הרם זרוע אחת ישר קדימה עד גובה הכתף, הורד לאט, ואז החלף. אל תתנדנד — תנועה איטית ומבוקרת.',                         instrEn: 'Stand tall with dumbbells in front of your thighs. Raise one arm straight forward to shoulder height, lower it slowly, then switch. Don\'t swing — keep the movement slow and controlled.' },
-  15: { id: '15', nameHe: 'לחיצת ארנולד',         nameEn: 'Arnold Press',              svg: 'arnold',         instrHe: 'שב על הספסל. החזק משקולות מול הפנים עם כפות ידיים כלפיך (כמו שאתה מסתכל במראה). תוך כדי דחיפה למעלה, סובב את כפות הידיים החוצה עד שהן פונות קדימה למעלה. הורד וסובב חזרה.',              instrEn: 'Sit on the bench. Hold dumbbells in front of your face with palms facing you (like you\'re looking in a mirror). As you press up, rotate your palms outward so they face forward at the top. Reverse the rotation on the way down.' },
-  16: { id: '16', nameHe: 'פרפר אחורי',           nameEn: 'Rear Delt Fly',             svg: 'rear_fly',       instrHe: 'שב על קצה הספסל, כופף את הגוף קדימה עד שהחזה כמעט נוגע בברכיים. החזק משקולות מתחת לרגליים. הרם זרועות לצדדים תוך כיווץ שכמות (שכמות) אחורה. הורד לאט.',                          instrEn: 'Sit on the edge of the bench, bend forward until your chest nearly touches your knees. Hold dumbbells under your legs. Raise arms out to the sides while squeezing your shoulder blades together. Lower slowly.' },
-  17: { id: '17', nameHe: 'כיפוף מרפק',           nameEn: 'DB Curl',                   svg: 'curl',           instrHe: 'עמוד זקוף, משקולת בכל יד, ידיים למטה עם כפות ידיים כלפי מעלה. כופף את המרפקים והרם את המשקולות לכתפיים. כווץ את הביצפס למעלה, הורד לאט. המרפקים צמודים לגוף.',                        instrEn: 'Stand straight, a dumbbell in each hand with arms down and palms facing forward. Bend your elbows and curl the weights up to your shoulders. Squeeze the biceps at the top, then lower slowly. Keep elbows pinned to your sides.' },
-  18: { id: '18', nameHe: 'כיפוף פטיש',           nameEn: 'Hammer Curl',               svg: 'hammer_curl',    instrHe: 'כמו כיפוף רגיל, אבל כפות הידיים פונות פנימה (זו לזו) — כמו אחיזה בפטיש. כופף מרפקים, הרם לכתפיים, הורד לאט. מרפקים צמודים לגוף.',                       instrEn: 'Like a regular curl, but palms face inward (toward each other) — like holding a hammer. Curl up to your shoulders and lower slowly. Keep elbows at your sides throughout.' },
-  19: { id: '19', nameHe: 'כיפוף ריכוז',          nameEn: 'Concentration Curl',        svg: 'conc_curl',      instrHe: 'שב על הספסל עם רגליים פשוקות. הנח את גב המרפק על פנים הירך. כופף את המשקולת לכתף ואז הורד לאט. זה מבודד את הביצפס — אל תזוז עם הגוף.',                               instrEn: 'Sit on the bench with legs apart. Brace the back of your elbow against your inner thigh. Curl the dumbbell up to your shoulder and lower slowly. This isolates the bicep — don\'t use body momentum.' },
-  20: { id: '20', nameHe: 'כיפוף משופע',          nameEn: 'Incline Curl',              svg: 'incline_curl',   instrHe: 'הגבה את משענת הספסל לזווית 45 מעלות כלפי מעלה. שכב עם הגב צמוד לספסל, ידיים תלויות למטה עם משקולות. כופף מרפקים, הרם לכתפיים, הורד לאט. תרגיש מתיחה בביצפס.',                             instrEn: 'Set the bench to about 45° incline (head higher than hips). Sit back with your back against the bench, arms hanging straight down holding dumbbells. Curl up to your shoulders and lower slowly. You\'ll feel a deep stretch in your biceps at the bottom.' },
-  21: { id: '21', nameHe: 'הארכה מעל הראש',       nameEn: 'Overhead Tricep Ext.',      svg: 'overhead_ext',   instrHe: 'עמוד או שב. אחוז במשקולת אחת בשתי הידיים מעל הראש, זרועות ישרות. כופף את המרפקים והורד את המשקולת מאחורי הראש. ישר חזרה למעלה. המרפקים פונים קדימה, קרובים לראש.',                      instrEn: 'Stand or sit. Hold one dumbbell with both hands above your head, arms straight. Bend your elbows to lower the weight behind your head. Straighten back up. Keep elbows pointing forward and close to your head.' },
-  22: { id: '22', nameHe: 'בעיטה אחורית',         nameEn: 'DB Kickback',               svg: 'kickback',       instrHe: 'כופף את הגוף קדימה 45 מעלות (או הישען על הספסל). אחוז משקולת, הרם את המרפק לגובה הגב. ישר את הזרוע לאחור עד שהיא ישרה, ואז כופף חזרה. רק האמה זזה — המרפק קבוע.',                                instrEn: 'Bend forward about 45° (or lean on the bench). Hold a dumbbell and raise your elbow to back height. Straighten your arm back until it\'s fully extended, then bend it back. Only your forearm moves — keep your elbow locked in place.' },
-  23: { id: '23', nameHe: 'שכיבות סמיכה צרות',    nameEn: 'Close-Grip Push-Up',        svg: 'close_pushup',   instrHe: 'תנוחת שכיבות סמיכה, אבל הידיים קרובות זו לזו מתחת לאמצע החזה (מרחק כ-15 ס"מ). כופף מרפקים קרוב לגוף (לא לצדדים). זה מעביר עבודה לתלת-ראשי.',             instrEn: 'Push-up position, but place your hands close together under the center of your chest (about 15 cm apart). Bend elbows close to your body (not flared out). This shifts the work to your triceps.' },
-  24: { id: '24', nameHe: 'הארכה בטבעות',         nameEn: 'Ring Tricep Extension',     svg: 'ring_ext',       instrHe: 'אחוז בטבעות ונטה קדימה עם גוף ישר (כמו נפילה מבוקרת). כופף מרפקים עד שהידיים מגיעות ליד האוזניים, ואז ישר חזרה. ככל שנוטים יותר קדימה — יותר קשה.',              instrEn: 'Grip the rings and lean forward with a straight body (like a controlled fall). Bend your elbows until your hands reach near your ears, then straighten back. The more you lean forward, the harder it gets.' },
+function resolvePlan(plan) {
+  return {
+    ...plan,
+    exercises: { ...exercisesData.exercises, ...(plan.exercises ?? {}) },
+  }
 }
 
-const WARMUP = [
-  { id: 'W1', nameHe: 'מעגלי זרועות',       nameEn: 'Arm Circles',          duration: 30, svg: 'warmup_circles',  instrHe: 'עמוד זקוף, פרוש זרועות לצדדים. בצע מעגלים קטנים קדימה 15 שניות, ואז אחורה 15 שניות. הגדל את המעגלים בהדרגה.',                  instrEn: 'Stand tall, arms out to sides. Make small circles forward for 15s, then backward for 15s. Gradually make the circles bigger.' },
-  { id: 'W2', nameHe: 'סיבובי כתפיים',      nameEn: 'Shoulder Rotations',   duration: 30, svg: 'warmup_shoulder', instrHe: 'עמוד זקוף, הנח ידיים על הכתפיים. בצע סיבובים גדולים עם המרפקים — קדימה 15 שניות, אחורה 15 שניות.',                     instrEn: 'Stand tall, place hands on shoulders. Make big circles with your elbows — forward 15s, then backward 15s.' },
-  { id: 'W3', nameHe: 'כלב מוריד ראש',      nameEn: 'Push-Up to Down Dog',  duration: 30, svg: 'warmup_downdog',  instrHe: 'התחל בתנוחת שכיבות סמיכה. דחוף את הישבן למעלה ליצירת צורת V הפוך (כף רגל שטוחה, ראש בין הזרועות). חזור לשכיבות סמיכה. חזור על התנועה.',            instrEn: 'Start in push-up position. Push your hips up to form an upside-down V shape (feet flat, head between arms). Return to push-up. Repeat the movement.' },
-  { id: 'W4', nameHe: 'קפצנים',             nameEn: 'Jumping Jacks',        duration: 30, svg: 'warmup_jj',       instrHe: 'עמוד עם רגליים צמודות, ידיים לצד הגוף. קפוץ — פתח רגליים לרוחב ובו-זמנית הרם ידיים מעל הראש. קפוץ חזרה. קצב מהיר.',                   instrEn: 'Stand with feet together, arms at sides. Jump — spread your legs wide while raising your arms overhead. Jump back to start. Keep a quick pace.' },
-  { id: 'W5', nameHe: 'שכיבות שכמות',       nameEn: 'Scapular Push-Ups',    duration: 30, svg: 'warmup_scap',     instrHe: 'תנוחת שכיבות סמיכה עם זרועות ישרות. בלי לכופף מרפקים — רק קרב את השכמות זו לזו (הגב שוקע) ואז רחק אותן (הגב עולה). תנועה קטנה אך חשובה.',      instrEn: 'Push-up position with straight arms. Without bending elbows — only squeeze shoulder blades together (back dips down) then push them apart (back rises up). Small but important movement.' },
-  { id: 'W6', nameHe: 'סקוואטים בסיסיים',   nameEn: 'Bodyweight Squats',    duration: 30, svg: 'warmup_squat',    instrHe: 'עמוד עם רגליים ברוחב כתפיים, כפות רגליים מופנות מעט החוצה. כופף ברכיים ושב למטה כאילו אתה מתיישב על כיסא. ירד עד שהירכיים מקבילות לרצפה, ואז עלה.',        instrEn: 'Stand with feet shoulder-width apart, toes slightly outward. Bend your knees and sit down as if sitting into a chair. Go down until thighs are parallel to the floor, then stand back up.' },
-]
-
-const COOLDOWN = [
-  { id: 'C1', nameHe: 'מתיחת חזה בדלת',    nameEn: 'Chest Doorway Stretch',   duration: 40, svg: 'cool_chest',     instrHe: 'עמוד ליד קיר או מסגרת דלת. הנח יד אחת על הקיר בגובה כתף, כף יד על הקיר. סובב את הגוף הצידה השני עד שמרגישים מתיחה בחזה. 20 שניות, ואז החלף צד.', instrEn: 'Stand next to a wall or doorframe. Place one hand on the wall at shoulder height. Rotate your body away until you feel a stretch across your chest. Hold 20s, then switch sides.' },
-  { id: 'C2', nameHe: 'מתיחת כתף צולבת',   nameEn: 'Cross-Body Stretch',      duration: 40, svg: 'cool_shoulder',   instrHe: 'הושט זרוע ישרה לפניך. עם היד השנייה, משוך אותה לרוחב הגוף לכיוון הכתף הנגדית. תרגיש מתיחה בכתף האחורית. 20 שניות לכל צד.',         instrEn: 'Extend one arm straight in front of you. With your other hand, pull it across your body toward the opposite shoulder. Feel the stretch in the back of your shoulder. 20s each side.' },
-  { id: 'C3', nameHe: 'מתיחת תלת-ראשי',    nameEn: 'Tricep Overhead Stretch', duration: 40, svg: 'cool_tricep',     instrHe: 'הרם יד אחת מעל הראש, כופף את המרפק כך שהיד נופלת מאחורי הראש. עם היד השנייה, לחץ בעדינות על המרפק כלפי מטה. תרגיש מתיחה בגב הזרוע. 20 שניות לכל צד.', instrEn: 'Raise one arm overhead and bend the elbow so your hand drops behind your head. With the other hand, gently push the elbow down. Feel the stretch in the back of your arm. 20s each side.' },
-  { id: 'C4', nameHe: 'נשימות עמוקות',     nameEn: 'Deep Breaths',            duration: 30, svg: 'cool_breathe',    instrHe: 'עצום עיניים. נשום עמוק דרך האף — 4 שניות. עצור — 2 שניות. נשוף לאט דרך הפה — 6 שניות. נענע ידיים ורגליים בנחת בין נשימות.',                     instrEn: 'Close your eyes. Breathe in deeply through your nose — 4 seconds. Hold — 2 seconds. Exhale slowly through your mouth — 6 seconds. Gently shake out your hands and feet between breaths.' },
-]
-
-// ─────────────────────────────────────────────
-// WORKOUT TEMPLATES
-// ─────────────────────────────────────────────
-const TEMPLATES = {
-  20: {
-    duration: 20,
-    warmupSecs: 3 * 30,
-    cooldownSecs: 40 + 40 + 40 + 30,
-    exercises: [
-      { exerciseId: '7',  sets: 3, reps: 8,  rest: 90,  setDuration: 35, weight: 'אפוד 0–16 ק"ג' },
-      { exerciseId: '1',  sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
-      { exerciseId: '12', sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
-      { exerciseId: '17', sets: 3, reps: 10, rest: 75,  setDuration: 30, weight: '2×10 ק"ג', supersetWith: '21' },
-      { exerciseId: '21', sets: 3, reps: 10, rest: 75,  setDuration: 30, weight: '17.5 ק"ג' },
-    ],
-  },
-  '30a': {
-    duration: 30,
-    warmupSecs: 3 * 30,
-    cooldownSecs: 40 + 40 + 40 + 30,
-    exercises: [
-      { exerciseId: '7',  sets: 4, reps: 6,  rest: 90, setDuration: 35, weight: 'אפוד 8–16 ק"ג' },
-      { exerciseId: '2',  sets: 3, reps: 10, rest: 75, setDuration: 35, weight: '2×10 ק"ג' },
-      { exerciseId: '15', sets: 3, reps: 10, rest: 75, setDuration: 35, weight: '2×8 ק"ג' },
-      { exerciseId: '3',  sets: 3, reps: 8,  rest: 90, setDuration: 35, weight: 'אפוד / משקל גוף' },
-      { exerciseId: '13', sets: 2, reps: 12, rest: 45, setDuration: 30, weight: '2×5 ק"ג', supersetWith: '16' },
-      { exerciseId: '16', sets: 2, reps: 12, rest: 45, setDuration: 30, weight: '2×5 ק"ג' },
-    ],
-  },
-  '30b': {
-    duration: 30,
-    warmupSecs: 3 * 30,
-    cooldownSecs: 40 + 40 + 40 + 30,
-    exercises: [
-      { exerciseId: '8',  sets: 4, reps: 10, rest: 60, setDuration: 35, weight: 'אפוד 8–16 ק"ג' },
-      { exerciseId: '1',  sets: 3, reps: 10, rest: 75, setDuration: 35, weight: '2×12.5 ק"ג' },
-      { exerciseId: '10', sets: 3, reps: 12, rest: 75, setDuration: 40, weight: '2×12.5 ק"ג' },
-      { exerciseId: '6',  sets: 3, reps: 12, rest: 60, setDuration: 40, weight: 'אפוד 10–20 ק"ג' },
-      { exerciseId: '18', sets: 3, reps: 10, rest: 75, setDuration: 30, weight: '2×10 ק"ג', supersetWith: '21' },
-      { exerciseId: '21', sets: 3, reps: 10, rest: 75, setDuration: 30, weight: '17.5 ק"ג' },
-    ],
-  },
-  45: {
-    duration: 45,
-    warmupSecs: 3 * 30,
-    cooldownSecs: 40 + 40 + 40 + 30,
-    exercises: [
-      { exerciseId: '7',  sets: 4, reps: 8,  rest: 90,  setDuration: 35, weight: 'אפוד 0–16 ק"ג' },
-      { exerciseId: '2',  sets: 4, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
-      { exerciseId: '8',  sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: 'אפוד 0–10 ק"ג' },
-      { exerciseId: '3',  sets: 3, reps: 8,  rest: 90,  setDuration: 35, weight: 'אפוד 10–16 ק"ג' },
-      { exerciseId: '15', sets: 3, reps: 10, rest: 75,  setDuration: 35, weight: '2×10 ק"ג' },
-      { exerciseId: '16', sets: 3, reps: 12, rest: 45,  setDuration: 35, weight: '2×5 ק"ג' },
-      { exerciseId: '17', sets: 3, reps: 10, rest: 60,  setDuration: 30, weight: '2×10 ק"ג' },
-      { exerciseId: '21', sets: 3, reps: 10, rest: 60,  setDuration: 30, weight: '17.5 ק"ג' },
-      { exerciseId: '6',  sets: 2, reps: 15, rest: 0,   setDuration: 45, weight: 'אפוד 10–20 ק"ג' },
-    ],
-  },
-}
+const DEFAULT_PLAN = resolvePlan(defaultPlanData)
 
 // ─────────────────────────────────────────────
 // STEP FLATTENER
 // ─────────────────────────────────────────────
-function buildSteps(template, skipWarmup) {
+function buildSteps(template, skipWarmup, plan) {
+  const { exercises, warmup, cooldown } = plan
   const steps = []
   let groupIndex = 0
   const groupStarts = []
@@ -193,7 +104,7 @@ function buildSteps(template, skipWarmup) {
   // Warmup
   if (!skipWarmup) {
     groupStarts.push(0)
-    for (const wu of WARMUP) {
+    for (const wu of warmup) {
       steps.push({ type: 'warmup', exercise: wu, duration: wu.duration, groupIndex })
     }
     groupIndex++
@@ -204,12 +115,12 @@ function buildSteps(template, skipWarmup) {
   let i = 0
   while (i < exList.length) {
     const ex = exList[i]
-    const exData = EXERCISES[ex.exerciseId]
+    const exData = exercises[ex.exerciseId]
 
     if (ex.supersetWith) {
       // Superset: current ex is A, next entry is B
       const exB = exList[i + 1]
-      const exDataB = EXERCISES[exB.exerciseId]
+      const exDataB = exercises[exB.exerciseId]
 
       groupStarts.push(steps.length)
       steps.push({ type: 'transition', duration: 10, previewExercise: exData, workoutEx: ex, previewExB: exDataB, workoutExB: exB, isSuperset: true, groupIndex })
@@ -240,7 +151,7 @@ function buildSteps(template, skipWarmup) {
 
   // Cooldown
   groupStarts.push(steps.length)
-  for (const cd of COOLDOWN) {
+  for (const cd of cooldown) {
     steps.push({ type: 'cooldown', exercise: cd, duration: cd.duration, groupIndex })
   }
   groupIndex++
@@ -314,6 +225,7 @@ const initialState = {
   selectedDuration: 30,
   selectedVariation: 'a',  // 'a' | 'b'  (only used when duration === 30)
   skipWarmup: false,
+  plan: DEFAULT_PLAN,    // active workout plan (can be swapped by LOAD_PLAN)
   steps: [],
   groupStarts: [],
   stepIndex: 0,
@@ -357,14 +269,20 @@ function reducer(state, action) {
       return { ...state, screen: 'preview' }
 
     case 'GO_HOME':
-      return { ...initialState, lang: state.lang }
+      return { ...initialState, lang: state.lang, plan: state.plan }
+
+    case 'LOAD_PLAN': {
+      const loaded = resolvePlan(action.plan)
+      const firstDuration = getAvailableDurations(loaded.templates)[0] ?? 30
+      return { ...initialState, lang: state.lang, plan: loaded, selectedDuration: firstDuration }
+    }
 
     case 'START_WORKOUT': {
       const templateKey = state.selectedDuration === 30
         ? '30' + state.selectedVariation
         : state.selectedDuration
-      const template = TEMPLATES[templateKey]
-      const { steps, groupStarts } = buildSteps(template, state.skipWarmup)
+      const template = state.plan.templates[templateKey]
+      const { steps, groupStarts } = buildSteps(template, state.skipWarmup, state.plan)
       const firstStep = steps[0]
       return {
         ...state,
@@ -1121,8 +1039,48 @@ function getDurationLabel(selectedDuration, selectedVariation, t) {
 // ─────────────────────────────────────────────
 // SCREEN: HOME
 // ─────────────────────────────────────────────
+// Derive unique numeric durations from template keys (e.g. "30a","30b","45" → [30,45])
+function getAvailableDurations(templates) {
+  const seen = new Set()
+  return Object.keys(templates)
+    .map(k => parseInt(k, 10))
+    .filter(d => !isNaN(d) && !seen.has(d) && seen.add(d))
+    .sort((a, b) => a - b)
+}
+
 function HomeScreen({ state, dispatch }) {
   const t = T[state.lang]
+  const { templates, meta } = state.plan
+  const durations = getAvailableDurations(templates)
+  const hasVariations =
+    templates[`${state.selectedDuration}a`] !== undefined &&
+    templates[`${state.selectedDuration}b`] !== undefined
+  const planName = meta?.name ?? ''
+  const fileInputRef = useRef(null)
+  const [loadError, setLoadError] = useState(null)
+
+  function handleFileChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const parsed = JSON.parse(ev.target.result)
+        if (!parsed.templates || !parsed.warmup || !parsed.cooldown) {
+          throw new Error(state.lang === 'he'
+            ? 'קובץ לא תקין: חסרים שדות templates / warmup / cooldown'
+            : 'Invalid plan: missing templates, warmup, or cooldown fields')
+        }
+        setLoadError(null)
+        dispatch({ type: 'LOAD_PLAN', plan: parsed })
+      } catch (err) {
+        setLoadError(err.message)
+      }
+      e.target.value = ''   // allow re-selecting the same file
+    }
+    reader.readAsText(file)
+  }
+
   return (
     <div className="flex flex-col h-full items-center justify-center px-6 gap-10">
       {/* Lang toggle */}
@@ -1142,43 +1100,48 @@ function HomeScreen({ state, dispatch }) {
       <div className="text-center">
         <div className="text-6xl md:text-7xl mb-3">💪</div>
         <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight">{t.appTitle}</h1>
+        {planName && planName !== 'Home Workout — Upper Body' && (
+          <p className="text-orange-400 mt-1 text-sm font-semibold">{planName}</p>
+        )}
         <p className="text-zinc-400 mt-2 text-lg md:text-xl">{t.pickDuration}</p>
       </div>
 
-      {/* Step 1: Variation picker */}
-      <div className="w-full max-w-sm space-y-2">
-        <p className="text-zinc-500 text-xs font-bold text-center uppercase tracking-widest">
-          {state.lang === 'he' ? 'בחר וריאציה' : 'Pick Variation'}
-        </p>
-        <div className="flex gap-3">
-          {(['a', 'b']).map(v => {
-            const isSelected = state.selectedVariation === v
-            const label = v === 'a' ? t.dayA : t.dayB
-            const sub   = v === 'a' ? t.pushFocus : t.pullFocus
-            return (
-              <button
-                key={v}
-                onClick={() => dispatch({ type: 'SET_VARIATION', variation: v })}
-                className={`flex-1 flex flex-col items-center py-5 rounded-2xl border-2 font-black transition-all active:scale-95
-                  ${isSelected
-                    ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
-                    : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
-              >
-                <span className="text-2xl leading-none">{label}</span>
-                <span className={`mt-2 text-xs font-medium text-center px-2 leading-tight ${isSelected ? 'text-orange-100' : 'text-zinc-500'}`}>{sub}</span>
-              </button>
-            )
-          })}
+      {/* Variation picker — only shown when selected duration has a/b variants */}
+      {hasVariations && (
+        <div className="w-full max-w-sm space-y-2">
+          <p className="text-zinc-500 text-xs font-bold text-center uppercase tracking-widest">
+            {state.lang === 'he' ? 'בחר וריאציה' : 'Pick Variation'}
+          </p>
+          <div className="flex gap-3">
+            {(['a', 'b']).map(v => {
+              const isSelected = state.selectedVariation === v
+              const label = v === 'a' ? t.dayA : t.dayB
+              const sub   = v === 'a' ? t.pushFocus : t.pullFocus
+              return (
+                <button
+                  key={v}
+                  onClick={() => dispatch({ type: 'SET_VARIATION', variation: v })}
+                  className={`flex-1 flex flex-col items-center py-5 rounded-2xl border-2 font-black transition-all active:scale-95
+                    ${isSelected
+                      ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
+                      : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
+                >
+                  <span className="text-2xl leading-none">{label}</span>
+                  <span className={`mt-2 text-xs font-medium text-center px-2 leading-tight ${isSelected ? 'text-orange-100' : 'text-zinc-500'}`}>{sub}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Step 2: Duration picker */}
+      {/* Duration picker — derived from plan templates */}
       <div className="w-full max-w-sm space-y-2">
         <p className="text-zinc-500 text-xs font-bold text-center uppercase tracking-widest">
           {state.lang === 'he' ? 'משך אימון' : 'Duration'}
         </p>
         <div className="flex gap-3">
-          {[20, 30, 45].map(d => {
+          {durations.map(d => {
             const isSelected = state.selectedDuration === d
             return (
               <button
@@ -1204,6 +1167,34 @@ function HomeScreen({ state, dispatch }) {
       >
         {t.preview}
       </button>
+
+      {/* Load custom plan */}
+      <div className="flex flex-col items-center gap-2">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="text-zinc-500 hover:text-zinc-300 text-sm font-semibold underline underline-offset-4 transition-colors"
+        >
+          {state.lang === 'he' ? '📂 טען תוכנית אימון מקובץ JSON' : '📂 Load workout plan from JSON'}
+        </button>
+        {loadError && (
+          <p className="text-red-400 text-xs text-center max-w-xs">{loadError}</p>
+        )}
+        {planName && planName !== 'Home Workout — Upper Body' && (
+          <button
+            onClick={() => dispatch({ type: 'LOAD_PLAN', plan: defaultPlanData })}
+            className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors"
+          >
+            {state.lang === 'he' ? '↩ חזור לתוכנית ברירת המחדל' : '↩ Reset to default plan'}
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -1214,19 +1205,20 @@ function HomeScreen({ state, dispatch }) {
 function PreviewScreen({ state, dispatch }) {
   const t = T[state.lang]
   const isHe = state.lang === 'he'
+  const { exercises, templates } = state.plan
   const templateKey = state.selectedDuration === 30
     ? '30' + state.selectedVariation
     : state.selectedDuration
-  const template = TEMPLATES[templateKey]
+  const template = templates[templateKey]
   const exList = template.exercises
   const items = []
   let i = 0
   while (i < exList.length) {
     const ex = exList[i]
-    const exData = EXERCISES[ex.exerciseId]
+    const exData = exercises[ex.exerciseId]
     if (ex.supersetWith) {
       const exB = exList[i + 1]
-      const exDataB = EXERCISES[exB.exerciseId]
+      const exDataB = exercises[exB.exerciseId]
       items.push({ type: 'superset', ex, exData, exB, exDataB })
       i += 2
     } else {
