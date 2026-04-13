@@ -1,6 +1,6 @@
-import { useReducer, useEffect, useRef, useCallback, useState } from 'react'
+import { useReducer, useEffect, useRef, useCallback } from 'react'
 import exercisesData from './data/exercises.json'
-import defaultPlanData from './data/workout-plan.json'
+import planData from './data/workout-plan.json'
 
 // ─────────────────────────────────────────────
 // TRANSLATIONS
@@ -96,7 +96,7 @@ function resolvePlan(plan) {
   }
 }
 
-const DEFAULT_PLAN = resolvePlan(defaultPlanData)
+const DEFAULT_PLAN = resolvePlan(planData)
 
 // ─────────────────────────────────────────────
 // STEP FLATTENER
@@ -232,7 +232,7 @@ const initialState = {
   selectedDuration: 30,
   selectedVariation: 'a',              // only used when category+duration has a/b variants
   skipWarmup: false,
-  plan: DEFAULT_PLAN,    // active workout plan (can be swapped by LOAD_PLAN)
+  plan: DEFAULT_PLAN,
   steps: [],
   groupStarts: [],
   stepIndex: 0,
@@ -284,13 +284,6 @@ function reducer(state, action) {
 
     case 'GO_HOME':
       return { ...initialState, lang: state.lang, plan: state.plan, selectedCategory: state.selectedCategory }
-
-    case 'LOAD_PLAN': {
-      const loaded = resolvePlan(action.plan)
-      const firstCat = getAvailableCategories(loaded.templates)[0] ?? 'upper'
-      const firstDuration = getAvailableDurations(loaded.templates, firstCat)[0] ?? 30
-      return { ...initialState, lang: state.lang, plan: loaded, selectedCategory: firstCat, selectedDuration: firstDuration }
-    }
 
     case 'START_WORKOUT': {
       const hasVariants = state.plan.templates[`${state.selectedCategory}_${state.selectedDuration}a`] !== undefined
@@ -1398,38 +1391,12 @@ function categoryIcon(cat) {
 
 function HomeScreen({ state, dispatch }) {
   const t = T[state.lang]
-  const { templates, meta } = state.plan
+  const { templates } = state.plan
   const categories = getAvailableCategories(templates)
   const durations = getAvailableDurations(templates, state.selectedCategory)
   const hasVariations =
     templates[`${state.selectedCategory}_${state.selectedDuration}a`] !== undefined &&
     templates[`${state.selectedCategory}_${state.selectedDuration}b`] !== undefined
-  const planName = meta?.name ?? ''
-  const fileInputRef = useRef(null)
-  const [loadError, setLoadError] = useState(null)
-
-  function handleFileChange(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = (ev) => {
-      try {
-        const parsed = JSON.parse(ev.target.result)
-        if (!parsed.templates || !parsed.warmup || !parsed.cooldown) {
-          throw new Error(state.lang === 'he'
-            ? 'קובץ לא תקין: חסרים שדות templates / warmup / cooldown'
-            : 'Invalid plan: missing templates, warmup, or cooldown fields')
-        }
-        setLoadError(null)
-        dispatch({ type: 'LOAD_PLAN', plan: parsed })
-      } catch (err) {
-        setLoadError(err.message)
-      }
-      e.target.value = ''   // allow re-selecting the same file
-    }
-    reader.readAsText(file)
-  }
-
   return (
     <div className="flex flex-col h-full items-center justify-center px-6 gap-10">
       {/* Lang toggle */}
@@ -1449,9 +1416,6 @@ function HomeScreen({ state, dispatch }) {
       <div className="text-center">
         <div className="text-6xl md:text-7xl mb-3">💪</div>
         <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight">{t.appTitle}</h1>
-        {planName && planName !== 'Home Workout — Upper Body' && (
-          <p className="text-orange-400 mt-1 text-sm font-semibold">{planName}</p>
-        )}
         <p className="text-zinc-400 mt-2 text-lg md:text-xl">{t.pickDuration}</p>
       </div>
 
@@ -1544,33 +1508,10 @@ function HomeScreen({ state, dispatch }) {
         {t.preview}
       </button>
 
-      {/* Load custom plan */}
-      <div className="flex flex-col items-center gap-2">
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="text-zinc-500 hover:text-zinc-300 text-sm font-semibold underline underline-offset-4 transition-colors"
-        >
-          {state.lang === 'he' ? '📂 טען תוכנית אימון מקובץ JSON' : '📂 Load workout plan from JSON'}
-        </button>
-        {loadError && (
-          <p className="text-red-400 text-xs text-center max-w-xs">{loadError}</p>
-        )}
-        {planName && planName !== 'Home Workout — Upper Body' && (
-          <button
-            onClick={() => dispatch({ type: 'LOAD_PLAN', plan: defaultPlanData })}
-            className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors"
-          >
-            {state.lang === 'he' ? '↩ חזור לתוכנית ברירת המחדל' : '↩ Reset to default plan'}
-          </button>
-        )}
-      </div>
+      {/* Version badge */}
+      <p className="absolute bottom-4 text-zinc-700 text-xs font-mono select-none">
+        v{__APP_VERSION__}
+      </p>
     </div>
   )
 }
