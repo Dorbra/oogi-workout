@@ -43,6 +43,8 @@ const T = {
     upperBody: 'גוף עליון',
     absLegs: 'בטן + רגליים',
     category: 'קטגוריה',
+    nextSet: 'הסט הבא',
+    nextExercise: 'התרגיל הבא',
   },
   en: {
     appTitle: 'Workout',
@@ -81,6 +83,8 @@ const T = {
     upperBody: 'Upper Body',
     absLegs: 'Abs & Legs',
     category: 'Category',
+    nextSet: 'Next set',
+    nextExercise: 'Next exercise',
   },
 }
 
@@ -127,6 +131,8 @@ function buildSteps(template, skipWarmup, plan) {
       // Superset: current ex is A, next entry is B
       const exB = exList[i + 1]
       const exDataB = exercises[exB.exerciseId]
+      const nextItem = exList[i + 2]
+      const nextExData = nextItem ? exercises[nextItem.exerciseId] : null
 
       groupStarts.push(steps.length)
       steps.push({ type: 'transition', duration: 10, previewExercise: exData, workoutEx: ex, previewExB: exDataB, workoutExB: exB, isSuperset: true, groupIndex })
@@ -136,11 +142,16 @@ function buildSteps(template, skipWarmup, plan) {
         steps.push({ type: 'exercise', exercise: exDataB, workoutEx: exB, set, totalSets: exB.sets, supersetPart: 'B', duration: exB.setDuration, groupIndex })
         if (set < ex.sets) {
           steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, previewExB: exDataB, isSuperset: true, groupIndex })
+        } else {
+          steps.push({ type: 'rest', duration: ex.rest, previewExercise: nextExData, isInterExercise: true, groupIndex })
         }
       }
       groupIndex++
       i += 2
     } else {
+      const nextItem = exList[i + 1]
+      const nextExData = nextItem ? exercises[nextItem.exerciseId] : null
+
       groupStarts.push(steps.length)
       steps.push({ type: 'transition', duration: 10, previewExercise: exData, workoutEx: ex, groupIndex })
 
@@ -148,6 +159,8 @@ function buildSteps(template, skipWarmup, plan) {
         steps.push({ type: 'exercise', exercise: exData, workoutEx: ex, set, totalSets: ex.sets, duration: ex.setDuration, groupIndex })
         if (set < ex.sets) {
           steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, groupIndex })
+        } else {
+          steps.push({ type: 'rest', duration: ex.rest, previewExercise: nextExData, isInterExercise: true, groupIndex })
         }
       }
       groupIndex++
@@ -1796,9 +1809,9 @@ function ActiveWorkoutScreen({ state, dispatch }) {
           </div>
           {ex && (
             <div className="bg-zinc-900 rounded-2xl px-6 py-3 w-full max-w-sm border border-zinc-800 text-center">
-              <p className="text-zinc-400 text-sm mb-1">{isHe ? 'הסט הבא:' : 'Next set:'}</p>
+              <p className="text-zinc-400 text-sm mb-1">{step.isInterExercise ? t.nextExercise : t.nextSet}:</p>
               <p className="text-white font-bold text-lg">{isHe ? ex.nameHe : ex.nameEn}</p>
-              {step.isSuperset && step.previewExB && (
+              {!step.isInterExercise && step.isSuperset && step.previewExB && (
                 <p className="text-zinc-400 text-sm mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
             </div>
