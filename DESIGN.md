@@ -5,23 +5,18 @@ Each item is tagged: `[data-only]` · `[frontend-only]` · `[new-api]` · `[new-
 
 ---
 
-## P1 — High Value, Feasible Solo (evening-scale)
+## Shipped
 
-### 1. Rest timer extension — tap to add 15s `[frontend-only]` (2–3 hrs)
+### ✅ Rest timer extension — tap to add 15s
+PR: [feat/rest-timer-extend](https://github.com/Dorbra/oogi-workout/pull/new/feat/rest-timer-extend)
 
-During a rest step, show a large "+15s" button. Lets the user take more time without losing their place.
-
-**Implementation:**
-- New reducer action: `EXTEND_REST` — adds 15 to `secondsRemaining`
-- Button renders only when `step.type === 'rest'`
-- Button disappears when the rest step ends (no lingering state)
-- Placement: centered below the countdown, large tap target (≥ 56px height)
-
-**Why this matters:** catching your breath mid-session is the #1 real-world pause scenario. This eliminates the need to pause entirely.
+`EXTEND_REST` reducer action adds 15s to both `secondsRemaining` and the step's `duration` (keeps progress bar accurate). Button renders only on rest steps; `stopPropagation` prevents triggering pause.
 
 ---
 
-### 2. Haptic feedback `[new-api]` (2 hrs)
+## P1 — High Value, Feasible Solo (evening-scale)
+
+### 1. Haptic feedback `[new-api]` (2 hrs)
 
 Audio cues already exist. Haptic cues make the app usable when the screen is face-down or in a pocket.
 
