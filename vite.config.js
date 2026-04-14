@@ -47,4 +47,7 @@ export default defineConfig({
       process.env.VITE_APP_VERSION ?? process.env.npm_package_version ?? '0.0.0'
     ),
   },
+  test: {
+    environment: 'node',
+  },
 })
