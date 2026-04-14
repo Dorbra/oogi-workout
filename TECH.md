@@ -6,6 +6,26 @@ Engineering improvement backlog. Nothing here is broken. Items are ordered P1 �
 
 ## P1 — Fix Now (High Impact, Low Risk)
 
+### 0. Timestamp-based timer — fix interval drift **QW** (1–2 hrs)
+
+**Problem:** `useWorkoutTimer` fires `TICK` every 1 000 ms via `setInterval`. The reducer decrements `secondsRemaining` by 1 on each tick. On mobile, JavaScript timers drift — the OS throttles background tabs, CPU load delays intervals, and a phone briefly sleeping can cause several ticks to fire late in rapid succession. The result: the displayed countdown runs slower than wall-clock time, and `completedSeconds` is inaccurate.
+
+This is a real bug in live workouts, not a theoretical one.
+
+**Fix:** Replace the decrement model with a deadline model.
+
+1. Add `stepEndTime: 0` to `initialState` (a `Date.now()` ms timestamp).
+2. In `START_WORKOUT` and `advanceStep`, set `stepEndTime = Date.now() + step.duration * 1000`.
+3. In `TICK`, compute `secondsRemaining = Math.max(0, Math.ceil((state.stepEndTime - Date.now()) / 1000))` instead of `state.secondsRemaining - 1`. If the result is 0, advance the step.
+4. In `EXTEND_REST`, add `stepEndTime: state.stepEndTime + 15_000` alongside the existing changes.
+5. `useWorkoutTimer` stays unchanged — it still dispatches `TICK` every second, but the reducer now self-corrects from the wall clock on each tick.
+
+**Result:** if an interval fires 200 ms late, the countdown still shows the correct second. If the phone sleeps for 3 seconds, the next tick corrects immediately to the right value.
+
+**Affected files:** `src/store/reducer.js` only (plus a matching update to `src/store/reducer.test.js` once tests exist).
+
+---
+
 ### 1. useMemo for `totalRemainingSeconds` **QW** (30 min)
 
 **Problem:** `totalRemainingSeconds(steps, stepIndex)` iterates the full `steps[]` array on every render of `ActiveWorkoutScreen`. This is called during every timer tick (every second).
@@ -213,6 +233,7 @@ Add format-on-save recommendation in `.vscode/settings.json`. Do NOT enforce in 
 
 | # | Item | Effort | Impact |
 |---|------|--------|--------|
+| 0 | Timestamp-based timer (drift fix) | 1–2 hrs | Correctness (high) |
 | 1 | useMemo for totalRemainingSeconds | 30 min | Perf (minor) |
 | 2 | Reducer + hook tests | 2–3 hrs | Safety (high) |
 | 3 | ESLint with react-hooks | 3–4 hrs | Safety (high) |

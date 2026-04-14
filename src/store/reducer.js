@@ -13,8 +13,13 @@ export const initialState = {
   groupStarts: [],
   stepIndex: 0,
   secondsRemaining: 0,
+  stepEndTime: 0,        // Date.now() ms — deadline for the current step
   isPaused: false,
   completedSeconds: 0,
+}
+
+function stepDeadline(durationSecs) {
+  return Date.now() + durationSecs * 1000
 }
 
 function advanceStep(state) {
@@ -26,10 +31,12 @@ function advanceStep(state) {
   if (nextStep.type === 'complete') {
     return { ...state, screen: 'complete', stepIndex: nextIndex, completedSeconds: state.completedSeconds + 1 }
   }
+  const duration = nextStep.duration || 0
   return {
     ...state,
     stepIndex: nextIndex,
-    secondsRemaining: nextStep.duration || 0,
+    secondsRemaining: duration,
+    stepEndTime: stepDeadline(duration),
     completedSeconds: state.completedSeconds + 1,
   }
 }
@@ -69,13 +76,15 @@ export function reducer(state, action) {
       const template = state.plan.templates[templateKey]
       const { steps, groupStarts } = buildSteps(template, state.skipWarmup, state.plan)
       const firstStep = steps[0]
+      const duration = firstStep?.duration ?? 0
       return {
         ...state,
         screen: 'active',
         steps,
         groupStarts,
         stepIndex: 0,
-        secondsRemaining: firstStep?.duration ?? 0,
+        secondsRemaining: duration,
+        stepEndTime: stepDeadline(duration),
         isPaused: false,
         completedSeconds: 0,
       }
@@ -83,8 +92,9 @@ export function reducer(state, action) {
 
     case 'TICK': {
       if (state.isPaused) return state
-      if (state.secondsRemaining > 1) {
-        return { ...state, secondsRemaining: state.secondsRemaining - 1, completedSeconds: state.completedSeconds + 1 }
+      const secondsRemaining = Math.max(0, Math.ceil((state.stepEndTime - Date.now()) / 1000))
+      if (secondsRemaining > 0) {
+        return { ...state, secondsRemaining, completedSeconds: state.completedSeconds + 1 }
       }
       return advanceStep(state)
     }
@@ -97,10 +107,12 @@ export function reducer(state, action) {
       }
       const nextStart = state.groupStarts[nextGroupIdx]
       const nextStep = state.steps[nextStart]
+      const duration = nextStep?.duration ?? 0
       return {
         ...state,
         stepIndex: nextStart,
-        secondsRemaining: nextStep?.duration ?? 0,
+        secondsRemaining: duration,
+        stepEndTime: stepDeadline(duration),
       }
     }
 
@@ -108,13 +120,15 @@ export function reducer(state, action) {
       const currentGroup = state.steps[state.stepIndex]?.groupIndex ?? 0
       const currentGroupStart = state.groupStarts[currentGroup] ?? 0
       const isNearStart = state.stepIndex <= currentGroupStart + 1
-      let targetGroup = isNearStart ? Math.max(0, currentGroup - 1) : currentGroup
+      const targetGroup = isNearStart ? Math.max(0, currentGroup - 1) : currentGroup
       const targetStart = state.groupStarts[targetGroup] ?? 0
       const targetStep = state.steps[targetStart]
+      const duration = targetStep?.duration ?? 0
       return {
         ...state,
         stepIndex: targetStart,
-        secondsRemaining: targetStep?.duration ?? 0,
+        secondsRemaining: duration,
+        stepEndTime: stepDeadline(duration),
       }
     }
 
@@ -122,11 +136,21 @@ export function reducer(state, action) {
       const updatedSteps = state.steps.map((s, i) =>
         i === state.stepIndex ? { ...s, duration: s.duration + 15 } : s
       )
-      return { ...state, steps: updatedSteps, secondsRemaining: state.secondsRemaining + 15 }
+      return {
+        ...state,
+        steps: updatedSteps,
+        secondsRemaining: state.secondsRemaining + 15,
+        stepEndTime: state.stepEndTime + 15_000,
+      }
     }
 
     case 'PAUSE_RESUME':
-      return { ...state, isPaused: !state.isPaused }
+      if (state.isPaused) {
+        // Resuming: recalculate deadline from current secondsRemaining so
+        // time paused doesn't count against the step.
+        return { ...state, isPaused: false, stepEndTime: stepDeadline(state.secondsRemaining) }
+      }
+      return { ...state, isPaused: true }
 
     default:
       return state
