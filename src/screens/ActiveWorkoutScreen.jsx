@@ -145,6 +145,13 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
               )}
             </div>
           )}
+
+          <button
+            onClick={e => { e.stopPropagation(); dispatch({ type: 'EXTEND_REST' }) }}
+            className="text-zinc-400 font-black text-2xl px-10 py-4 rounded-2xl border border-zinc-700 bg-zinc-900 active:scale-95 active:bg-zinc-800"
+          >
+            {t.extendRest}
+          </button>
         </div>
 
         <ProgressBar progress={progress} color="bg-blue-500" />

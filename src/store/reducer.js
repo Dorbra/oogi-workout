@@ -118,6 +118,13 @@ export function reducer(state, action) {
       }
     }
 
+    case 'EXTEND_REST': {
+      const updatedSteps = state.steps.map((s, i) =>
+        i === state.stepIndex ? { ...s, duration: s.duration + 15 } : s
+      )
+      return { ...state, steps: updatedSteps, secondsRemaining: state.secondsRemaining + 15 }
+    }
+
     case 'PAUSE_RESUME':
       return { ...state, isPaused: !state.isPaused }
 
