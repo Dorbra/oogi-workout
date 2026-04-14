@@ -38,6 +38,7 @@ export const T = {
     category: 'קטגוריה',
     nextSet: 'הסט הבא',
     nextExercise: 'התרגיל הבא',
+    extendRest: '+15שנ׳',
   },
   en: {
     appTitle: 'Workout',
@@ -78,5 +79,6 @@ export const T = {
     category: 'Category',
     nextSet: 'Next set',
     nextExercise: 'Next exercise',
+    extendRest: '+15s',
   },
 }
