@@ -31,11 +31,11 @@ function PlayIcon() {
   )
 }
 
-export function NavBar({ t, dispatch, isPaused = false, isTransition = false }) {
+export function NavBar({ t, dispatch, isPaused = false, isTransition = false, prevAction = 'SKIP_BACKWARD', nextAction = 'SKIP_FORWARD' }) {
   return (
     <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 border-t border-white/5">
       <button
-        onClick={() => dispatch({ type: 'SKIP_BACKWARD' })}
+        onClick={() => dispatch({ type: prevAction })}
         className="flex items-center gap-2 glass rounded-full text-zinc-400 font-bold px-5 py-3 active:scale-95 transition-transform text-sm"
       >
         <ChevronLeft />
@@ -55,7 +55,7 @@ export function NavBar({ t, dispatch, isPaused = false, isTransition = false }) 
       </button>
 
       <button
-        onClick={() => dispatch({ type: 'SKIP_FORWARD' })}
+        onClick={() => dispatch({ type: nextAction })}
         className="flex items-center gap-2 glass rounded-full text-zinc-400 font-bold px-5 py-3 active:scale-95 transition-transform text-sm"
       >
         {isTransition ? t.skip : t.next}

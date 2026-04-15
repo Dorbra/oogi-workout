@@ -128,13 +128,21 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
   // ── REST ────────────────────────────────────────────────
   if (step.type === 'rest') {
     const ex = step.previewExercise
+    const isIntraSet = !step.isInterExercise
     return (
       <div
         className="flex flex-col h-full"
         style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.1) 0%, transparent 65%)' }}
       >
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
-          <span className="text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
+            {isIntraSet && step.set != null && (
+              <span className="text-zinc-500 text-xs font-bold">
+                · {t.set} {step.set}{t.of}{step.totalSets}
+              </span>
+            )}
+          </div>
           <span className="text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
@@ -163,7 +171,13 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         <ProgressBar progress={progress} color="bg-blue-500" />
-        <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
+        <NavBar
+          t={t}
+          dispatch={dispatch}
+          isPaused={state.isPaused}
+          prevAction={isIntraSet ? 'SKIP_SET_BACKWARD' : 'SKIP_BACKWARD'}
+          nextAction={isIntraSet ? 'SKIP_SET_FORWARD' : 'SKIP_FORWARD'}
+        />
       </div>
     )
   }

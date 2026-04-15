@@ -43,7 +43,7 @@ export function buildSteps(template, skipWarmup, plan) {
         steps.push({ type: 'exercise', exercise: exData, workoutEx: ex, set, totalSets: ex.sets, supersetPart: 'A', duration: ex.setDuration, groupIndex })
         steps.push({ type: 'exercise', exercise: exDataB, workoutEx: exB, set, totalSets: exB.sets, supersetPart: 'B', duration: exB.setDuration, groupIndex })
         if (set < ex.sets) {
-          steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, previewExB: exDataB, isSuperset: true, groupIndex })
+          steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, previewExB: exDataB, isSuperset: true, set, totalSets: ex.sets, groupIndex })
         } else {
           steps.push({ type: 'rest', duration: ex.rest, previewExercise: nextExData, isInterExercise: true, groupIndex })
         }
@@ -60,7 +60,7 @@ export function buildSteps(template, skipWarmup, plan) {
       for (let set = 1; set <= ex.sets; set++) {
         steps.push({ type: 'exercise', exercise: exData, workoutEx: ex, set, totalSets: ex.sets, duration: ex.setDuration, groupIndex })
         if (set < ex.sets) {
-          steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, groupIndex })
+          steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, set, totalSets: ex.sets, groupIndex })
         } else {
           steps.push({ type: 'rest', duration: ex.rest, previewExercise: nextExData, isInterExercise: true, groupIndex })
         }
