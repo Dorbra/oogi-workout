@@ -4,6 +4,7 @@ import { totalRemainingSeconds, formatTime } from '../lib/steps'
 import { ExerciseSvg } from '../components/Svgs'
 import { NavBar } from '../components/NavBar'
 import { ProgressBar } from '../components/ProgressBar'
+import { TimerRing } from '../components/TimerRing'
 
 export function ActiveWorkoutScreen({ state, dispatch }) {
   const t = T[state.lang]
@@ -20,23 +21,23 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
     dispatch({ type: 'PAUSE_RESUME' })
   }, [dispatch])
 
-  // TRANSITION screen
+  // ── TRANSITION ──────────────────────────────────────────
   if (step.type === 'transition') {
     const ex = step.previewExercise
     const instr = ex ? (isHe ? ex.instrHe : ex.instrEn) : null
     return (
       <div className="flex flex-col h-full relative">
-        <div className="flex items-center justify-between px-5 pt-5 pb-2 shrink-0">
+        <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
           <div>
             <p className="text-orange-400 font-black text-lg leading-tight">{t.getReady}</p>
-            <p className="text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</p>
+            <p className="text-zinc-600 text-xs mt-0.5">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</p>
           </div>
-          <span className="text-7xl font-black text-white tabular-nums leading-none">{state.secondsRemaining}</span>
+          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="orange" size={72} />
         </div>
 
         <div className="flex-1 flex flex-col px-4 gap-3 overflow-y-auto pb-2" onClick={handleCenterTap}>
           {ex && (
-            <div className="w-full rounded-xl overflow-hidden bg-zinc-900/40 border border-zinc-800/50">
+            <div className="w-full rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
               <div className="w-full" style={{ aspectRatio: '200/80' }}>
                 <ExerciseSvg svgKey={ex.svg} />
               </div>
@@ -44,21 +45,21 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           )}
 
           {ex && (
-            <div className="bg-zinc-900 rounded-2xl px-4 py-3 border border-zinc-800">
+            <div className="glass rounded-2xl px-4 py-3">
               {step.isSuperset && (
-                <p className="text-orange-400 text-xs font-black uppercase tracking-wide mb-1">{t.superset}</p>
+                <span className="inline-block text-orange-400 text-xs font-black uppercase tracking-wide bg-orange-500/10 px-2.5 py-0.5 rounded-full mb-2">{t.superset}</span>
               )}
               <p className="text-white font-black text-xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</p>
               {step.isSuperset && step.previewExB && (
                 <p className="text-zinc-400 font-bold text-base mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
               <div className="flex items-center gap-3 mt-2 flex-wrap">
-                <span className="text-orange-400 font-black text-base">{step.workoutEx.sets}×{step.workoutEx.reps}</span>
-                <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-lg px-3 py-1">
+                <span className="font-display font-black text-orange-400 text-lg">{step.workoutEx.sets}×{step.workoutEx.reps}</span>
+                <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-full px-3 py-1">
                   <span className="text-orange-300 font-bold text-sm">🏋️ {step.workoutEx.weight}</span>
                 </div>
                 {step.isSuperset && step.workoutExB && step.workoutExB.weight !== step.workoutEx.weight && (
-                  <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-lg px-3 py-1">
+                  <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-full px-3 py-1">
                     <span className="text-orange-300 font-bold text-sm">🏋️ {step.workoutExB.weight}</span>
                   </div>
                 )}
@@ -67,88 +68,95 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           )}
 
           {instr && (
-            <div className="bg-zinc-900/60 rounded-xl px-4 py-3 border border-zinc-800/50">
-              <p className="text-zinc-400 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? 'הוראות ביצוע' : 'Form cues'}</p>
-              <p className="text-zinc-200 text-sm leading-relaxed">{instr}</p>
+            <div className="glass rounded-xl px-4 py-3">
+              <p className="text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? 'הוראות ביצוע' : 'Form cues'}</p>
+              <p className="text-zinc-300 text-sm leading-relaxed">{instr}</p>
             </div>
           )}
 
           {step.isSuperset && step.previewExB && (
-            <div className="bg-zinc-900/60 rounded-xl px-4 py-3 border border-zinc-800/50">
-              <p className="text-zinc-400 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
-              <p className="text-zinc-200 text-sm leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
+            <div className="glass rounded-xl px-4 py-3">
+              <p className="text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
+              <p className="text-zinc-300 text-sm leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
             </div>
           )}
         </div>
 
-        <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} isTransition />
         <ProgressBar progress={progress} />
+        <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} isTransition />
       </div>
     )
   }
 
-  // WARMUP screen
+  // ── WARMUP ──────────────────────────────────────────────
   if (step.type === 'warmup') {
     const ex = step.exercise
     return (
       <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
-          <span className="text-zinc-500 text-sm font-medium">{t.warmup}</span>
-          <span className="text-zinc-500 text-sm font-medium">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
+        <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
+          <span className="text-teal-400 font-bold text-sm tracking-wide uppercase">{t.warmup}</span>
+          <span className="text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
-        <div className="flex-1 flex flex-col px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
-          <div className="h-36 md:h-48 flex items-center justify-center">
-            <div className="w-32 h-32 md:w-44 md:h-44">
-              <ExerciseSvg svgKey={ex.svg} />
-            </div>
+        <div className="flex-1 flex flex-col items-center px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
+          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', aspectRatio: '200/80' }}>
+            <ExerciseSvg svgKey={ex.svg} />
           </div>
-          <div className="text-center">
-            <h2 className="text-white font-black text-4xl md:text-5xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</h2>
-            {isHe && <p className="text-zinc-500 text-base md:text-lg mt-1">{ex.nameEn}</p>}
+
+          <div className="text-center flex-shrink-0">
+            <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)' }}>
+              {isHe ? ex.nameHe : ex.nameEn}
+            </h2>
+            {isHe && <p className="text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
-          <p className="text-zinc-400 text-base md:text-lg leading-relaxed text-center px-2">
+
+          <p className="text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
             {isHe ? ex.instrHe : ex.instrEn}
           </p>
-          <div className="flex flex-col items-center gap-3 mt-auto pb-4">
-            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums" style={{ filter: 'drop-shadow(0 0 20px rgba(251, 146, 60, 0.7))' }}>{state.secondsRemaining}</span>
-            <ProgressBar progress={progress} />
+
+          <div className="flex flex-col items-center gap-3 mt-auto pb-2 flex-shrink-0">
+            <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="teal" size={148} />
           </div>
         </div>
 
+        <ProgressBar progress={progress} color="bg-teal-500" />
         <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
       </div>
     )
   }
 
-  // REST screen
+  // ── REST ────────────────────────────────────────────────
   if (step.type === 'rest') {
     const ex = step.previewExercise
     return (
-      <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
-          <span className="text-zinc-500 text-sm font-medium">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
-          <span className="text-zinc-600 text-sm">{currentGroup}/{exerciseCount}</span>
+      <div
+        className="flex flex-col h-full"
+        style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.1) 0%, transparent 65%)' }}
+      >
+        <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
+          <span className="text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
+          <span className="text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6" onClick={handleCenterTap}>
-          <p className="text-orange-400 font-black text-3xl md:text-4xl">{t.rest}</p>
-          <div className="text-9xl md:text-[10rem] font-black text-white leading-none tabular-nums" style={{ filter: 'drop-shadow(0 0 24px rgba(147, 197, 253, 0.5))' }}>
-            {state.secondsRemaining}
-          </div>
+        <div className="flex-1 flex flex-col items-center justify-center gap-5 px-5" onClick={handleCenterTap}>
+          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="blue" size={172} />
+
           {ex && (
-            <div className="bg-zinc-900 rounded-2xl px-6 py-3 w-full max-w-sm border border-zinc-800 text-center">
-              <p className="text-zinc-400 text-sm mb-1">{step.isInterExercise ? t.nextExercise : t.nextSet}:</p>
-              <p className="text-white font-bold text-lg">{isHe ? ex.nameHe : ex.nameEn}</p>
+            <div className="glass rounded-2xl px-5 py-3 w-full max-w-sm text-center">
+              <p className="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-1">
+                {step.isInterExercise ? t.nextExercise : t.nextSet}
+              </p>
+              <p className="text-white font-black text-lg">{isHe ? ex.nameHe : ex.nameEn}</p>
               {!step.isInterExercise && step.isSuperset && step.previewExB && (
-                <p className="text-zinc-400 text-sm mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
+                <p className="text-zinc-500 text-sm mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
             </div>
           )}
 
           <button
             onClick={e => { e.stopPropagation(); dispatch({ type: 'EXTEND_REST' }) }}
-            className="text-zinc-400 font-black text-2xl px-10 py-4 rounded-2xl border border-zinc-700 bg-zinc-900 active:scale-95 active:bg-zinc-800"
+            className="glass rounded-full text-indigo-300 font-black text-lg px-8 py-3 active:scale-95 transition-transform"
+            style={{ border: '1px solid rgba(99,102,241,0.25)' }}
           >
             {t.extendRest}
           </button>
@@ -160,120 +168,130 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
     )
   }
 
-  // COOLDOWN screen
+  // ── COOLDOWN ─────────────────────────────────────────────
   if (step.type === 'cooldown') {
     const ex = step.exercise
     return (
       <div className="flex flex-col h-full">
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
-          <span className="text-zinc-400 font-bold text-sm">{t.cooldown}</span>
-          <span className="text-zinc-500 text-sm">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
+        <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
+          <span className="text-teal-400 font-bold text-sm tracking-wide uppercase">{t.cooldown}</span>
+          <span className="text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
-        <div className="flex-1 flex flex-col px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
-          <div className="h-36 md:h-48 flex items-center justify-center">
-            <div className="w-32 h-32 md:w-44 md:h-44">
-              <ExerciseSvg svgKey={ex.svg} />
-            </div>
+        <div className="flex-1 flex flex-col items-center px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
+          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', aspectRatio: '200/80' }}>
+            <ExerciseSvg svgKey={ex.svg} />
           </div>
-          <div className="text-center">
-            <h2 className="text-white font-black text-4xl md:text-5xl">{isHe ? ex.nameHe : ex.nameEn}</h2>
-            {isHe && <p className="text-zinc-500 text-base md:text-lg mt-1">{ex.nameEn}</p>}
+
+          <div className="text-center flex-shrink-0">
+            <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)' }}>
+              {isHe ? ex.nameHe : ex.nameEn}
+            </h2>
+            {isHe && <p className="text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
-          <p className="text-zinc-400 text-base md:text-lg leading-relaxed text-center px-2">{isHe ? ex.instrHe : ex.instrEn}</p>
-          <div className="flex flex-col items-center gap-3 mt-auto pb-4">
-            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums" style={{ filter: 'drop-shadow(0 0 20px rgba(251, 146, 60, 0.7))' }}>{state.secondsRemaining}</span>
-            <ProgressBar progress={progress} color="bg-teal-500" />
+
+          <p className="text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
+            {isHe ? ex.instrHe : ex.instrEn}
+          </p>
+
+          <div className="flex flex-col items-center gap-3 mt-auto pb-2 flex-shrink-0">
+            <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="teal" size={148} />
           </div>
         </div>
 
+        <ProgressBar progress={progress} color="bg-teal-500" />
         <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
       </div>
     )
   }
 
-  // EXERCISE SET screen
+  // ── EXERCISE SET ─────────────────────────────────────────
   const ex = step.exercise
   const wo = step.workoutEx
   const name = isHe ? ex.nameHe : ex.nameEn
   const instr = isHe ? ex.instrHe : ex.instrEn
+  const isUrgent = state.secondsRemaining <= 10
+  const ringColor = isUrgent ? 'red' : 'orange'
+  const barColor = isUrgent ? 'bg-red-500' : 'bg-orange-500'
 
   return (
     <div className="flex flex-col h-full relative">
-      <div className="flex items-center justify-between px-5 pt-5 pb-2 shrink-0">
-        <span className="text-zinc-500 text-sm font-medium">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
-        <span className="text-zinc-600 text-sm font-medium">{currentGroup}/{exerciseCount}</span>
+      <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
+        <span className="text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
+        <span className="text-zinc-600 text-xs">{currentGroup}/{exerciseCount}</span>
       </div>
 
       {step.supersetPart && (
-        <div className="px-5 shrink-0">
-          <span className="text-xs text-orange-400 font-black uppercase tracking-wide bg-orange-500/10 px-3 py-1 rounded-full">
+        <div className="px-5 flex-shrink-0 mb-1">
+          <span className="text-xs text-orange-400 font-black uppercase tracking-wide bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
             {t.superset} · {step.supersetPart === 'A' ? 'א' : 'ב'}
           </span>
         </div>
       )}
 
-      <div className="flex-1 flex flex-col px-5 gap-3 md:gap-4 overflow-hidden min-h-0" onClick={handleCenterTap}>
-        <div className="w-full px-1 shrink-0">
-          <div className="w-full" style={{ aspectRatio: '200/80' }}>
-            <ExerciseSvg svgKey={ex.svg} />
-          </div>
+      <div className="flex-1 flex flex-col px-5 gap-3 overflow-hidden min-h-0" onClick={handleCenterTap}>
+        {/* SVG diagram */}
+        <div className="w-full flex-shrink-0 rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', aspectRatio: '200/78' }}>
+          <ExerciseSvg svgKey={ex.svg} />
         </div>
 
-        <div className="text-center shrink-0">
-          <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 5vw, 3rem)' }}>
+        {/* Name */}
+        <div className="text-center flex-shrink-0">
+          <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.4rem, 5vw, 2.2rem)' }}>
             {name}
           </h2>
-          {isHe && <p className="text-zinc-500 text-sm md:text-base mt-0.5">{ex.nameEn}</p>}
+          {isHe && <p className="text-zinc-600 text-xs mt-0.5">{ex.nameEn}</p>}
         </div>
 
-        <div className="flex items-center justify-center gap-4 md:gap-8 shrink-0">
+        {/* Stats row */}
+        <div className="glass rounded-2xl flex items-center justify-around py-3 flex-shrink-0">
           <div className="text-center">
-            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">{t.set}</p>
-            <p className="text-white font-black text-3xl md:text-4xl">{step.set}{t.of}{step.totalSets}</p>
+            <p className="text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.set}</p>
+            <p className="text-white font-display font-black text-2xl leading-none">{step.set}<span className="text-zinc-600 text-base">{t.of}{step.totalSets}</span></p>
           </div>
-          <div className="w-px h-10 md:h-12 bg-zinc-800" />
+          <div className="w-px h-8 bg-white/8" />
           <div className="text-center">
-            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">{t.reps}</p>
-            <p className="text-orange-400 font-black text-3xl md:text-4xl">{wo.reps}</p>
+            <p className="text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.reps}</p>
+            <p className="text-orange-400 font-display font-black text-2xl leading-none">{wo.reps}</p>
           </div>
-          <div className="w-px h-10 md:h-12 bg-zinc-800" />
+          <div className="w-px h-8 bg-white/8" />
           <div className="text-center">
-            <p className="text-zinc-500 text-xs md:text-sm uppercase tracking-wide">{t.weight}</p>
-            <p className="text-zinc-300 font-bold text-base md:text-lg">{wo.weight}</p>
+            <p className="text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.weight}</p>
+            <p className="text-zinc-300 font-bold text-sm leading-none">{wo.weight}</p>
           </div>
         </div>
 
-        <p className="text-zinc-400 text-sm md:text-base leading-relaxed text-center px-2 shrink-0 line-clamp-3">
+        {/* Form cue */}
+        <p className="text-zinc-500 text-xs leading-relaxed text-center px-1 flex-shrink-0 line-clamp-2">
           {instr}
         </p>
 
-        <div className="mt-auto pb-2 shrink-0 space-y-3">
-          <div className="flex items-center justify-center">
-            <span
-              className={`text-7xl md:text-8xl font-black tabular-nums leading-none transition-colors ${
-                state.secondsRemaining <= 10 ? 'text-red-500' : 'text-orange-400'
-              }${state.secondsRemaining <= 5 ? ' animate-pulse' : ''}`}
-              style={{ filter: state.secondsRemaining <= 10
-                ? 'drop-shadow(0 0 20px rgba(239, 68, 68, 0.8))'
-                : 'drop-shadow(0 0 20px rgba(251, 146, 60, 0.7))' }}
-            >
-              {state.secondsRemaining}
-            </span>
-          </div>
-          <ProgressBar progress={progress} color={state.secondsRemaining <= 10 ? 'bg-red-500' : 'bg-orange-500'} />
+        {/* Timer ring */}
+        <div className="mt-auto pb-1 flex-shrink-0 flex flex-col items-center gap-2">
+          <TimerRing
+            seconds={state.secondsRemaining}
+            totalSeconds={step.duration}
+            color={ringColor}
+            size={148}
+          />
         </div>
       </div>
 
+      <ProgressBar progress={progress} color={barColor} />
       <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} />
 
+      {/* Pause overlay */}
       {state.isPaused && (
-        <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-4 z-10">
-          <p className="text-white font-black text-5xl md:text-6xl">{t.paused}</p>
-          <p className="text-zinc-400 text-lg md:text-xl">{t.tapResume}</p>
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center gap-5 z-10"
+          style={{ background: 'rgba(6,6,12,0.85)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+        >
+          <p className="font-display font-black text-white uppercase tracking-widest" style={{ fontSize: 'clamp(2.5rem, 12vw, 4rem)' }}>{t.paused}</p>
+          <p className="text-zinc-500 text-base">{t.tapResume}</p>
           <button
             onClick={() => dispatch({ type: 'PAUSE_RESUME' })}
-            className="mt-4 bg-orange-500 text-white font-black text-2xl md:text-3xl px-12 md:px-16 py-5 md:py-6 rounded-2xl active:scale-95"
+            className="mt-2 btn-shine text-white font-black text-xl px-12 py-4 rounded-2xl active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #f97316, #f59e0b)', boxShadow: '0 8px 24px rgba(249,115,22,0.4)' }}
           >
             {t.resume}
           </button>
