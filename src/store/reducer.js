@@ -132,6 +132,28 @@ export function reducer(state, action) {
       }
     }
 
+    case 'SKIP_SET_FORWARD': {
+      // Skip the current rest and go to the next exercise step (next set)
+      return advanceStep(state)
+    }
+
+    case 'SKIP_SET_BACKWARD': {
+      // Go back to the exercise step immediately before this rest (repeat the set just done)
+      let targetIndex = state.stepIndex - 1
+      while (targetIndex >= 0 && state.steps[targetIndex].type !== 'exercise') {
+        targetIndex--
+      }
+      if (targetIndex < 0) return state
+      const targetStep = state.steps[targetIndex]
+      const duration = targetStep?.duration ?? 0
+      return {
+        ...state,
+        stepIndex: targetIndex,
+        secondsRemaining: duration,
+        stepEndTime: stepDeadline(duration),
+      }
+    }
+
     case 'EXTEND_REST': {
       const updatedSteps = state.steps.map((s, i) =>
         i === state.stepIndex ? { ...s, duration: s.duration + 15 } : s
