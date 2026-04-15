@@ -11,7 +11,7 @@ export function NavBar({ t, dispatch, isPaused = false, isTransition = false }) 
         onClick={() => dispatch({ type: 'PAUSE_RESUME' })}
         className={`flex items-center gap-2 font-bold px-6 py-3 md:px-8 md:py-4 rounded-xl active:scale-95 text-sm md:text-base transition-all ${
           isPaused
-            ? 'bg-orange-500 hover:bg-orange-400 text-white'
+            ? 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-white shadow-md shadow-orange-500/40'
             : 'bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 text-zinc-300'
         }`}
       >

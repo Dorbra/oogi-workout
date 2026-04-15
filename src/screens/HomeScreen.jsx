@@ -45,7 +45,7 @@ export function HomeScreen({ state, dispatch }) {
                   onClick={() => dispatch({ type: 'SET_CATEGORY', category: cat })}
                   className={`flex-1 flex flex-col items-center py-4 rounded-2xl border-2 font-black transition-all active:scale-95
                     ${isSelected
-                      ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
+                      ? 'bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-xl shadow-orange-500/50'
                       : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
                 >
                   <span className="text-2xl leading-none">{categoryIcon(cat)}</span>
@@ -76,7 +76,7 @@ export function HomeScreen({ state, dispatch }) {
                   onClick={() => dispatch({ type: 'SET_VARIATION', variation: v })}
                   className={`flex-1 flex flex-col items-center py-5 rounded-2xl border-2 font-black transition-all active:scale-95
                     ${isSelected
-                      ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30'
+                      ? 'bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400 text-white shadow-xl shadow-orange-500/50'
                       : 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:border-zinc-500'}`}
                 >
                   <span className="text-2xl leading-none">{label}</span>
@@ -116,7 +116,7 @@ export function HomeScreen({ state, dispatch }) {
       {/* Preview button */}
       <button
         onClick={() => dispatch({ type: 'GO_PREVIEW' })}
-        className="w-full max-w-xs md:max-w-sm bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/30"
+        className="w-full max-w-xs md:max-w-sm bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 active:from-orange-600 active:to-amber-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/40"
       >
         {t.preview}
       </button>

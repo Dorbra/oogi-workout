@@ -18,7 +18,7 @@ export default function App() {
   return (
     <div
       dir={state.lang === 'he' ? 'rtl' : 'ltr'}
-      className="h-full bg-zinc-950 text-white max-w-2xl mx-auto relative overflow-hidden"
+      className="h-full bg-gradient-to-b from-zinc-900 to-zinc-950 text-white max-w-2xl mx-auto relative overflow-hidden"
     >
       {state.screen === 'home'     && <HomeScreen          state={state} dispatch={dispatch} />}
       {state.screen === 'preview'  && <PreviewScreen       state={state} dispatch={dispatch} />}
