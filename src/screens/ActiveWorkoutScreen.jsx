@@ -25,7 +25,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
     const ex = step.previewExercise
     const instr = ex ? (isHe ? ex.instrHe : ex.instrEn) : null
     return (
-      <div className="flex flex-col h-full bg-zinc-950 relative">
+      <div className="flex flex-col h-full relative">
         <div className="flex items-center justify-between px-5 pt-5 pb-2 shrink-0">
           <div>
             <p className="text-orange-400 font-black text-lg leading-tight">{t.getReady}</p>
@@ -91,7 +91,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
   if (step.type === 'warmup') {
     const ex = step.exercise
     return (
-      <div className="flex flex-col h-full bg-zinc-950">
+      <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
           <span className="text-zinc-500 text-sm font-medium">{t.warmup}</span>
           <span className="text-zinc-500 text-sm font-medium">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
@@ -111,7 +111,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             {isHe ? ex.instrHe : ex.instrEn}
           </p>
           <div className="flex flex-col items-center gap-3 mt-auto pb-4">
-            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums">{state.secondsRemaining}</span>
+            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums" style={{ filter: 'drop-shadow(0 0 20px rgba(251, 146, 60, 0.7))' }}>{state.secondsRemaining}</span>
             <ProgressBar progress={progress} />
           </div>
         </div>
@@ -125,7 +125,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
   if (step.type === 'rest') {
     const ex = step.previewExercise
     return (
-      <div className="flex flex-col h-full bg-zinc-950">
+      <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
           <span className="text-zinc-500 text-sm font-medium">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
           <span className="text-zinc-600 text-sm">{currentGroup}/{exerciseCount}</span>
@@ -133,7 +133,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
 
         <div className="flex-1 flex flex-col items-center justify-center gap-6 px-6" onClick={handleCenterTap}>
           <p className="text-orange-400 font-black text-3xl md:text-4xl">{t.rest}</p>
-          <div className="text-9xl md:text-[10rem] font-black text-white leading-none tabular-nums">
+          <div className="text-9xl md:text-[10rem] font-black text-white leading-none tabular-nums" style={{ filter: 'drop-shadow(0 0 24px rgba(147, 197, 253, 0.5))' }}>
             {state.secondsRemaining}
           </div>
           {ex && (
@@ -164,7 +164,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
   if (step.type === 'cooldown') {
     const ex = step.exercise
     return (
-      <div className="flex flex-col h-full bg-zinc-950">
+      <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
           <span className="text-zinc-400 font-bold text-sm">{t.cooldown}</span>
           <span className="text-zinc-500 text-sm">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
@@ -182,7 +182,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           </div>
           <p className="text-zinc-400 text-base md:text-lg leading-relaxed text-center px-2">{isHe ? ex.instrHe : ex.instrEn}</p>
           <div className="flex flex-col items-center gap-3 mt-auto pb-4">
-            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums">{state.secondsRemaining}</span>
+            <span className="text-7xl md:text-8xl font-black text-orange-400 tabular-nums" style={{ filter: 'drop-shadow(0 0 20px rgba(251, 146, 60, 0.7))' }}>{state.secondsRemaining}</span>
             <ProgressBar progress={progress} color="bg-teal-500" />
           </div>
         </div>
@@ -199,7 +199,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
   const instr = isHe ? ex.instrHe : ex.instrEn
 
   return (
-    <div className="flex flex-col h-full bg-zinc-950 relative">
+    <div className="flex flex-col h-full relative">
       <div className="flex items-center justify-between px-5 pt-5 pb-2 shrink-0">
         <span className="text-zinc-500 text-sm font-medium">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         <span className="text-zinc-600 text-sm font-medium">{currentGroup}/{exerciseCount}</span>
@@ -250,9 +250,14 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
 
         <div className="mt-auto pb-2 shrink-0 space-y-3">
           <div className="flex items-center justify-center">
-            <span className={`text-7xl md:text-8xl font-black tabular-nums leading-none transition-colors ${
-              state.secondsRemaining <= 10 ? 'text-red-500' : 'text-orange-400'
-            }${state.secondsRemaining <= 5 ? ' animate-pulse' : ''}`}>
+            <span
+              className={`text-7xl md:text-8xl font-black tabular-nums leading-none transition-colors ${
+                state.secondsRemaining <= 10 ? 'text-red-500' : 'text-orange-400'
+              }${state.secondsRemaining <= 5 ? ' animate-pulse' : ''}`}
+              style={{ filter: state.secondsRemaining <= 10
+                ? 'drop-shadow(0 0 20px rgba(239, 68, 68, 0.8))'
+                : 'drop-shadow(0 0 20px rgba(251, 146, 60, 0.7))' }}
+            >
               {state.secondsRemaining}
             </span>
           </div>

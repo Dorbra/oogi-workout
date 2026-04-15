@@ -118,7 +118,7 @@ export function PreviewScreen({ state, dispatch }) {
         </label>
         <button
           onClick={() => dispatch({ type: 'START_WORKOUT' })}
-          className="w-full bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/30"
+          className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 active:from-orange-600 active:to-amber-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/40"
         >
           {t.start}
         </button>

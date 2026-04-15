@@ -18,7 +18,7 @@ export function CompleteScreen({ state, dispatch }) {
       </div>
       <button
         onClick={() => dispatch({ type: 'GO_HOME' })}
-        className="w-full max-w-xs md:max-w-sm bg-orange-500 hover:bg-orange-400 active:bg-orange-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95"
+        className="w-full max-w-xs md:max-w-sm bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 active:from-orange-600 active:to-amber-600 text-white font-black text-xl md:text-2xl py-5 md:py-6 rounded-2xl transition-all active:scale-95 shadow-lg shadow-orange-500/40"
       >
         {t.backHome}
       </button>
