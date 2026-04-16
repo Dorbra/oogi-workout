@@ -50,7 +50,7 @@ export function PreviewScreen({ state, dispatch }) {
 
         {/* Warmup row */}
         <div className="glass rounded-xl px-4 py-3 flex items-center justify-between">
-          <span className="text-teal-400 font-bold text-sm">{t.warmup}</span>
+          <span className="text-teal-600 dark:text-teal-400 font-bold text-sm">{t.warmup}</span>
           <span className="text-zinc-600 text-sm tabular-nums">{state.skipWarmup ? '—' : '3:00'}</span>
         </div>
 
@@ -103,7 +103,7 @@ export function PreviewScreen({ state, dispatch }) {
 
         {/* Cooldown row */}
         <div className="glass rounded-xl px-4 py-3 flex items-center justify-between">
-          <span className="text-teal-400 font-bold text-sm">{t.cooldown}</span>
+          <span className="text-teal-600 dark:text-teal-400 font-bold text-sm">{t.cooldown}</span>
           <span className="text-zinc-600 text-sm tabular-nums">2:30</span>
         </div>
       </div>

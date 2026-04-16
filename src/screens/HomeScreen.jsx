@@ -76,7 +76,7 @@ export function HomeScreen({ state, dispatch }) {
                   } : {}}
                 >
                   <span className="text-2xl leading-none">{categoryIcon(cat)}</span>
-                  <span className={`mt-1.5 text-xs font-bold text-center leading-tight px-1 ${isSelected ? 'text-orange-200' : 'text-zinc-500'}`}>
+                  <span className={`mt-1.5 text-xs font-bold text-center leading-tight px-1 ${isSelected ? 'text-orange-600 dark:text-orange-200' : 'text-zinc-500'}`}>
                     {categoryLabel(cat, t)}
                   </span>
                 </button>
@@ -112,7 +112,7 @@ export function HomeScreen({ state, dispatch }) {
                   } : {}}
                 >
                   <span className="font-display text-xl font-black leading-none">{label}</span>
-                  <span className={`mt-1.5 text-xs font-medium text-center px-2 leading-tight ${isSelected ? 'text-orange-200' : 'text-zinc-600'}`}>{sub}</span>
+                  <span className={`mt-1.5 text-xs font-medium text-center px-2 leading-tight ${isSelected ? 'text-orange-600 dark:text-orange-200' : 'text-zinc-600'}`}>{sub}</span>
                 </button>
               )
             })}
