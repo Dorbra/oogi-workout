@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700;900&display=swap');
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --font-display: 'Rajdhani', system-ui, sans-serif;
   --color-exercise: #f97316;
@@ -11,6 +13,27 @@
   --color-cooldown-glow: rgba(20, 184, 166, 0.45);
   --color-warmup: #14b8a6;
   --color-warmup-glow: rgba(20, 184, 166, 0.45);
+
+  /* Theme tokens — light defaults */
+  --bg-body: #f4f4f5;
+  --bg-root: radial-gradient(ellipse at 50% 0%, #fff7ed 0%, #f4f4f5 60%);
+  --color-surface: rgba(0, 0, 0, 0.04);
+  --color-surface-border: rgba(0, 0, 0, 0.08);
+  --color-svg-bg: rgba(0, 0, 0, 0.03);
+  --color-svg-border: rgba(0, 0, 0, 0.08);
+  --color-divider: rgba(0, 0, 0, 0.06);
+  --color-pause-overlay: rgba(244, 244, 245, 0.85);
+}
+
+.dark {
+  --bg-body: #06060c;
+  --bg-root: radial-gradient(ellipse at 50% 0%, #150800 0%, #06060c 60%);
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-surface-border: rgba(255, 255, 255, 0.08);
+  --color-svg-bg: rgba(255, 255, 255, 0.03);
+  --color-svg-border: rgba(255, 255, 255, 0.06);
+  --color-divider: rgba(255, 255, 255, 0.05);
+  --color-pause-overlay: rgba(6, 6, 12, 0.85);
 }
 
 * {
@@ -22,13 +45,13 @@
 body {
   overflow: hidden;
   height: 100dvh;
-  background: #06060c;
+  background: var(--bg-body);
 }
 
 #root {
   height: 100dvh;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 0%, #150800 0%, #06060c 60%);
+  background: var(--bg-root);
 }
 
 /* ── Display font utility ── */
@@ -38,8 +61,8 @@ body {
 
 /* ── Glass card ── */
 .glass {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }

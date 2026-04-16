@@ -30,14 +30,14 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
           <div>
             <p className="text-orange-400 font-black text-lg leading-tight">{t.getReady}</p>
-            <p className="text-zinc-600 text-xs mt-0.5">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</p>
+            <p className="text-zinc-500 dark:text-zinc-600 text-xs mt-0.5">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</p>
           </div>
           <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="orange" size={72} />
         </div>
 
         <div className="flex-1 flex flex-col px-4 gap-3 overflow-y-auto pb-2" onClick={handleCenterTap}>
           {ex && (
-            <div className="w-full rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="w-full rounded-2xl overflow-hidden" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)' }}>
               <div className="w-full" style={{ aspectRatio: '200/80' }}>
                 <ExerciseSvg svgKey={ex.svg} />
               </div>
@@ -49,9 +49,9 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
               {step.isSuperset && (
                 <span className="inline-block text-orange-400 text-xs font-black uppercase tracking-wide bg-orange-500/10 px-2.5 py-0.5 rounded-full mb-2">{t.superset}</span>
               )}
-              <p className="text-white font-black text-xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</p>
+              <p className="text-zinc-900 dark:text-white font-black text-xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</p>
               {step.isSuperset && step.previewExB && (
-                <p className="text-zinc-400 font-bold text-base mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
+                <p className="text-zinc-500 dark:text-zinc-400 font-bold text-base mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
               <div className="flex items-center gap-3 mt-2 flex-wrap">
                 <span className="font-display font-black text-orange-400 text-lg">{step.workoutEx.sets}×{step.workoutEx.reps}</span>
@@ -69,15 +69,15 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
 
           {instr && (
             <div className="glass rounded-xl px-4 py-3">
-              <p className="text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? 'הוראות ביצוע' : 'Form cues'}</p>
-              <p className="text-zinc-300 text-sm leading-relaxed">{instr}</p>
+              <p className="text-zinc-500 dark:text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? 'הוראות ביצוע' : 'Form cues'}</p>
+              <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed">{instr}</p>
             </div>
           )}
 
           {step.isSuperset && step.previewExB && (
             <div className="glass rounded-xl px-4 py-3">
-              <p className="text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
-              <p className="text-zinc-300 text-sm leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
+              <p className="text-zinc-500 dark:text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
+              <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
             </div>
           )}
         </div>
@@ -95,22 +95,22 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
           <span className="text-teal-400 font-bold text-sm tracking-wide uppercase">{t.warmup}</span>
-          <span className="text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
+          <span className="text-zinc-500 dark:text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
         <div className="flex-1 flex flex-col items-center px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
-          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', aspectRatio: '200/80' }}>
+          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/80' }}>
             <ExerciseSvg svgKey={ex.svg} />
           </div>
 
           <div className="text-center flex-shrink-0">
-            <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)' }}>
+            <h2 className="text-zinc-900 dark:text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)' }}>
               {isHe ? ex.nameHe : ex.nameEn}
             </h2>
-            {isHe && <p className="text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
+            {isHe && <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
 
-          <p className="text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
             {isHe ? ex.instrHe : ex.instrEn}
           </p>
 
@@ -143,7 +143,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
               </span>
             )}
           </div>
-          <span className="text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</span>
+          <span className="text-zinc-500 dark:text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-5 px-5" onClick={handleCenterTap}>
@@ -154,7 +154,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
               <p className="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-1">
                 {step.isInterExercise ? t.nextExercise : t.nextSet}
               </p>
-              <p className="text-white font-black text-lg">{isHe ? ex.nameHe : ex.nameEn}</p>
+              <p className="text-zinc-900 dark:text-white font-black text-lg">{isHe ? ex.nameHe : ex.nameEn}</p>
               {!step.isInterExercise && step.isSuperset && step.previewExB && (
                 <p className="text-zinc-500 text-sm mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
@@ -189,22 +189,22 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
           <span className="text-teal-400 font-bold text-sm tracking-wide uppercase">{t.cooldown}</span>
-          <span className="text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
+          <span className="text-zinc-500 dark:text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
         <div className="flex-1 flex flex-col items-center px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
-          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', aspectRatio: '200/80' }}>
+          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/80' }}>
             <ExerciseSvg svgKey={ex.svg} />
           </div>
 
           <div className="text-center flex-shrink-0">
-            <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)' }}>
+            <h2 className="text-zinc-900 dark:text-white font-black leading-tight" style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)' }}>
               {isHe ? ex.nameHe : ex.nameEn}
             </h2>
-            {isHe && <p className="text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
+            {isHe && <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
 
-          <p className="text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
             {isHe ? ex.instrHe : ex.instrEn}
           </p>
 
@@ -231,8 +231,8 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
   return (
     <div className="flex flex-col h-full relative">
       <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
-        <span className="text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
-        <span className="text-zinc-600 text-xs">{currentGroup}/{exerciseCount}</span>
+        <span className="text-zinc-500 dark:text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
+        <span className="text-zinc-500 dark:text-zinc-600 text-xs">{currentGroup}/{exerciseCount}</span>
       </div>
 
       {step.supersetPart && (
@@ -245,33 +245,33 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
 
       <div className="flex-1 flex flex-col px-5 gap-3 overflow-hidden min-h-0" onClick={handleCenterTap}>
         {/* SVG diagram */}
-        <div className="w-full flex-shrink-0 rounded-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', aspectRatio: '200/78' }}>
+        <div className="w-full flex-shrink-0 rounded-2xl overflow-hidden" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/78' }}>
           <ExerciseSvg svgKey={ex.svg} />
         </div>
 
         {/* Name */}
         <div className="text-center flex-shrink-0">
-          <h2 className="text-white font-black leading-tight" style={{ fontSize: 'clamp(1.4rem, 5vw, 2.2rem)' }}>
+          <h2 className="text-zinc-900 dark:text-white font-black leading-tight" style={{ fontSize: 'clamp(1.4rem, 5vw, 2.2rem)' }}>
             {name}
           </h2>
-          {isHe && <p className="text-zinc-600 text-xs mt-0.5">{ex.nameEn}</p>}
+          {isHe && <p className="text-zinc-500 dark:text-zinc-600 text-xs mt-0.5">{ex.nameEn}</p>}
         </div>
 
         {/* Stats row */}
         <div className="glass rounded-2xl flex items-center justify-around py-3 flex-shrink-0">
           <div className="text-center">
-            <p className="text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.set}</p>
-            <p className="text-white font-display font-black text-2xl leading-none">{step.set}<span className="text-zinc-600 text-base">{t.of}{step.totalSets}</span></p>
+            <p className="text-zinc-500 dark:text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.set}</p>
+            <p className="text-zinc-900 dark:text-white font-display font-black text-2xl leading-none">{step.set}<span className="text-zinc-500 dark:text-zinc-600 text-base">{t.of}{step.totalSets}</span></p>
           </div>
-          <div className="w-px h-8 bg-white/8" />
+          <div className="w-px h-8 bg-black/8 dark:bg-white/8" />
           <div className="text-center">
-            <p className="text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.reps}</p>
+            <p className="text-zinc-500 dark:text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.reps}</p>
             <p className="text-orange-400 font-display font-black text-2xl leading-none">{wo.reps}</p>
           </div>
-          <div className="w-px h-8 bg-white/8" />
+          <div className="w-px h-8 bg-black/8 dark:bg-white/8" />
           <div className="text-center">
-            <p className="text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.weight}</p>
-            <p className="text-zinc-300 font-bold text-sm leading-none">{wo.weight}</p>
+            <p className="text-zinc-500 dark:text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.weight}</p>
+            <p className="text-zinc-600 dark:text-zinc-300 font-bold text-sm leading-none">{wo.weight}</p>
           </div>
         </div>
 
@@ -298,9 +298,9 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
       {state.isPaused && (
         <div
           className="absolute inset-0 flex flex-col items-center justify-center gap-5 z-10"
-          style={{ background: 'rgba(6,6,12,0.85)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+          style={{ background: 'var(--color-pause-overlay)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
         >
-          <p className="font-display font-black text-white uppercase tracking-widest" style={{ fontSize: 'clamp(2.5rem, 12vw, 4rem)' }}>{t.paused}</p>
+          <p className="font-display font-black text-zinc-900 dark:text-white uppercase tracking-widest" style={{ fontSize: 'clamp(2.5rem, 12vw, 4rem)' }}>{t.paused}</p>
           <p className="text-zinc-500 text-base">{t.tapResume}</p>
           <button
             onClick={() => dispatch({ type: 'PAUSE_RESUME' })}

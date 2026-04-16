@@ -28,7 +28,7 @@ export function HomeScreen({ state, dispatch }) {
             className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all ${
               state.lang === l
                 ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30'
-                : 'text-zinc-500 hover:text-zinc-300'
+                : 'text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300'
             }`}
           >
             {l === 'he' ? 'עב' : 'EN'}
@@ -36,10 +36,19 @@ export function HomeScreen({ state, dispatch }) {
         ))}
       </div>
 
+      {/* Theme toggle */}
+      <button
+        onClick={() => dispatch({ type: 'SET_THEME', theme: state.theme === 'dark' ? 'light' : 'dark' })}
+        className="absolute top-5 right-5 glass rounded-full px-3 py-1.5 text-lg leading-none transition-all active:scale-95"
+        aria-label={state.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {state.theme === 'dark' ? '☀️' : '🌙'}
+      </button>
+
       {/* Title */}
       <div className="text-center animate-slide-up" style={{ animationDelay: '0ms' }}>
         <div className="text-5xl md:text-6xl mb-2 leading-none">💪</div>
-        <h1 className="font-display font-black text-white tracking-wide uppercase" style={{ fontSize: 'clamp(2.4rem, 10vw, 3.8rem)' }}>
+        <h1 className="font-display font-black text-zinc-900 dark:text-white tracking-wide uppercase" style={{ fontSize: 'clamp(2.4rem, 10vw, 3.8rem)' }}>
           {t.appTitle}
         </h1>
         <p className="text-zinc-500 mt-1 text-sm md:text-base">{t.pickDuration}</p>
@@ -58,8 +67,8 @@ export function HomeScreen({ state, dispatch }) {
                   onClick={() => dispatch({ type: 'SET_CATEGORY', category: cat })}
                   className={`flex-1 flex flex-col items-center py-4 rounded-2xl border transition-all active:scale-95 ${
                     isSelected
-                      ? 'border-orange-500/50 text-white'
-                      : 'glass border-white/5 text-zinc-400 hover:border-white/10'
+                      ? 'border-orange-500/50 text-zinc-900 dark:text-white'
+                      : 'glass border-black/5 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-black/10 dark:hover:border-white/10'
                   }`}
                   style={isSelected ? {
                     background: 'linear-gradient(145deg, rgba(249,115,22,0.18), rgba(245,158,11,0.08))',
@@ -94,8 +103,8 @@ export function HomeScreen({ state, dispatch }) {
                   onClick={() => dispatch({ type: 'SET_VARIATION', variation: v })}
                   className={`flex-1 flex flex-col items-center py-4 rounded-2xl border transition-all active:scale-95 ${
                     isSelected
-                      ? 'border-orange-500/50 text-white'
-                      : 'glass border-white/5 text-zinc-400 hover:border-white/10'
+                      ? 'border-orange-500/50 text-zinc-900 dark:text-white'
+                      : 'glass border-black/5 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-black/10 dark:hover:border-white/10'
                   }`}
                   style={isSelected ? {
                     background: 'linear-gradient(145deg, rgba(249,115,22,0.18), rgba(245,158,11,0.08))',
@@ -123,10 +132,10 @@ export function HomeScreen({ state, dispatch }) {
               <button
                 key={d}
                 onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
-                className={`flex-1 flex flex-col items-center py-3.5 rounded-2xl border font-black transition-all active:scale-95 ${
+                  className={`flex-1 flex flex-col items-center py-3.5 rounded-2xl border font-black transition-all active:scale-95 ${
                   isSelected
-                    ? 'glass border-white/20 text-white'
-                    : 'glass border-white/5 text-zinc-600 hover:border-white/10 hover:text-zinc-400'
+                    ? 'glass border-black/10 dark:border-white/20 text-zinc-900 dark:text-white'
+                    : 'glass border-black/5 dark:border-white/5 text-zinc-500 dark:text-zinc-600 hover:border-black/10 dark:hover:border-white/10 hover:text-zinc-700 dark:hover:text-zinc-400'
                 }`}
               >
                 <span className="font-display text-3xl leading-none">{d}</span>
@@ -151,7 +160,7 @@ export function HomeScreen({ state, dispatch }) {
       </button>
 
       {/* Version badge */}
-      <p className="absolute bottom-4 text-zinc-800 text-xs font-mono select-none">
+      <p className="absolute bottom-4 text-zinc-400 dark:text-zinc-800 text-xs font-mono select-none">
         v{__APP_VERSION__}
       </p>
     </div>

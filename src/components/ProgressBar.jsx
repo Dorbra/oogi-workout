@@ -29,7 +29,7 @@ export function ProgressBar({ progress, color = 'bg-orange-500' }) {
     <div className="w-full px-0 flex-shrink-0">
       <div
         className="w-full rounded-full overflow-visible relative"
-        style={{ height: 3, background: 'rgba(255,255,255,0.06)' }}
+        style={{ height: 3, background: 'var(--color-divider)' }}
       >
         <div
           className="rounded-full relative"
