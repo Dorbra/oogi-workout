@@ -50,7 +50,7 @@ export function CompleteScreen({ state, dispatch }) {
       {/* Title */}
       <div className="animate-slide-up" style={{ animationDelay: '200ms' }}>
         <h1
-          className="font-display font-black text-white uppercase tracking-wide"
+          className="font-display font-black text-zinc-900 dark:text-white uppercase tracking-wide"
           style={{ fontSize: 'clamp(2.4rem, 10vw, 3.8rem)' }}
         >
           {t.complete}

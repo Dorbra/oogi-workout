@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useReducer, useEffect } from 'react'
 import { reducer, initialState } from './store/reducer'
 import { useWorkoutTimer } from './hooks/useWorkoutTimer'
 import { useWakeLock } from './hooks/useWakeLock'
@@ -15,10 +15,14 @@ export default function App() {
   useWakeLock(state.screen)
   useWorkoutAudio(state.screen, state.steps, state.stepIndex, state.secondsRemaining)
 
+  useEffect(() => {
+    localStorage.setItem('theme', state.theme)
+  }, [state.theme])
+
   return (
     <div
       dir={state.lang === 'he' ? 'rtl' : 'ltr'}
-      className="h-full bg-gradient-to-b from-zinc-900 to-zinc-950 text-white max-w-2xl mx-auto relative overflow-hidden"
+      className={`h-full bg-gradient-to-b from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 text-zinc-900 dark:text-white max-w-2xl mx-auto relative overflow-hidden${state.theme === 'dark' ? ' dark' : ''}`}
     >
       {state.screen === 'home'     && <HomeScreen          state={state} dispatch={dispatch} />}
       {state.screen === 'preview'  && <PreviewScreen       state={state} dispatch={dispatch} />}

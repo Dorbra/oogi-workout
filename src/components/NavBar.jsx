@@ -33,10 +33,10 @@ function PlayIcon() {
 
 export function NavBar({ t, dispatch, isPaused = false, isTransition = false, prevAction = 'SKIP_BACKWARD', nextAction = 'SKIP_FORWARD' }) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 border-t border-white/5">
+    <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 border-t border-black/5 dark:border-white/5">
       <button
         onClick={() => dispatch({ type: prevAction })}
-        className="flex items-center gap-2 glass rounded-full text-zinc-400 font-bold px-5 py-3 active:scale-95 transition-transform text-sm"
+        className="flex items-center gap-2 glass rounded-full text-zinc-500 dark:text-zinc-400 font-bold px-5 py-3 active:scale-95 transition-transform text-sm"
       >
         <ChevronLeft />
         {t.prev}
@@ -47,7 +47,7 @@ export function NavBar({ t, dispatch, isPaused = false, isTransition = false, pr
         className={`flex items-center gap-2 font-bold px-6 py-3 rounded-full active:scale-95 transition-all text-sm ${
           isPaused
             ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40'
-            : 'glass text-zinc-400'
+            : 'glass text-zinc-500 dark:text-zinc-400'
         }`}
       >
         {isPaused ? <PlayIcon /> : <PauseIcon />}
@@ -56,7 +56,7 @@ export function NavBar({ t, dispatch, isPaused = false, isTransition = false, pr
 
       <button
         onClick={() => dispatch({ type: nextAction })}
-        className="flex items-center gap-2 glass rounded-full text-zinc-400 font-bold px-5 py-3 active:scale-95 transition-transform text-sm"
+        className="flex items-center gap-2 glass rounded-full text-zinc-500 dark:text-zinc-400 font-bold px-5 py-3 active:scale-95 transition-transform text-sm"
       >
         {isTransition ? t.skip : t.next}
         <ChevronRight />

@@ -3,6 +3,7 @@ import { getAvailableDurations } from '../lib/plan'
 
 export const initialState = {
   lang: 'he',
+  theme: (typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null) ?? 'dark',
   screen: 'home',        // home | preview | active | complete
   selectedCategory: 'upper',
   selectedDuration: 30,
@@ -61,6 +62,9 @@ export function reducer(state, action) {
 
     case 'SET_LANG':
       return { ...state, lang: action.lang }
+
+    case 'SET_THEME':
+      return { ...state, theme: action.theme }
 
     case 'GO_PREVIEW':
       return { ...state, screen: 'preview' }
