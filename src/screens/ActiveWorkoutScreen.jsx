@@ -55,12 +55,12 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
               )}
               <div className="flex items-center gap-3 mt-2 flex-wrap">
                 <span className="font-display font-black text-orange-400 text-lg">{step.workoutEx.sets}×{step.workoutEx.reps}</span>
-                <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-full px-3 py-1">
-                  <span className="text-orange-300 font-bold text-sm">🏋️ {step.workoutEx.weight}</span>
+                <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/25 dark:border-orange-500/20 rounded-full px-3 py-1">
+                  <span className="text-orange-600 dark:text-orange-300 font-bold text-sm">🏋️ {step.workoutEx.weight}</span>
                 </div>
                 {step.isSuperset && step.workoutExB && step.workoutExB.weight !== step.workoutEx.weight && (
-                  <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-full px-3 py-1">
-                    <span className="text-orange-300 font-bold text-sm">🏋️ {step.workoutExB.weight}</span>
+                  <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/25 dark:border-orange-500/20 rounded-full px-3 py-1">
+                    <span className="text-orange-600 dark:text-orange-300 font-bold text-sm">🏋️ {step.workoutExB.weight}</span>
                   </div>
                 )}
               </div>
@@ -94,7 +94,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
     return (
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
-          <span className="text-teal-400 font-bold text-sm tracking-wide uppercase">{t.warmup}</span>
+          <span className="text-teal-600 dark:text-teal-400 font-bold text-sm tracking-wide uppercase">{t.warmup}</span>
           <span className="text-zinc-500 dark:text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
@@ -136,7 +136,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
       >
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
           <div className="flex items-center gap-2">
-            <span className="text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
+            <span className="text-indigo-600 dark:text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
             {isIntraSet && step.set != null && (
               <span className="text-zinc-500 text-xs font-bold">
                 · {t.set} {step.set}{t.of}{step.totalSets}
@@ -151,7 +151,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
 
           {ex && (
             <div className="glass rounded-2xl px-5 py-3 w-full max-w-sm text-center">
-              <p className="text-indigo-400 text-xs font-bold uppercase tracking-widest mb-1">
+              <p className="text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-widest mb-1">
                 {step.isInterExercise ? t.nextExercise : t.nextSet}
               </p>
               <p className="text-zinc-900 dark:text-white font-black text-lg">{isHe ? ex.nameHe : ex.nameEn}</p>
@@ -188,7 +188,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
     return (
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
-          <span className="text-teal-400 font-bold text-sm tracking-wide uppercase">{t.cooldown}</span>
+          <span className="text-teal-600 dark:text-teal-400 font-bold text-sm tracking-wide uppercase">{t.cooldown}</span>
           <span className="text-zinc-500 dark:text-zinc-600 text-xs">⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
