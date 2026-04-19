@@ -2,26 +2,26 @@ const COLOR_MAP = {
   orange: {
     stroke: 'url(#ring-grad-orange)',
     glow:   'rgba(249, 115, 22, 0.5)',
-    text:   '#f97316',
-    textShadow: '0 0 20px rgba(249, 115, 22, 0.7)',
+    text:   'var(--ring-text-orange)',
+    textShadow: '0 0 20px rgba(249, 115, 22, 0.5)',
   },
   blue: {
     stroke: 'url(#ring-grad-blue)',
     glow:   'rgba(99, 102, 241, 0.5)',
-    text:   '#818cf8',
-    textShadow: '0 0 24px rgba(99, 102, 241, 0.7)',
+    text:   'var(--ring-text-blue)',
+    textShadow: '0 0 24px rgba(99, 102, 241, 0.5)',
   },
   teal: {
     stroke: 'url(#ring-grad-teal)',
     glow:   'rgba(20, 184, 166, 0.5)',
-    text:   '#2dd4bf',
-    textShadow: '0 0 20px rgba(20, 184, 166, 0.6)',
+    text:   'var(--ring-text-teal)',
+    textShadow: '0 0 20px rgba(20, 184, 166, 0.4)',
   },
   red: {
     stroke: 'url(#ring-grad-red)',
     glow:   'rgba(239, 68, 68, 0.6)',
-    text:   '#f87171',
-    textShadow: '0 0 20px rgba(239, 68, 68, 0.8)',
+    text:   'var(--ring-text-red)',
+    textShadow: '0 0 20px rgba(239, 68, 68, 0.6)',
   },
 }
 
@@ -82,7 +82,7 @@ export function TimerRing({ seconds, totalSeconds, color = 'orange', size = 160 
           cy={cy}
           r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.06)"
+          stroke="var(--ring-track)"
           strokeWidth={size * 0.045}
         />
 

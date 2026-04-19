@@ -59,7 +59,7 @@ export function PreviewScreen({ state, dispatch }) {
             return (
               <div key={idx} className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(168,85,247,0.2)', background: 'rgba(168,85,247,0.04)' }}>
                 <div className="px-4 py-1.5 flex items-center gap-2" style={{ background: 'rgba(168,85,247,0.08)' }}>
-                  <span className="text-purple-400 text-xs font-black uppercase tracking-widest">{t.superset}</span>
+                  <span className="text-purple-700 dark:text-purple-400 text-xs font-black uppercase tracking-widest">{t.superset}</span>
                 </div>
                 {[{ ex: item.ex, exData: item.exData }, { ex: item.exB, exData: item.exDataB }].map(({ ex, exData }, j) => (
                   <div key={j} className={`px-4 py-3 flex items-center gap-3 ${j === 0 ? 'border-b border-black/5 dark:border-white/5' : ''}`}>
@@ -71,7 +71,7 @@ export function PreviewScreen({ state, dispatch }) {
                       {isHe && <p className="text-zinc-500 dark:text-zinc-600 text-xs mt-0.5">{exData.nameEn}</p>}
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-orange-400 font-display font-black text-sm">{ex.sets}×{ex.reps}</p>
+                      <p className="text-orange-600 dark:text-orange-400 font-display font-black text-sm">{ex.sets}×{ex.reps}</p>
                       <p className="text-zinc-600 text-xs">{ex.weight}</p>
                     </div>
                   </div>
@@ -94,7 +94,7 @@ export function PreviewScreen({ state, dispatch }) {
                 <p className="text-zinc-500 dark:text-zinc-700 text-xs mt-0.5">{t.rest}: {item.ex.rest}{t.sec}</p>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="text-orange-400 font-display font-black text-sm">{item.ex.sets}×{item.ex.reps}</p>
+                <p className="text-orange-600 dark:text-orange-400 font-display font-black text-sm">{item.ex.sets}×{item.ex.reps}</p>
                 <p className="text-zinc-600 text-xs">{item.ex.weight}</p>
               </div>
             </div>

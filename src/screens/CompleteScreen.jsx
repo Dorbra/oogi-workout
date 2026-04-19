@@ -68,8 +68,8 @@ export function CompleteScreen({ state, dispatch }) {
           className="font-display font-black leading-none"
           style={{
             fontSize: 'clamp(3rem, 14vw, 5rem)',
-            color: '#f97316',
-            textShadow: '0 0 24px rgba(249,115,22,0.6)',
+            color: 'var(--ring-text-orange)',
+            textShadow: '0 0 24px rgba(249,115,22,0.45)',
           }}
         >
           {formatTime(elapsed)}

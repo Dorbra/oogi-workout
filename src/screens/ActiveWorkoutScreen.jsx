@@ -29,7 +29,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
       <div className="flex flex-col h-full relative">
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
           <div>
-            <p className="text-orange-400 font-black text-lg leading-tight">{t.getReady}</p>
+            <p className="text-orange-600 dark:text-orange-400 font-black text-lg leading-tight">{t.getReady}</p>
             <p className="text-zinc-500 dark:text-zinc-600 text-xs mt-0.5">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</p>
           </div>
           <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="orange" size={72} />
@@ -47,14 +47,14 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           {ex && (
             <div className="glass rounded-2xl px-4 py-3">
               {step.isSuperset && (
-                <span className="inline-block text-orange-400 text-xs font-black uppercase tracking-wide bg-orange-500/10 px-2.5 py-0.5 rounded-full mb-2">{t.superset}</span>
+                <span className="inline-block text-orange-600 dark:text-orange-400 text-xs font-black uppercase tracking-wide bg-orange-500/10 px-2.5 py-0.5 rounded-full mb-2">{t.superset}</span>
               )}
               <p className="text-zinc-900 dark:text-white font-black text-xl leading-tight">{isHe ? ex.nameHe : ex.nameEn}</p>
               {step.isSuperset && step.previewExB && (
                 <p className="text-zinc-500 dark:text-zinc-400 font-bold text-base mt-0.5">+ {isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               )}
               <div className="flex items-center gap-3 mt-2 flex-wrap">
-                <span className="font-display font-black text-orange-400 text-lg">{step.workoutEx.sets}×{step.workoutEx.reps}</span>
+                <span className="font-display font-black text-orange-600 dark:text-orange-400 text-lg">{step.workoutEx.sets}×{step.workoutEx.reps}</span>
                 <div className="inline-flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/25 dark:border-orange-500/20 rounded-full px-3 py-1">
                   <span className="text-orange-600 dark:text-orange-300 font-bold text-sm">🏋️ {step.workoutEx.weight}</span>
                 </div>
@@ -163,7 +163,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
 
           <button
             onClick={e => { e.stopPropagation(); dispatch({ type: 'EXTEND_REST' }) }}
-            className="glass rounded-full text-indigo-300 font-black text-lg px-8 py-3 active:scale-95 transition-transform"
+            className="glass rounded-full text-indigo-700 dark:text-indigo-300 font-black text-lg px-8 py-3 active:scale-95 transition-transform"
             style={{ border: '1px solid rgba(99,102,241,0.25)' }}
           >
             {t.extendRest}
@@ -237,7 +237,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
 
       {step.supersetPart && (
         <div className="px-5 flex-shrink-0 mb-1">
-          <span className="text-xs text-orange-400 font-black uppercase tracking-wide bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
+          <span className="text-xs text-orange-600 dark:text-orange-400 font-black uppercase tracking-wide bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full">
             {t.superset} · {step.supersetPart === 'A' ? 'א' : 'ב'}
           </span>
         </div>
@@ -266,7 +266,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           <div className="w-px h-8 bg-black/8 dark:bg-white/8" />
           <div className="text-center">
             <p className="text-zinc-500 dark:text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.reps}</p>
-            <p className="text-orange-400 font-display font-black text-2xl leading-none">{wo.reps}</p>
+            <p className="text-orange-600 dark:text-orange-400 font-display font-black text-2xl leading-none">{wo.reps}</p>
           </div>
           <div className="w-px h-8 bg-black/8 dark:bg-white/8" />
           <div className="text-center">
