@@ -124,15 +124,27 @@ Rules:
 
 ## Versioning
 
-CI auto-increments the **patch** on every deploy to `main`. You only need to touch versioning manually when the change warrants a **minor** bump.
+`package.json` is the **single source of truth** for the app version. Vite reads it directly at build time (dev and prod) and bakes it into `__APP_VERSION__`, which the home screen displays.
+
+### How CI resolves the version on every push to `main`
+
+1. Reads `package.json.version` (PKG) and the latest `vX.Y.Z` git tag (TAG).
+2. If `PKG > TAG` → honours the manual bump and releases as PKG.
+3. Otherwise → auto-increments the **patch** of TAG.
+4. Writes the resolved version back into `package.json` via `npm version --no-git-tag-version`.
+5. Runs tests, builds, deploys, commits the updated `package.json` back to `main`, pushes the `vX.Y.Z` tag, and creates a GitHub Release with auto-generated notes.
+
+The commit CI pushes back (`chore(release): vX.Y.Z`) uses `GITHUB_TOKEN`, which by design does not retrigger workflows — no infinite loop. The workflow also guards with an `if:` that skips runs whose head commit starts with `chore(release):`.
+
+### What you need to do
 
 | Bump | When | Action |
 |------|------|--------|
-| Patch `1.0.0 → 1.0.1` | Any deploy | Nothing — CI handles it |
-| Minor `1.0 → 1.1` | New user-facing feature | Edit `"version"` in `package.json` in the same PR as the feature |
-| Major `1.x → 2.0` | Only on explicit instruction from the user | Edit `"version"` in `package.json` |
+| Patch `1.0.0 → 1.0.1` | Any push to `main` | Nothing — CI handles it. `package.json` will be updated in-place. |
+| Minor `1.0.x → 1.1.0` | New user-facing feature | Edit `"version"` in `package.json` in the PR. CI honours it as-is. |
+| Major `1.x.y → 2.0.0` | Only on explicit instruction from the user | Edit `"version"` in `package.json` in the PR. |
 
-The version is baked into the build at CI time via `VITE_APP_VERSION` and displayed on the home screen. Locally it falls back to the `package.json` version.
+After merge, `package.json` on `main` always matches the live deployed version and the number shown in the UI.
 
 ---
 
@@ -226,12 +238,15 @@ Before marking any UI change complete, manually verify:
 
 ## CI / deployment
 
-`.github/workflows/deploy.yml` — triggers on push to `main`:
-1. Determines next patch version from latest git tag
-2. Builds with `VITE_APP_VERSION` injected
-3. Deploys to GitHub Pages
-4. Pushes the version tag → triggers `release.yml` → creates GitHub Release
+`.github/workflows/deploy.yml` is the single workflow. On push to `main` it:
 
-`.github/workflows/release.yml` — triggers on `v*` tags, creates a GitHub Release with auto-generated notes.
+1. Installs dependencies with `npm ci` and runs `npm test` (deploy aborts if tests fail)
+2. Resolves the next version (see **Versioning** above)
+3. Syncs `package.json` to that version via `npm version --no-git-tag-version`
+4. Builds (Vite reads the new version from `package.json`)
+5. Deploys `dist/` to Cloudflare Pages
+6. Commits the `package.json` bump back to `main` as `chore(release): vX.Y.Z`
+7. Pushes the `vX.Y.Z` tag
+8. Creates a GitHub Release with auto-generated notes
 
-Do not modify the CI workflows unless explicitly asked.
+Do not modify the CI workflow unless explicitly asked.

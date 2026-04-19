@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy
 
 on:
   push:
@@ -6,50 +6,83 @@ on:
       - main
 
 permissions:
-  contents: write      # push version tags
+  contents: write      # commit package.json bump + push tags
   deployments: write   # Cloudflare Pages deployment status on GitHub
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false   # never cancel a deploy mid-flight — it could leave the repo with an untagged build
 
 jobs:
   build-and-deploy:
     name: Build & Deploy
     runs-on: ubuntu-latest
+    # Skip the workflow when the trigger is our own release-commit landing back on main.
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # full history required to read all tags
+          fetch-depth: 0        # full history so we can read every version tag
+          persist-credentials: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Determine next version
+      - name: Run tests
+        run: npm test
+
+      - name: Resolve next version
         id: version
         run: |
-          git fetch --tags
-          LATEST=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -1)
-          if [ -z "$LATEST" ]; then
-            NEXT="v1.0.0"
+          set -euo pipefail
+          git fetch --tags --quiet
+
+          PKG=$(node -p "require('./package.json').version")
+          LATEST_TAG=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n 1 || true)
+          LATEST=${LATEST_TAG#v}
+          LATEST=${LATEST:-0.0.0}
+
+          # If package.json has been manually bumped above the latest tag,
+          # treat that as an explicit minor/major release and honour it.
+          # Otherwise, auto-increment the patch from the latest tag.
+          HIGHEST=$(printf '%s\n%s\n' "$PKG" "$LATEST" | sort -V | tail -n 1)
+          if [ "$PKG" != "$LATEST" ] && [ "$HIGHEST" = "$PKG" ]; then
+            NEXT="$PKG"
+            REASON="manual bump in package.json"
           else
-            IFS='.' read -r major minor patch <<< "${LATEST#v}"
-            NEXT="v${major}.${minor}.$((patch + 1))"
+            IFS='.' read -r MAJ MIN PAT <<< "$LATEST"
+            NEXT="${MAJ}.${MIN}.$((PAT + 1))"
+            REASON="auto patch bump from v${LATEST}"
           fi
-          echo "tag=${NEXT}" >> $GITHUB_OUTPUT
-          echo "plain=${NEXT#v}" >> $GITHUB_OUTPUT
-          echo "Next version: ${NEXT}"
+
+          echo "version=${NEXT}"      >> "$GITHUB_OUTPUT"
+          echo "tag=v${NEXT}"         >> "$GITHUB_OUTPUT"
+          echo "previous_pkg=${PKG}"  >> "$GITHUB_OUTPUT"
+          echo "::notice title=Version::Releasing v${NEXT} (${REASON})"
+
+      - name: Sync package.json to release version
+        id: sync_pkg
+        run: |
+          set -euo pipefail
+          PREV="${{ steps.version.outputs.previous_pkg }}"
+          NEXT="${{ steps.version.outputs.version }}"
+          if [ "$PREV" != "$NEXT" ]; then
+            npm version "$NEXT" --no-git-tag-version --allow-same-version
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build
         run: npm run build
-        env:
-          VITE_APP_VERSION: ${{ steps.version.outputs.plain }}
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
@@ -58,7 +91,33 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=oogi-workout
 
-      - name: Tag release
+      - name: Commit version bump, tag, and push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git tag ${{ steps.version.outputs.tag }}
-          git push origin ${{ steps.version.outputs.tag }}
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ "${{ steps.sync_pkg.outputs.changed }}" = "true" ]; then
+            git add package.json package-lock.json 2>/dev/null || git add package.json
+            git commit -m "chore(release): ${{ steps.version.outputs.tag }}"
+            git push origin HEAD:main
+          fi
+
+          # Tag may already exist only if a deploy was re-run; fail loud if so.
+          git tag -a "${{ steps.version.outputs.tag }}" -m "Release ${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+
+      - name: Create GitHub Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = '${{ steps.version.outputs.tag }}';
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tag,
+              name: tag,
+              generate_release_notes: true,
+            });

@@ -74,8 +74,7 @@ src/
     workout-plan.json      # workout plan — templates, warmup, cooldown
 .github/
   workflows/
-    deploy.yml             # build → deploy to GitHub Pages → push version tag
-    release.yml            # create GitHub Release from version tag
+    deploy.yml             # test → bump package.json → build → deploy → tag → GitHub Release
 ```
 
 ### Data-driven architecture
@@ -96,19 +95,25 @@ abs_legs_20    → Abs & Legs, 20 min (no A/B split)
 
 ## Deployment & versioning
 
-Every merge to `main` triggers a GitHub Actions workflow that:
+`package.json` is the **single source of truth** for the version. Vite reads it at build time (dev and prod) and bakes it into the home screen, so the version in `package.json` always matches what users see.
 
-1. Reads the latest `vX.Y.Z` git tag
-2. Auto-increments the **patch** number
-3. Bakes the version string into the build (shown on the home screen)
-4. Deploys to GitHub Pages
-5. Pushes the new tag → triggers a GitHub Release automatically
+Every push to `main` triggers a single GitHub Actions workflow that:
+
+1. Installs dependencies (`npm ci`) and runs the test suite (deploy aborts on failure)
+2. Resolves the next version:
+   - If `package.json.version` is ahead of the latest `vX.Y.Z` tag → releases that version (honours manual minor/major bumps)
+   - Otherwise → auto-increments the **patch** from the latest tag
+3. Writes the resolved version back into `package.json` via `npm version --no-git-tag-version`
+4. Builds and deploys `dist/` to Cloudflare Pages
+5. Commits the `package.json` bump back to `main` (`chore(release): vX.Y.Z`), pushes the matching `vX.Y.Z` tag, and creates a GitHub Release with auto-generated notes
+
+The bot's release-commit uses `GITHUB_TOKEN`, which does not retrigger workflows — no infinite loop.
 
 | Bump | When | How |
 |------|------|-----|
-| Patch (`1.0.0 → 1.0.1`) | Every deploy | Automatic — no action needed |
-| Minor (`1.0 → 1.1`) | New feature shipped | Edit `"version"` in `package.json` before opening the PR |
-| Major (`1.x → 2.0`) | Full redesign | Explicit instruction only |
+| Patch (`1.0.0 → 1.0.1`) | Every push to `main` | Automatic — CI bumps `package.json` and deploys |
+| Minor (`1.0.x → 1.1.0`) | New user-facing feature | Edit `"version"` in `package.json` in the PR — CI releases it as-is |
+| Major (`1.x.y → 2.0.0`) | Breaking change / redesign | Edit `"version"` in `package.json` in the PR (explicit instruction only) |
 
 ---
 
