@@ -135,19 +135,21 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.1) 0%, transparent 65%)' }}
       >
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="text-indigo-600 dark:text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
-            {isIntraSet && step.set != null && (
-              <span className="text-zinc-500 text-xs font-bold">
-                · {t.set} {step.set}{t.of}{step.totalSets}
-              </span>
-            )}
-          </div>
+          <span className="text-indigo-600 dark:text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
           <span className="text-zinc-500 dark:text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-5 px-5" onClick={handleCenterTap}>
           <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="blue" size={172} />
+
+          {/* Set indicator — shown during intra-set rests */}
+          {isIntraSet && step.set != null && (
+            <div className="flex items-center gap-3">
+              <span className="text-indigo-500 dark:text-indigo-400 text-sm font-bold uppercase tracking-widest">{t.set}</span>
+              <span className="font-display font-black text-zinc-900 dark:text-white leading-none" style={{ fontSize: 'clamp(2.8rem, 11vw, 4rem)' }}>{step.set}</span>
+              <span className="text-zinc-400 dark:text-zinc-500 font-bold text-2xl">/ {step.totalSets}</span>
+            </div>
+          )}
 
           {ex && (
             <div className="glass rounded-2xl px-5 py-3 w-full max-w-sm text-center">
@@ -257,13 +259,15 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           {isHe && <p className="text-zinc-500 dark:text-zinc-600 text-xs mt-0.5">{ex.nameEn}</p>}
         </div>
 
-        {/* Stats row */}
+        {/* Set indicator — large, glanceable */}
+        <div className="flex-shrink-0 flex items-center justify-center gap-3">
+          <span className="text-zinc-400 dark:text-zinc-500 text-sm font-bold uppercase tracking-widest">{t.set}</span>
+          <span className="font-display font-black text-zinc-900 dark:text-white leading-none" style={{ fontSize: 'clamp(2.8rem, 11vw, 4rem)' }}>{step.set}</span>
+          <span className="text-zinc-400 dark:text-zinc-500 font-bold text-2xl">/ {step.totalSets}</span>
+        </div>
+
+        {/* Reps + weight */}
         <div className="glass rounded-2xl flex items-center justify-around py-3 flex-shrink-0">
-          <div className="text-center">
-            <p className="text-zinc-500 dark:text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.set}</p>
-            <p className="text-zinc-900 dark:text-white font-display font-black text-2xl leading-none">{step.set}<span className="text-zinc-500 dark:text-zinc-600 text-base">{t.of}{step.totalSets}</span></p>
-          </div>
-          <div className="w-px h-8 bg-black/8 dark:bg-white/8" />
           <div className="text-center">
             <p className="text-zinc-500 dark:text-zinc-600 text-xs uppercase tracking-wide mb-0.5">{t.reps}</p>
             <p className="text-orange-600 dark:text-orange-400 font-display font-black text-2xl leading-none">{wo.reps}</p>
