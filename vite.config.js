@@ -45,6 +45,11 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,json,woff2}'],
         navigateFallback: 'index.html',
+        // Take over immediately on install — don't wait for all tabs to close.
+        // Without this the old SW keeps serving the old app on Android PWA
+        // until the user force-quits the app, which almost never happens.
+        skipWaiting: true,
+        clientsClaim: true,
       },
     }),
   ],
