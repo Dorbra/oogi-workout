@@ -19,7 +19,7 @@ Terse, imperative rules. Read before acting. These complement [CLAUDE.md](CLAUDE
 
 ## State Management
 
-- **All workout flow state lives in `src/store/reducer.js`.** Never introduce `useState` for screen routing, step progression, timer state, language selection, category/duration selection, or pause state.
+- **All workout flow state lives in `src/store/reducer.js`.** Never introduce `useState` for screen routing, step progression, timer state, language selection, theme (light/dark), category/duration selection, or pause state.
 - `useState` is permitted only for ephemeral local UI state that has no effect beyond the component (e.g., a tooltip open/close flag that does not survive a re-render cycle).
 - Mutate state only by dispatching actions. Never call reducer logic directly from a component.
 - `initialState` in `reducer.js` is the single source of truth for default values. Do not hardcode defaults elsewhere.
@@ -95,7 +95,7 @@ data/        → JSON only — no JS logic
 
 ## Anti-Patterns — Never Do These
 
-- `useState` for `screen`, `stepIndex`, `lang`, `isPaused`, `selectedCategory`, `selectedDuration`, or any other reducer-owned field
+- `useState` for `screen`, `stepIndex`, `lang`, `theme`, `isPaused`, `selectedCategory`, `selectedDuration`, or any other reducer-owned field
 - Calling `buildSteps` inside a component render or `useEffect`
 - Hardcoded Hebrew or English strings in JSX
 - Adding a translation key to only one language (`he` or `en`)

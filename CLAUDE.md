@@ -9,7 +9,7 @@ Companion docs: [RULES.md](RULES.md) · [TECH.md](TECH.md) · [DESIGN.md](DESIGN
 
 ```bash
 npm install
-npm run dev       # http://localhost:5173/oogi-workout/
+npm run dev       # http://localhost:5173/
 npm test          # Vitest — must pass before committing
 npm run build     # must pass with zero errors before committing
 ```
@@ -18,9 +18,9 @@ npm run build     # must pass with zero errors before committing
 
 ## Project overview
 
-Modular single-page React app that runs a structured home workout session. All workout content lives in two JSON data files; the React code is purely UI and timer logic. Deployed to GitHub Pages on every merge to `main`.
+Modular single-page React app that runs a structured home workout session. All workout content lives in two JSON data files; the React code is purely UI and timer logic. Deployed to Cloudflare Pages on every push to `main`.
 
-**Live app:** https://dorbra.github.io/oogi-workout/  
+**Live app:** https://oogi-workout.pages.dev/  
 **Repo:** https://github.com/Dorbra/oogi-workout
 
 ---
@@ -47,7 +47,7 @@ src/
     useWorkoutAudio.js     # Web Audio API beeps and tones
   lib/                 # Pure functions — no React imports
     steps.js               # buildSteps, formatTime, totalRemainingSeconds
-    steps.test.js          # Vitest unit tests (26 tests)
+    steps.test.js          # Vitest unit tests (25 tests)
     plan.js                # Category/duration helpers
     audio.js               # Low-level Web Audio tone generation
   store/               # State
@@ -206,12 +206,12 @@ The UI derives all category tabs and duration buttons dynamically from the templ
 
 ```bash
 npm run build     # must pass with zero errors before any commit
-npm run dev       # open http://localhost:5173/oogi-workout/ to test manually
+npm run dev       # open http://localhost:5173/ to test manually
 npm test          # Vitest — must pass before any commit
 npm run test:watch  # watch mode during development
 ```
 
-Tests live in `src/lib/steps.test.js` (26 tests). They cover `buildSteps`, `formatTime`, and `totalRemainingSeconds`. See Testing guidelines below.
+Tests live in `src/lib/steps.test.js` (25 tests). They cover `buildSteps`, `formatTime`, and `totalRemainingSeconds`. See Testing guidelines below.
 
 Before marking any UI change complete, manually verify:
 1. The changed feature works on a mobile viewport

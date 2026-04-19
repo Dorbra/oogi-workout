@@ -2,7 +2,7 @@
 
 A mobile-first home workout timer app — built for equipment-minimal training with a weighted vest, gymnastic rings, and dumbbells. Choose a category, pick a duration, and the app guides you through every set, rest, warmup, and cooldown with a live timer, visual exercise diagrams, and audio cues.
 
-**[Open the app →](https://dorbra.github.io/oogi-workout/)**
+**[Open the app →](https://oogi-workout.pages.dev/)**
 
 ---
 
@@ -50,7 +50,7 @@ Single template per duration (no A/B split) — combines compound leg work with 
 git clone git@github.com:Dorbra/oogi-workout.git
 cd oogi-workout
 npm install
-npm run dev        # opens at http://localhost:5173/oogi-workout/
+npm run dev        # opens at http://localhost:5173/
 ```
 
 Production build:
@@ -124,6 +124,6 @@ The bot's release-commit uses `GITHUB_TOKEN`, which does not retrigger workflows
 | Framework | React 19 |
 | Build tool | Vite 6 |
 | Styling | Tailwind CSS v4 |
-| Hosting | GitHub Pages |
+| Hosting | Cloudflare Pages |
 | CI/CD | GitHub Actions |
 | Language | JavaScript (JSX) |

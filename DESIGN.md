@@ -12,6 +12,16 @@ PR: [feat/rest-timer-extend](https://github.com/Dorbra/oogi-workout/pull/new/fea
 
 `EXTEND_REST` reducer action adds 15s to both `secondsRemaining` and the step's `duration` (keeps progress bar accurate). Button renders only on rest steps; `stopPropagation` prevents triggering pause.
 
+### ✅ Dark / light mode toggle
+PRs: [#15 feat/light-dark-mode-toggle](https://github.com/Dorbra/oogi-workout/pull/15) · [#17 feat/light-dark-mode-fix](https://github.com/Dorbra/oogi-workout/pull/17)
+
+`theme: 'dark' | 'light'` lives in the reducer (seeded from `localStorage.theme`); a `SET_THEME` action flips it and `App.jsx` toggles a `dark` class on the root. Theme-aware CSS variables in `src/index.css` drive surface, glass, divider, pause-overlay, SVG stroke/equipment colours, timer-ring track, and ring number colours — so every screen (home, preview, active, complete) renders with high contrast in both modes. SVG diagrams use `var(--svg-figure)` / `var(--svg-equipment)` / `var(--svg-bar)` instead of hardcoded hex.
+
+### ✅ Premium visual makeover
+PRs: [#12](https://github.com/Dorbra/oogi-workout/pull/12) · [#13](https://github.com/Dorbra/oogi-workout/pull/13) · [#14](https://github.com/Dorbra/oogi-workout/pull/14)
+
+SVG circular timer ring (`TimerRing`), glass-card surfaces, gradient CTAs, shine sweep, set-level navigation, rest-set indicator, and swap from ring pull-ups → ring dips.
+
 ---
 
 ## P1 — High Value, Feasible Solo (evening-scale)
@@ -33,7 +43,7 @@ Call `useHaptics` alongside `useWorkoutAudio` in `App.jsx`. The two hooks stay i
 
 ---
 
-### 3. Quick weight/rep session override `[frontend-only]` (half-day)
+### 2. Quick weight/rep session override `[frontend-only]` (half-day)
 
 On the **PreviewScreen**, allow the user to tap a weight or rep value to bump it up or down for this session only.
 
@@ -52,7 +62,7 @@ On the **PreviewScreen**, allow the user to tap a weight or rep value to bump it
 
 ## P2 — Worth Planning (weekend-scale)
 
-### 4. Workout history + personal records `[new-screen]` (2–3 days)
+### 3. Workout history + personal records `[new-screen]` (2–3 days)
 
 Save a record on every workout completion.
 
@@ -72,20 +82,7 @@ Requires a **minor version bump** (`package.json` version).
 
 ---
 
-### 5. Dark / light mode toggle `[frontend-only]` (half-day)
-
-The app is hardcoded dark (`bg-zinc-950`). Some users prefer light for outdoor use.
-
-**Implementation:**
-- New reducer state: `theme: 'dark' | 'light'`
-- New reducer action: `SET_THEME`
-- Apply a `data-theme` attribute to the root `<div>` and swap Tailwind classes via CSS custom properties on `:root`
-- Persist `theme` to `localStorage` alongside other preferences (from item #7 in TECH.md)
-- Limit: the PWA `theme_color` in `vite.config.js` is static — it won't follow the toggle. That's acceptable.
-
----
-
-### 6. Share workout summary — Web Share API `[new-api]` (2–3 hrs)
+### 4. Share workout summary — Web Share API `[new-api]` (2–3 hrs)
 
 On the **CompleteScreen**, add a "Share" button that opens the native share sheet.
 
@@ -97,7 +94,7 @@ On the **CompleteScreen**, add a "Share" button that opens the native share shee
 
 ---
 
-### 7. New workout categories: stretching & cardio `[data-only]` (half-day each)
+### 5. New workout categories: stretching & cardio `[data-only]` (half-day each)
 
 **Stretching:** A cooldown-only template — essentially just the cooldown steps. Useful as a standalone recovery session.
 - Add template key `stretch_20` to `workout-plan.json` with `exercises: []` and only warmupSecs/cooldownSecs
@@ -112,7 +109,7 @@ On the **CompleteScreen**, add a "Share" button that opens the native share shee
 
 ## P3 — Future / Big Bets (multi-day)
 
-### 8. Custom workout builder `[new-screen]` (3–5 days)
+### 6. Custom workout builder `[new-screen]` (3–5 days)
 
 A new screen where the user can compose their own workout from the exercise library.
 
@@ -127,33 +124,33 @@ A new screen where the user can compose their own workout from the exercise libr
 
 ---
 
-### 9. Progress charts — weekly volume (2–3 days)
+### 7. Progress charts — weekly volume (2–3 days)
 
-**Depends on:** workout history (item 4).
+**Depends on:** workout history (item 3).
 
 Weekly volume = `sets × reps × weight` summed per exercise per week. A bar chart of volume over the last 8 weeks shows whether you're improving.
 
 **Implementation notes:**
 - Evaluate vanilla Canvas (`<canvas>`) before adding a chart library dependency
 - If a library is needed, `recharts` (React-native) is the least-invasive option — but add it only if the Canvas approach produces worse UX
-- Gate: implement history (item 4) first and collect at least 4 weeks of data before charting is meaningful
+- Gate: implement history (item 3) first and collect at least 4 weeks of data before charting is meaningful
 
 ---
 
-### 10. AI-assisted progressive overload suggestions (unknown effort)
+### 8. AI-assisted progressive overload suggestions (unknown effort)
 
 After enough workout history exists, surface "+2.5kg on Floor Press" style suggestions.
 
 **Requirements before starting:**
-- Workout history (item 4) with ≥ 10 sessions per exercise
-- Weight/rep override data (item 3) to detect what the user actually lifted
+- Workout history (item 3) with ≥ 10 sessions per exercise
+- Weight/rep override data (item 2) to detect what the user actually lifted
 - Anthropic API access (requires a backend proxy or edge function — this is the blocker)
 
 **Design consideration:** API calls per workout completion add ongoing cost. Cache suggestions locally per exercise and refresh only when a new session is recorded.
 
 ---
 
-### 11. Workout scheduling `[new-api]` (1 week+)
+### 9. Workout scheduling `[new-api]` (1 week+)
 
 Remind users to work out at a set time.
 
@@ -163,7 +160,7 @@ Remind users to work out at a set time.
 
 ---
 
-### 12. Landscape / tablet mode `[frontend-only]` (1–2 days)
+### 10. Landscape / tablet mode `[frontend-only]` (1–2 days)
 
 The app currently forces portrait via the PWA manifest (`orientation: 'portrait'`). On tablets or landscape phones, the layout is cramped vertically.
 
