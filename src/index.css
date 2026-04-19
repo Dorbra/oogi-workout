@@ -19,11 +19,25 @@
   --bg-root: radial-gradient(ellipse at 50% 0%, #fff3e8 0%, #efefef 60%);
   --color-surface: rgba(255, 255, 255, 0.85);
   --color-surface-border: rgba(0, 0, 0, 0.10);
-  --color-svg-bg: rgba(0, 0, 0, 0.05);
-  --color-svg-border: rgba(0, 0, 0, 0.10);
+  --color-svg-bg: rgba(255, 255, 255, 0.70);
+  --color-svg-border: rgba(0, 0, 0, 0.12);
   --color-divider: rgba(0, 0, 0, 0.08);
   --color-pause-overlay: rgba(239, 239, 239, 0.90);
   --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+
+  /* SVG diagram colors — dark strokes on light surface */
+  --svg-figure: #1f2937;
+  --svg-equipment: #64748b;
+  --svg-bar: #57534e;
+
+  /* Timer ring track */
+  --ring-track: rgba(0, 0, 0, 0.10);
+
+  /* Timer ring number colors — darker in light mode for contrast */
+  --ring-text-orange: #ea580c;
+  --ring-text-blue:   #4f46e5;
+  --ring-text-teal:   #0f766e;
+  --ring-text-red:    #dc2626;
 }
 
 .dark {
@@ -36,6 +50,20 @@
   --color-divider: rgba(255, 255, 255, 0.05);
   --color-pause-overlay: rgba(6, 6, 12, 0.85);
   --glass-shadow: none;
+
+  /* SVG diagram colors — light strokes on dark surface */
+  --svg-figure: #e2e8f0;
+  --svg-equipment: #3f3f46;
+  --svg-bar: #78716c;
+
+  /* Timer ring track */
+  --ring-track: rgba(255, 255, 255, 0.06);
+
+  /* Timer ring number colors — brighter in dark mode */
+  --ring-text-orange: #f97316;
+  --ring-text-blue:   #818cf8;
+  --ring-text-teal:   #2dd4bf;
+  --ring-text-red:    #f87171;
 }
 
 * {
