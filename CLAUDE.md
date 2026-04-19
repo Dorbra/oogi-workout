@@ -238,15 +238,33 @@ Before marking any UI change complete, manually verify:
 
 ## CI / deployment
 
-`.github/workflows/deploy.yml` is the single workflow. On push to `main` it:
+Two workflows, one per lifecycle stage.
 
-1. Installs dependencies with `npm ci` and runs `npm test` (deploy aborts if tests fail)
+### `.github/workflows/ci.yml` — runs on every PR
+
+Triggered on `pull_request` against `main`. One job:
+
+1. `npm ci`
+2. `npm test` (fails the PR if any test fails)
+3. `npm run build`
+4. Deploys `dist/` to Cloudflare Pages as a **branch preview** (URL: `https://<branch>.oogi-workout.pages.dev/`)
+5. Upserts a sticky comment on the PR with the preview URL, current version, and a link to the run
+
+Fork PRs skip the deploy step (Cloudflare secrets aren't exposed to forks) but still run tests + build as a merge gate. Branch protection on `main` should require the **CI → Test, build & preview** check.
+
+### `.github/workflows/deploy.yml` — runs on merge to `main`
+
+Triggered on `push` to `main`. On push:
+
+1. Installs dependencies with `npm ci` and runs `npm test` (belt-and-braces — main should already be green from CI)
 2. Resolves the next version (see **Versioning** above)
 3. Syncs `package.json` to that version via `npm version --no-git-tag-version`
 4. Builds (Vite reads the new version from `package.json`)
-5. Deploys `dist/` to Cloudflare Pages
+5. Deploys `dist/` to Cloudflare Pages **production**
 6. Commits the `package.json` bump back to `main` as `chore(release): vX.Y.Z`
 7. Pushes the `vX.Y.Z` tag
 8. Creates a GitHub Release with auto-generated notes
 
-Do not modify the CI workflow unless explicitly asked.
+Skips itself on the `chore(release):` commit it just pushed, to avoid an infinite loop.
+
+Do not modify either CI workflow unless explicitly asked.
