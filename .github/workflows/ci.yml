@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write   # upsert the sticky preview-URL comment
+  deployments: write     # Cloudflare Pages deployment status on GitHub
+
+# One CI run per PR — new pushes cancel in-flight runs to save minutes.
+concurrency:
+  group: ci-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Test, build & preview
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Read version from package.json
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: npm run build
+
+      # Cloudflare secrets are unavailable to fork PRs — skip the deploy cleanly in that case.
+      # Tests + build still run and gate the merge.
+      - name: Deploy preview to Cloudflare Pages
+        id: deploy
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=oogi-workout --branch=${{ github.event.pull_request.head.ref }}
+
+      - name: Upsert sticky PR comment with preview URL
+        if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository }}
+        uses: actions/github-script@v7
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          UNIQUE_URL: ${{ steps.deploy.outputs.deployment-url }}
+          ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          DEPLOY_CONCLUSION: ${{ steps.deploy.conclusion }}
+          JOB_STATUS: ${{ job.status }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const marker = '<!-- oogi-workout-preview -->';
+            const {
+              VERSION,
+              UNIQUE_URL,
+              ALIAS_URL,
+              DEPLOY_CONCLUSION,
+              JOB_STATUS,
+              BRANCH,
+              RUN_URL,
+            } = process.env;
+
+            const lines = [marker, ''];
+
+            if (JOB_STATUS !== 'success') {
+              lines.push('### ❌ Preview unavailable — CI failed');
+              lines.push('');
+              lines.push(`Tests or build did not pass. [View workflow run](${RUN_URL}).`);
+            } else if (DEPLOY_CONCLUSION === 'success' && (ALIAS_URL || UNIQUE_URL)) {
+              const stableUrl = ALIAS_URL || UNIQUE_URL;
+              lines.push('### ✅ Preview deploy ready');
+              lines.push('');
+              lines.push(`- **Live preview:** ${stableUrl}`);
+              if (ALIAS_URL && UNIQUE_URL && ALIAS_URL !== UNIQUE_URL) {
+                lines.push(`- **This build:** ${UNIQUE_URL}`);
+              }
+              lines.push(`- **Version:** \`v${VERSION}\``);
+              lines.push(`- **Branch:** \`${BRANCH}\``);
+              lines.push(`- **Run:** [view logs](${RUN_URL})`);
+            } else {
+              lines.push('### ⚠️ Preview deploy skipped');
+              lines.push('');
+              lines.push('Cloudflare secrets unavailable (fork PR or misconfiguration). Tests + build still gate merge.');
+            }
+
+            lines.push('');
+            lines.push(`_Updated: ${new Date().toISOString()}_`);
+
+            const body = lines.join('\n');
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number });
+            const existing = comments.find(c => c.body && c.body.startsWith(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
