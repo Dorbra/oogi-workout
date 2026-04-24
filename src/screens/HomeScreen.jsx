@@ -146,31 +146,33 @@ export function HomeScreen({ state, dispatch, history }) {
         </div>
       </div>
 
-      {/* Preview button */}
-      <button
-        onClick={() => dispatch({ type: 'GO_PREVIEW' })}
-        className="btn-shine w-full max-w-xs md:max-w-sm text-white font-black text-lg md:text-xl py-5 rounded-2xl transition-all active:scale-95 animate-slide-up tracking-wide"
-        style={{
-          animationDelay: '160ms',
-          background: 'linear-gradient(135deg, #f97316, #f59e0b)',
-          boxShadow: '0 8px 32px rgba(249,115,22,0.4), 0 2px 6px rgba(0,0,0,0.4)',
-        }}
+      {/* Preview button + history link */}
+      <div
+        className="w-full max-w-xs md:max-w-sm flex flex-col items-center gap-3 animate-slide-up"
+        style={{ animationDelay: '160ms' }}
       >
-        {t.preview}
-      </button>
-
-      {/* Bottom bar: version + history */}
-      <div className="absolute bottom-4 inset-x-5 flex items-center justify-between pointer-events-none">
-        <p className="text-zinc-400 dark:text-zinc-800 text-xs font-mono select-none">
-          v{__APP_VERSION__}
-        </p>
+        <button
+          onClick={() => dispatch({ type: 'GO_PREVIEW' })}
+          className="btn-shine w-full text-white font-black text-lg md:text-xl py-5 rounded-2xl transition-all active:scale-95 tracking-wide"
+          style={{
+            background: 'linear-gradient(135deg, #f97316, #f59e0b)',
+            boxShadow: '0 8px 32px rgba(249,115,22,0.4), 0 2px 6px rgba(0,0,0,0.4)',
+          }}
+        >
+          {t.preview}
+        </button>
         <button
           onClick={() => dispatch({ type: 'GO_HISTORY' })}
-          className="pointer-events-auto glass rounded-full px-3 py-1.5 text-xs font-bold text-zinc-500 dark:text-zinc-400 active:scale-95 transition-transform flex items-center gap-1.5"
+          className="flex items-center gap-1.5 text-sm font-medium text-zinc-500 dark:text-zinc-400 active:scale-95 transition-transform py-1"
         >
-          📊 {t.history}{history.length > 0 && <span className="text-orange-500">{history.length}</span>}
+          📊 {t.history}{history.length > 0 && <span className="text-orange-500 font-bold ml-0.5">{history.length}</span>}
         </button>
       </div>
+
+      {/* Version number */}
+      <p className="absolute bottom-4 left-5 text-zinc-400 dark:text-zinc-800 text-xs font-mono select-none pointer-events-none">
+        v{__APP_VERSION__}
+      </p>
     </div>
   )
 }
