@@ -69,6 +69,9 @@ export function reducer(state, action) {
     case 'GO_PREVIEW':
       return { ...state, screen: 'preview' }
 
+    case 'GO_HISTORY':
+      return { ...state, screen: 'history' }
+
     case 'GO_HOME':
       return { ...initialState, lang: state.lang, plan: state.plan, selectedCategory: state.selectedCategory }
 

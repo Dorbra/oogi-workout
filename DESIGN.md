@@ -17,6 +17,17 @@ PRs: [#15 feat/light-dark-mode-toggle](https://github.com/Dorbra/oogi-workout/pu
 
 `theme: 'dark' | 'light'` lives in the reducer (seeded from `localStorage.theme`); a `SET_THEME` action flips it and `App.jsx` toggles a `dark` class on the root. Theme-aware CSS variables in `src/index.css` drive surface, glass, divider, pause-overlay, SVG stroke/equipment colours, timer-ring track, and ring number colours — so every screen (home, preview, active, complete) renders with high contrast in both modes. SVG diagrams use `var(--svg-figure)` / `var(--svg-equipment)` / `var(--svg-bar)` instead of hardcoded hex.
 
+### ✅ Workout history
+`src/lib/history.js` · `src/hooks/useWorkoutHistory.js` · `src/screens/HistoryScreen.jsx`
+
+Versioned `localStorage` schema (`oogi_history` key, v1). Each entry stores: `id`, `completedAt` (ISO 8601), `category`, `duration`, `variation` (null when no A/B split), `skipWarmup`, `elapsedSeconds`. Saved automatically on `active → complete` transition in `App.jsx` via a `prevScreen` ref — fires exactly once per workout, no double-save risk.
+
+`HistoryScreen` shows: stats bar (total sessions · total training time · this-week count), a reverse-chronological card list with planned vs actual time, per-entry delete (×), and a clear-all button with a 3-second double-tap confirm guard.
+
+History entry point: `📊 History N` button on the home screen (count badge hidden until at least one workout is logged).
+
+---
+
 ### ✅ Premium visual makeover
 PRs: [#12](https://github.com/Dorbra/oogi-workout/pull/12) · [#13](https://github.com/Dorbra/oogi-workout/pull/13) · [#14](https://github.com/Dorbra/oogi-workout/pull/14)
 
@@ -62,23 +73,16 @@ On the **PreviewScreen**, allow the user to tap a weight or rep value to bump it
 
 ## P2 — Worth Planning (weekend-scale)
 
-### 3. Workout history + personal records `[new-screen]` (2–3 days)
+### 3. Personal records per template key `[frontend-only]` (2–3 hrs)
 
-Save a record on every workout completion.
+**Depends on:** workout history (shipped).
 
-**Data model** (stored in `localStorage`):
-```js
-{ date: ISO8601, templateKey: 'upper_30a', durationSeconds: 1740, skippedWarmup: false }
-```
+Track the fastest (fewest elapsed seconds) completed session per template key. Show a "🏅 PR" badge on the CompleteScreen when the user beats their previous best for that template.
 
 **Implementation:**
-- New reducer state: `history: []`
-- New reducer action: `RECORD_WORKOUT` — prepended to `history` on `COMPLETE`; also saved to `localStorage`
-- New screen: `src/screens/HistoryScreen.jsx` — simple reverse-chronological list with duration and date
-- Route: add `'history'` to the `screen` state enum; add a history button on HomeScreen
-- Personal records: track best (longest uninterrupted) session per template key
-
-Requires a **minor version bump** (`package.json` version).
+- Compute `pr = history.filter(e => matches template).min(e => e.elapsedSeconds)` in `useWorkoutHistory`
+- Pass to `CompleteScreen` via props
+- Badge renders only when the current `elapsedSeconds < pr`
 
 ---
 
