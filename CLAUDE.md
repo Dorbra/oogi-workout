@@ -29,7 +29,7 @@ Modular single-page React app that runs a structured home workout session. All w
 
 ```
 src/
-  App.jsx              # Root: useReducer + 3 hooks + screen router only
+  App.jsx              # Root: useReducer + 4 hooks + screen router only
   main.jsx             # React 19 entry point
   index.css            # Tailwind import + global resets
   screens/             # One file per full-page view
@@ -37,6 +37,7 @@ src/
     PreviewScreen.jsx      # Exercise list preview before starting
     ActiveWorkoutScreen.jsx  # Live workout timer (largest screen)
     CompleteScreen.jsx     # Post-workout summary
+    HistoryScreen.jsx      # Workout history log (stats + entry cards)
   components/          # Shared presentational components
     NavBar.jsx             # Pause / skip controls
     ProgressBar.jsx        # Visual step-countdown bar
@@ -45,11 +46,14 @@ src/
     useWorkoutTimer.js     # Dispatches TICK every second during active workout
     useWakeLock.js         # Keeps screen awake during workout
     useWorkoutAudio.js     # Web Audio API beeps and tones
+    useWorkoutHistory.js   # localStorage history: saveWorkout, removeEntry, wipeHistory
   lib/                 # Pure functions — no React imports
     steps.js               # buildSteps, formatTime, totalRemainingSeconds
     steps.test.js          # Vitest unit tests (25 tests)
     plan.js                # Category/duration helpers
     audio.js               # Low-level Web Audio tone generation
+    history.js             # localStorage CRUD: loadHistory, appendEntry, deleteEntry, clearHistory
+    history.test.js        # Vitest unit tests (15 tests)
   store/               # State
     reducer.js             # useReducer handler + initialState
   constants/           # Static data
@@ -211,7 +215,7 @@ npm test          # Vitest — must pass before any commit
 npm run test:watch  # watch mode during development
 ```
 
-Tests live in `src/lib/steps.test.js` (25 tests). They cover `buildSteps`, `formatTime`, and `totalRemainingSeconds`. See Testing guidelines below.
+Tests live in two colocated files — `src/lib/steps.test.js` (25 tests covering `buildSteps`, `formatTime`, `totalRemainingSeconds`) and `src/lib/history.test.js` (15 tests covering the localStorage CRUD layer). 40 tests total. See Testing guidelines below.
 
 Before marking any UI change complete, manually verify:
 1. The changed feature works on a mobile viewport
@@ -222,7 +226,7 @@ Before marking any UI change complete, manually verify:
 
 ## Testing guidelines
 
-**What has tests:** Pure functions in `src/lib/` — `steps.js` is fully covered.
+**What has tests:** Pure functions in `src/lib/` — `steps.js` and `history.js` are fully covered.
 
 **What does not have tests (currently acceptable):** `reducer.js`, hooks, and screen components.
 

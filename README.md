@@ -18,6 +18,7 @@ A mobile-first home workout timer app — built for equipment-minimal training w
 - **Bilingual UI** — Hebrew (RTL) and English, switchable at any time
 - **Pause / resume** — tap anywhere on the active screen to pause mid-set
 - **Skip controls** — jump forward or back between sets without losing your place
+- **Workout history** — every completed session is saved to `localStorage`; the history screen shows total workouts, total training time, this-week count, and a per-entry log with planned vs actual duration
 - **Semantic versioning** — every deploy is tagged; current version is shown on the home screen
 
 ---
@@ -66,14 +67,27 @@ npm run preview    # serve the built output locally
 
 ```
 src/
-  App.jsx                  # single-file React app — all screens, reducer, and logic
-  main.jsx                 # React entry point
-  index.css                # global styles (Tailwind v4)
+  App.jsx                  # root — useReducer + hooks + screen router
+  screens/                 # one file per full-page view
+    HomeScreen.jsx         # category / duration picker + history entry point
+    PreviewScreen.jsx      # exercise list before starting
+    ActiveWorkoutScreen.jsx  # live timer (largest screen)
+    CompleteScreen.jsx     # post-workout summary
+    HistoryScreen.jsx      # workout history log
+  hooks/
+    useWorkoutTimer.js     # TICK dispatch every second
+    useWakeLock.js         # keep screen awake
+    useWorkoutAudio.js     # Web Audio API beeps
+    useWorkoutHistory.js   # localStorage history (save / delete / wipe)
+  lib/
+    steps.js               # buildSteps, formatTime, totalRemainingSeconds
+    history.js             # versioned localStorage CRUD layer
   data/
-    exercises.json         # exercise library — 38 exercises keyed by string ID
-    workout-plan.json      # workout plan — templates, warmup, cooldown
+    exercises.json         # exercise library — 38 exercises
+    workout-plan.json      # workout templates, warmup, cooldown
 .github/
   workflows/
+    ci.yml                 # test + build + Cloudflare branch preview on every PR
     deploy.yml             # test → bump package.json → build → deploy → tag → GitHub Release
 ```
 
