@@ -159,18 +159,25 @@ export function HomeScreen({ state, dispatch, history }) {
         {t.preview}
       </button>
 
-      {/* Bottom bar: version + history */}
-      <div className="absolute bottom-4 inset-x-5 flex items-center justify-between pointer-events-none">
-        <p className="text-zinc-400 dark:text-zinc-800 text-xs font-mono select-none">
-          v{__APP_VERSION__}
-        </p>
-        <button
-          onClick={() => dispatch({ type: 'GO_HISTORY' })}
-          className="pointer-events-auto glass rounded-full px-3 py-1.5 text-xs font-bold text-zinc-500 dark:text-zinc-400 active:scale-95 transition-transform flex items-center gap-1.5"
-        >
-          📊 {t.history}{history.length > 0 && <span className="text-orange-500">{history.length}</span>}
-        </button>
-      </div>
+      {/* History button — in flow so it never overlaps the preview button */}
+      <button
+        onClick={() => dispatch({ type: 'GO_HISTORY' })}
+        className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm font-medium active:scale-95 transition-transform animate-slide-up"
+        style={{ animationDelay: '190ms' }}
+      >
+        <span>📊</span>
+        <span>{t.history}</span>
+        {history.length > 0 && (
+          <span className="glass rounded-full px-2 py-0.5 text-xs font-black text-orange-500">
+            {history.length}
+          </span>
+        )}
+      </button>
+
+      {/* Version badge */}
+      <p className="absolute bottom-4 text-zinc-400 dark:text-zinc-800 text-xs font-mono select-none">
+        v{__APP_VERSION__}
+      </p>
     </div>
   )
 }
