@@ -3,6 +3,7 @@ import { reducer, initialState } from './store/reducer'
 import { useWorkoutTimer } from './hooks/useWorkoutTimer'
 import { useWakeLock } from './hooks/useWakeLock'
 import { useWorkoutAudio } from './hooks/useWorkoutAudio'
+import { useHaptics } from './hooks/useHaptics'
 import { useWorkoutHistory } from './hooks/useWorkoutHistory'
 import { HomeScreen } from './screens/HomeScreen'
 import { PreviewScreen } from './screens/PreviewScreen'
@@ -18,6 +19,7 @@ export default function App() {
   useWorkoutTimer(dispatch, state.screen, state.isPaused)
   useWakeLock(state.screen)
   useWorkoutAudio(state.screen, state.steps, state.stepIndex, state.secondsRemaining)
+  useHaptics(state.screen, state.steps, state.stepIndex, state.secondsRemaining)
 
   useEffect(() => {
     localStorage.setItem('theme', state.theme)
