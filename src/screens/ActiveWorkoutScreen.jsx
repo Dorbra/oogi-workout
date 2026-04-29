@@ -70,14 +70,14 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           {instr && (
             <div className="glass rounded-xl px-4 py-3">
               <p className="text-zinc-500 dark:text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? 'הוראות ביצוע' : 'Form cues'}</p>
-              <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed">{instr}</p>
+              <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed">{instr}</p>
             </div>
           )}
 
           {step.isSuperset && step.previewExB && (
             <div className="glass rounded-xl px-4 py-3">
               <p className="text-zinc-500 dark:text-zinc-600 text-xs font-bold uppercase tracking-wide mb-1">{isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
-              <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
+              <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
             </div>
           )}
         </div>
@@ -110,7 +110,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             {isHe && <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
 
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
+          <p className="text-zinc-500 dark:text-zinc-400 text-base leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
             {isHe ? ex.instrHe : ex.instrEn}
           </p>
 
@@ -129,24 +129,29 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
   if (step.type === 'rest') {
     const ex = step.previewExercise
     const isIntraSet = !step.isInterExercise
+    const restIsUrgent = state.secondsRemaining <= 10
+    const restAccent = restIsUrgent ? 'rgba(239,68,68,0.12)' : 'rgba(99,102,241,0.1)'
+    const restRing = restIsUrgent ? 'red' : 'blue'
+    const restBar = restIsUrgent ? 'bg-red-500' : 'bg-blue-500'
+    const nextSetNum = isIntraSet && step.set != null ? step.set + 1 : null
     return (
       <div
         className="flex flex-col h-full"
-        style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.1) 0%, transparent 65%)' }}
+        style={{ background: `radial-gradient(ellipse at 50% 30%, ${restAccent} 0%, transparent 65%)` }}
       >
         <div className="flex items-center justify-between px-5 pt-4 pb-2 flex-shrink-0">
-          <span className="text-indigo-600 dark:text-indigo-400 font-black text-sm tracking-widest uppercase">{t.rest}</span>
+          <span className={`font-black text-sm tracking-widest uppercase ${restIsUrgent ? 'text-red-500 dark:text-red-400' : 'text-indigo-600 dark:text-indigo-400'}`}>{t.rest}</span>
           <span className="text-zinc-500 dark:text-zinc-600 text-xs">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</span>
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-5 px-5" onClick={handleCenterTap}>
-          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="blue" size={172} />
+          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color={restRing} size={172} />
 
-          {/* Set indicator — shown during intra-set rests */}
-          {isIntraSet && step.set != null && (
+          {/* Set indicator — shows the NEXT set number coming up */}
+          {nextSetNum != null && (
             <div className="flex items-center gap-3">
-              <span className="text-indigo-500 dark:text-indigo-400 text-sm font-bold uppercase tracking-widest">{t.set}</span>
-              <span className="font-display font-black text-zinc-900 dark:text-white leading-none" style={{ fontSize: 'clamp(2.8rem, 11vw, 4rem)' }}>{step.set}</span>
+              <span className={`text-sm font-bold uppercase tracking-widest ${restIsUrgent ? 'text-red-500 dark:text-red-400' : 'text-indigo-500 dark:text-indigo-400'}`}>{t.set}</span>
+              <span className={`font-display font-black leading-none ${restIsUrgent ? 'text-red-500 dark:text-red-400' : 'text-zinc-900 dark:text-white'}`} style={{ fontSize: 'clamp(2.8rem, 11vw, 4rem)' }}>{nextSetNum}</span>
               <span className="text-zinc-400 dark:text-zinc-500 font-bold text-2xl">/ {step.totalSets}</span>
             </div>
           )}
@@ -164,15 +169,15 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           )}
 
           <button
-            onClick={e => { e.stopPropagation(); dispatch({ type: 'EXTEND_REST' }) }}
-            className="glass rounded-full text-indigo-700 dark:text-indigo-300 font-black text-lg px-8 py-3 active:scale-95 transition-transform"
+            onClick={e => { e.stopPropagation(); dispatch({ type: isIntraSet ? 'SKIP_SET_FORWARD' : 'SKIP_FORWARD' }) }}
+            className="glass rounded-full font-black text-base px-8 py-3 active:scale-95 transition-transform text-indigo-700 dark:text-indigo-300"
             style={{ border: '1px solid rgba(99,102,241,0.25)' }}
           >
-            {t.extendRest}
+            {t.skipRest} →
           </button>
         </div>
 
-        <ProgressBar progress={progress} color="bg-blue-500" />
+        <ProgressBar progress={progress} color={restBar} />
         <NavBar
           t={t}
           dispatch={dispatch}
@@ -206,7 +211,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             {isHe && <p className="text-zinc-500 dark:text-zinc-600 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
 
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
+          <p className="text-zinc-500 dark:text-zinc-400 text-base leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
             {isHe ? ex.instrHe : ex.instrEn}
           </p>
 
@@ -280,7 +285,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         {/* Form cue */}
-        <p className="text-zinc-500 text-xs leading-relaxed text-center px-1 flex-shrink-0 line-clamp-2">
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed text-center px-1 flex-shrink-0 line-clamp-3">
           {instr}
         </p>
 
