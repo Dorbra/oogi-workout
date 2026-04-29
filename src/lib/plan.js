@@ -1,3 +1,5 @@
+import { CATEGORY_META } from '../constants/categories'
+
 export function getAvailableCategories(templates) {
   const cats = new Set()
   Object.keys(templates).forEach(k => {
@@ -24,13 +26,15 @@ export function getDurationLabel(selectedDuration, selectedVariation, t) {
 }
 
 export function categoryLabel(cat, t) {
-  if (cat === 'upper') return t.upperBody
-  if (cat === 'abs_legs') return t.absLegs
-  return cat
+  const meta = CATEGORY_META[cat]
+  return meta ? t[meta.labelKey] : cat
+}
+
+export function categoryDesc(cat, t) {
+  const meta = CATEGORY_META[cat]
+  return meta ? t[meta.descKey] : ''
 }
 
 export function categoryIcon(cat) {
-  if (cat === 'upper') return '💪'
-  if (cat === 'abs_legs') return '🦵'
-  return '🏋️'
+  return CATEGORY_META[cat]?.icon ?? '🏋️'
 }

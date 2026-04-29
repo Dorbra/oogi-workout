@@ -1,5 +1,5 @@
 import { T } from '../constants/translations'
-import { getAvailableCategories, getAvailableDurations, categoryLabel, categoryIcon } from '../lib/plan'
+import { getAvailableCategories, getAvailableDurations, categoryLabel, categoryDesc, categoryIcon } from '../lib/plan'
 
 export function HomeScreen({ state, dispatch, history }) {
   const t = T[state.lang]
@@ -92,6 +92,9 @@ export function HomeScreen({ state, dispatch, history }) {
                   <span className="text-2xl leading-none">{categoryIcon(cat)}</span>
                   <span className={`mt-1.5 text-xs font-bold text-center leading-tight px-1 ${isSelected ? 'text-orange-600 dark:text-orange-200' : 'text-zinc-500'}`}>
                     {categoryLabel(cat, t)}
+                  </span>
+                  <span className={`mt-0.5 text-[10px] text-center leading-tight px-1 ${isSelected ? 'text-orange-500/80 dark:text-orange-300/70' : 'text-zinc-400 dark:text-zinc-600'}`}>
+                    {categoryDesc(cat, t)}
                   </span>
                 </button>
               )

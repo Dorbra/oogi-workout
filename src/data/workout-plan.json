@@ -101,19 +101,19 @@
       ]
     },
 
-    "abs_legs_20": {
+    "lower_20": {
       "duration": 20,
       "warmupSecs": 90,
       "cooldownSecs": 150,
       "exercises": [
         { "exerciseId": "31", "sets": 3, "reps": 12, "rest": 60, "setDuration": 35, "weight": "12–20 ק\"ג" },
+        { "exerciseId": "33", "sets": 2, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
         { "exerciseId": "34", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף" },
-        { "exerciseId": "25", "sets": 3, "reps": 1,  "rest": 40, "setDuration": 30, "weight": "30 שנ׳" },
         { "exerciseId": "26", "sets": 2, "reps": 15, "rest": 40, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "27" },
         { "exerciseId": "27", "sets": 2, "reps": 12, "rest": 40, "setDuration": 30, "weight": "משקל גוף" }
       ]
     },
-    "abs_legs_30": {
+    "lower_30": {
       "duration": 30,
       "warmupSecs": 90,
       "cooldownSecs": 150,
@@ -122,26 +122,54 @@
         { "exerciseId": "33", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
         { "exerciseId": "32", "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
         { "exerciseId": "34", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף" },
-        { "exerciseId": "25", "sets": 3, "reps": 1,  "rest": 40, "setDuration": 40, "weight": "40 שנ׳" },
-        { "exerciseId": "26", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "27" },
-        { "exerciseId": "27", "sets": 3, "reps": 12, "rest": 45, "setDuration": 30, "weight": "משקל גוף" }
+        { "exerciseId": "26", "sets": 2, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "27" },
+        { "exerciseId": "27", "sets": 2, "reps": 12, "rest": 45, "setDuration": 30, "weight": "משקל גוף" }
       ]
     },
-    "abs_legs_45": {
+    "lower_45": {
       "duration": 45,
       "warmupSecs": 90,
       "cooldownSecs": 150,
       "exercises": [
         { "exerciseId": "36", "sets": 4, "reps": 10, "rest": 60, "setDuration": 40, "weight": "20–28 ק\"ג" },
         { "exerciseId": "31", "sets": 3, "reps": 12, "rest": 60, "setDuration": 35, "weight": "16–20 ק\"ג" },
-        { "exerciseId": "33", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
+        { "exerciseId": "33", "sets": 4, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
         { "exerciseId": "35", "sets": 3, "reps": 8,  "rest": 75, "setDuration": 40, "weight": "2×8 ק\"ג" },
-        { "exerciseId": "32", "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
-        { "exerciseId": "34", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "אפוד / משקל גוף" },
-        { "exerciseId": "25", "sets": 3, "reps": 1,  "rest": 40, "setDuration": 45, "weight": "45 שנ׳" },
-        { "exerciseId": "27", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "26" },
-        { "exerciseId": "26", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף" },
+        { "exerciseId": "39", "sets": 3, "reps": 15, "rest": 60, "setDuration": 40, "weight": "20 ק\"ג" },
+        { "exerciseId": "32", "sets": 2, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
+        { "exerciseId": "38", "sets": 2, "reps": 20, "rest": 30, "setDuration": 25, "weight": "משקל גוף" },
+        { "exerciseId": "27", "sets": 3, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף", "supersetWith": "28" },
         { "exerciseId": "28", "sets": 3, "reps": 20, "rest": 30, "setDuration": 30, "weight": "5–8 ק\"ג" }
+      ]
+    },
+
+    "full_body_30": {
+      "duration": 30,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "31", "sets": 3, "reps": 12, "rest": 60, "setDuration": 35, "weight": "14–20 ק\"ג" },
+        { "exerciseId": "33", "sets": 2, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "8",  "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "אפוד 0–10 ק\"ג" },
+        { "exerciseId": "12", "sets": 2, "reps": 10, "rest": 60, "setDuration": 30, "weight": "2×8 ק\"ג" },
+        { "exerciseId": "25", "sets": 2, "reps": 1,  "rest": 40, "setDuration": 35, "weight": "35 שנ׳" },
+        { "exerciseId": "30", "sets": 2, "reps": 10, "rest": 30, "setDuration": 30, "weight": "משקל גוף" }
+      ]
+    },
+    "full_body_45": {
+      "duration": 45,
+      "warmupSecs": 90,
+      "cooldownSecs": 150,
+      "exercises": [
+        { "exerciseId": "31", "sets": 4, "reps": 12, "rest": 60, "setDuration": 35, "weight": "16–20 ק\"ג" },
+        { "exerciseId": "33", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×12.5 ק\"ג" },
+        { "exerciseId": "7",  "sets": 4, "reps": 8,  "rest": 60, "setDuration": 35, "weight": "אפוד 0–10 ק\"ג" },
+        { "exerciseId": "3",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד / משקל גוף" },
+        { "exerciseId": "32", "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
+        { "exerciseId": "25", "sets": 3, "reps": 1,  "rest": 40, "setDuration": 40, "weight": "40 שנ׳" },
+        { "exerciseId": "27", "sets": 2, "reps": 15, "rest": 45, "setDuration": 30, "weight": "משקל גוף" }
       ]
     }
   }
