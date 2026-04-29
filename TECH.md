@@ -15,6 +15,7 @@ Engineering improvement backlog. Nothing here is broken. Items are ordered P1 �
 - ✅ **Dependency audit in CI** — `npm audit --audit-level=high --omit=dev` runs in both `ci.yml` (on every PR) and `deploy.yml` (on every merge to `main`), blocking on any high or critical CVE in production deps. `wrangler` corrected to `devDependencies` so its transitive CVEs don't pollute the production audit.
 - ✅ **Dependabot** — `.github/dependabot.yml` auto-raises weekly PRs for npm and GitHub Actions updates. Patch and minor bumps are grouped separately to reduce noise; major bumps get individual PRs for manual review.
 
+
 ---
 
 ## P1 — Fix Now (High Impact, Low Risk)
