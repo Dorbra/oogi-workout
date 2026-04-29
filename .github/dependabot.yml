@@ -1,0 +1,32 @@
+version: 2
+
+updates:
+  # npm — weekly on Mondays, groups patch/minor to reduce PR noise
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      patch-updates:
+        update-types:
+          - patch
+      minor-updates:
+        update-types:
+          - minor
+
+  # GitHub Actions — keep action pins current
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+    commit-message:
+      prefix: chore
+      include: scope
