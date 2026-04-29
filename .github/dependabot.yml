@@ -1,32 +1,37 @@
 version: 2
 
 updates:
-  # npm — weekly on Mondays, groups patch/minor to reduce PR noise
+  # npm — one PR per week combining all patch + minor bumps.
+  # Major version bumps are excluded from the group and get individual PRs.
   - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: weekly
       day: monday
       time: "08:00"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 2
     commit-message:
       prefix: chore
       include: scope
     groups:
-      patch-updates:
+      all-non-major:
         update-types:
           - patch
-      minor-updates:
-        update-types:
           - minor
 
-  # GitHub Actions — keep action pins current
+  # GitHub Actions — one PR per week for all action updates
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: weekly
       day: monday
       time: "08:00"
+    open-pull-requests-limit: 2
     commit-message:
       prefix: chore
       include: scope
+    groups:
+      all-actions:
+        update-types:
+          - patch
+          - minor
