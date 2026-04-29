@@ -12,6 +12,9 @@ Engineering improvement backlog. Nothing here is broken. Items are ordered P1 �
 - ✅ **Workout history (localStorage)** — versioned storage layer (`oogi_history`, schema v1) with pure CRUD in `src/lib/history.js` (15 unit tests), a `useWorkoutHistory` React hook, and a dedicated `HistoryScreen` showing stats (total sessions, total time, this-week count) plus a per-entry log. Entry saved automatically on `active → complete` screen transition. Per-entry delete and double-tap-confirm clear-all included.
 - ✅ **Haptic feedback** — `src/lib/haptics.js` wraps `navigator.vibrate()` lazily (silent no-op where unsupported). `useHaptics` hook fires: double pulse on exercise start, short pulse on all other step changes, one pulse/second during the last 3 s of rest/transition, long buzz on workout complete. 4 unit tests — 44 total.
 - ✅ **PWA instant update** — `sw.js` served with `Cache-Control: no-cache` so the browser always fetches the latest service worker. `controllerchange` listener in `main.jsx` reloads the page the moment the new SW claims the client, ensuring users see the new version in the same session without force-quitting.
+- ✅ **Dependency audit in CI** — `npm audit --audit-level=high --omit=dev` runs in both `ci.yml` (on every PR) and `deploy.yml` (on every merge to `main`), blocking on any high or critical CVE in production deps. `wrangler` corrected to `devDependencies` so its transitive CVEs don't pollute the production audit.
+- ✅ **Dependabot** — `.github/dependabot.yml` auto-raises weekly PRs for npm and GitHub Actions updates. Patch and minor bumps are grouped separately to reduce noise; major bumps get individual PRs for manual review.
+
 
 ---
 
