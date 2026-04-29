@@ -38,7 +38,7 @@
       "cooldownSecs": 150,
       "exercises": [
         { "exerciseId": "8",  "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "אפוד 0–10 ק\"ג" },
-        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 12, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
         { "exerciseId": "10", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12.5 ק\"ג" },
         { "exerciseId": "17", "sets": 3, "reps": 12, "rest": 45, "setDuration": 30, "weight": "2×10 ק\"ג", "supersetWith": "21" },
         { "exerciseId": "21", "sets": 3, "reps": 10, "rest": 45, "setDuration": 30, "weight": "17.5 ק\"ג" }
@@ -63,7 +63,7 @@
       "cooldownSecs": 150,
       "exercises": [
         { "exerciseId": "8",  "sets": 4, "reps": 10, "rest": 60, "setDuration": 35, "weight": "אפוד 8–16 ק\"ג" },
-        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×12.5 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 12, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
         { "exerciseId": "10", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12.5 ק\"ג" },
         { "exerciseId": "6",  "sets": 3, "reps": 12, "rest": 60, "setDuration": 40, "weight": "אפוד 10–20 ק\"ג" },
         { "exerciseId": "18", "sets": 3, "reps": 10, "rest": 75, "setDuration": 30, "weight": "2×10 ק\"ג", "supersetWith": "21" },
@@ -91,7 +91,7 @@
       "cooldownSecs": 150,
       "exercises": [
         { "exerciseId": "8",  "sets": 4, "reps": 10, "rest": 60, "setDuration": 35, "weight": "אפוד 8–16 ק\"ג" },
-        { "exerciseId": "1",  "sets": 4, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×12.5 ק\"ג" },
+        { "exerciseId": "1",  "sets": 4, "reps": 12, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
         { "exerciseId": "10", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12.5 ק\"ג" },
         { "exerciseId": "6",  "sets": 3, "reps": 12, "rest": 60, "setDuration": 40, "weight": "אפוד 10–20 ק\"ג" },
         { "exerciseId": "15", "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
@@ -148,9 +148,9 @@
       "warmupSecs": 90,
       "cooldownSecs": 150,
       "exercises": [
-        { "exerciseId": "31", "sets": 3, "reps": 12, "rest": 60, "setDuration": 35, "weight": "14–20 ק\"ג" },
+        { "exerciseId": "31", "sets": 3, "reps": 12, "rest": 45, "setDuration": 35, "weight": "14–20 ק\"ג" },
         { "exerciseId": "33", "sets": 2, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
-        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 12, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
         { "exerciseId": "8",  "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "אפוד 0–10 ק\"ג" },
         { "exerciseId": "12", "sets": 2, "reps": 10, "rest": 60, "setDuration": 30, "weight": "2×8 ק\"ג" },
         { "exerciseId": "25", "sets": 2, "reps": 1,  "rest": 40, "setDuration": 35, "weight": "35 שנ׳" },
@@ -162,9 +162,9 @@
       "warmupSecs": 90,
       "cooldownSecs": 150,
       "exercises": [
-        { "exerciseId": "31", "sets": 4, "reps": 12, "rest": 60, "setDuration": 35, "weight": "16–20 ק\"ג" },
+        { "exerciseId": "31", "sets": 4, "reps": 12, "rest": 45, "setDuration": 35, "weight": "16–20 ק\"ג" },
         { "exerciseId": "33", "sets": 3, "reps": 12, "rest": 75, "setDuration": 40, "weight": "2×12 ק\"ג" },
-        { "exerciseId": "1",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×12.5 ק\"ג" },
+        { "exerciseId": "1",  "sets": 3, "reps": 12, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
         { "exerciseId": "7",  "sets": 4, "reps": 8,  "rest": 60, "setDuration": 35, "weight": "אפוד 0–10 ק\"ג" },
         { "exerciseId": "3",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד / משקל גוף" },
         { "exerciseId": "32", "sets": 3, "reps": 10, "rest": 60, "setDuration": 35, "weight": "2×8 ק\"ג" },
