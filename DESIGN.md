@@ -27,7 +27,24 @@ Versioned `localStorage` schema (`oogi_history` key, v1). Each entry stores: `id
 
 `HistoryScreen` shows: stats bar (total sessions · total training time · this-week count), a reverse-chronological card list with planned vs actual time, per-entry delete (×), and a clear-all button with a 3-second double-tap confirm guard.
 
-History entry point: `📊 History N` button on the home screen (count badge hidden until at least one workout is logged).
+History entry point: `📊` icon button in the top-right corner, grouped with the theme toggle. Orange count badge shows session total (capped at `9+`); badge hidden until first workout is logged.
+
+---
+
+### ✅ Haptic feedback
+
+`src/lib/haptics.js` · `src/hooks/useHaptics.js`
+
+`navigator.vibrate()` wrapped in a lazy availability check — silent no-op on desktop and iOS Safari (where the API is unsupported). Hook mirrors `useWorkoutAudio` in structure; both are called independently in `App.jsx` so a denied vibration permission never affects audio.
+
+| Moment | Pattern |
+|---|---|
+| Exercise step starts | Double pulse — 100ms · 80ms pause · 200ms |
+| Any other step change (rest, warmup, transition, cooldown) | Short pulse — 100ms |
+| Last 3 s of rest / transition | One short pulse per second (mirrors audio beep) |
+| Workout complete | Long buzz — 500ms |
+
+4 unit tests in `src/lib/haptics.test.js` — 44 tests total.
 
 ---
 
@@ -41,25 +58,7 @@ SVG circular timer ring (`TimerRing`), glass-card surfaces, gradient CTAs, shine
 
 ## P1 — High Value, Feasible Solo (evening-scale)
 
-### 1. Haptic feedback `[new-api]` (2 hrs)
-
-Audio cues already exist. Haptic cues make the app usable when the screen is face-down or in a pocket.
-
-**Implementation:**
-
-- New file: `src/lib/haptics.js` — wraps `navigator.vibrate()` with an availability check
-- New hook: `src/hooks/useHaptics.js` — mirrors `useWorkoutAudio` in structure
-- Patterns:
-   - Step transition start: single short pulse (100ms)
-   - Exercise start: double pulse (100ms · pause · 200ms)
-   - Workout complete: long buzz (500ms)
-   - Last 3 seconds of rest: three quick pulses (matching audio countdown)
-
-Call `useHaptics` alongside `useWorkoutAudio` in `App.jsx`. The two hooks stay independent — audio can be working while haptics are denied, and vice versa.
-
----
-
-### 2. Quick weight/rep session override `[frontend-only]` (half-day)
+### 1. Quick weight/rep session override `[frontend-only]` (half-day)
 
 On the **PreviewScreen**, allow the user to tap a weight or rep value to bump it up or down for this session only.
 
