@@ -50,17 +50,20 @@ src/
   lib/                 # Pure functions — no React imports
     steps.js               # buildSteps, formatTime, totalRemainingSeconds
     steps.test.js          # Vitest unit tests (25 tests)
-    plan.js                # Category/duration helpers
+    plan.js                # Category/duration helpers (uses CATEGORY_META)
     audio.js               # Low-level Web Audio tone generation
     history.js             # localStorage CRUD: loadHistory, appendEntry, deleteEntry, clearHistory
     history.test.js        # Vitest unit tests (15 tests)
+    haptics.js             # navigator.vibrate() wrapper — vibrateShort/Double/Long
+    haptics.test.js        # Vitest unit tests (4 tests)
   store/               # State
     reducer.js             # useReducer handler + initialState
   constants/           # Static data
     translations.js        # T object with `he` and `en` keys
+    categories.js          # CATEGORY_META — icon, labelKey, descKey per category
   data/                # JSON content — no JS logic
-    exercises.json         # 38 exercises
-    workout-plan.json      # warmup, cooldown, 8 workout templates
+    exercises.json         # 39 exercises
+    workout-plan.json      # warmup, cooldown, 13 workout templates
 ```
 
 **Data flow:** `App.jsx` owns all state via `useReducer(reducer, initialState)`. Screens receive `state` and `dispatch` as props — `dispatch` is the only way to mutate state.
@@ -156,7 +159,7 @@ After merge, `package.json` on `main` always matches the live deployed version a
 
 ### `src/data/exercises.json`
 
-The exercise library. 38 exercises keyed by string ID (`"1"` – `"38"`). Each entry:
+The exercise library. 39 exercises keyed by string ID (`"1"` – `"39"`). Each entry:
 
 ```json
 {
@@ -172,7 +175,7 @@ The exercise library. 38 exercises keyed by string ID (`"1"` – `"38"`). Each e
 - Adding a new exercise requires a matching SVG key in `src/components/Svgs.jsx`
 - IDs are string numbers — increment from the current highest
 
-### `src/workout-plan.json`
+### `src/data/workout-plan.json`
 
 The active workout plan. Key sections:
 
@@ -182,11 +185,23 @@ The active workout plan. Key sections:
 
 **Template key convention:**
 ```
-upper_30a     → Upper Body, 30 min, Day A
-abs_legs_20   → Abs & Legs, 20 min (no A/B split)
+upper_30a      → Upper Body, 30 min, Day A (A/B split)
+lower_20       → Lower Body, 20 min (no A/B split)
+full_body_45   → Full Body, 45 min (no A/B split)
 ```
 
-The UI derives all category tabs and duration buttons dynamically from the template keys. Adding a new category only requires adding template keys — no code change needed.
+**The three categories:**
+
+| Key | Display | Durations | A/B split |
+|---|---|---|---|
+| `upper` | Upper Body | 20 · 30 · 45 min | Yes (Day A / Day B) |
+| `lower` | Lower Body | 20 · 30 · 45 min | No |
+| `full_body` | Full Body | 30 · 45 min | No |
+
+The UI derives duration buttons dynamically from the template keys. **Adding a new category requires:**
+1. Template key(s) in `workout-plan.json`
+2. A row in `src/constants/categories.js` → `CATEGORY_META`
+3. Two translation keys in `translations.js` (`labelKey` + `descKey` in both `he` and `en`)
 
 **Exercise data is personal.** The weights, reps, and sets in the templates are calibrated to the user's current training level. Do not modify them without explicit instruction.
 
@@ -215,7 +230,7 @@ npm test          # Vitest — must pass before any commit
 npm run test:watch  # watch mode during development
 ```
 
-Tests live in two colocated files — `src/lib/steps.test.js` (25 tests covering `buildSteps`, `formatTime`, `totalRemainingSeconds`) and `src/lib/history.test.js` (15 tests covering the localStorage CRUD layer). 40 tests total. See Testing guidelines below.
+Tests live in three colocated files — `src/lib/steps.test.js` (25 tests), `src/lib/history.test.js` (15 tests), `src/lib/haptics.test.js` (4 tests). **44 tests total.** See Testing guidelines below.
 
 Before marking any UI change complete, manually verify:
 1. The changed feature works on a mobile viewport
