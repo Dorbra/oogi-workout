@@ -7,11 +7,30 @@ Each item is tagged: `[data-only]` · `[frontend-only]` · `[new-api]` · `[new-
 
 ## Shipped
 
-### ✅ Rest timer extension — tap to add 15s
+### ✅ Rest screen UX overhaul
 
-PR: [feat/rest-timer-extend](https://github.com/Dorbra/oogi-workout/pull/new/feat/rest-timer-extend)
+PR: [#35 feat/workout-ux-polish](https://github.com/Dorbra/oogi-workout/pull/35)
 
-`EXTEND_REST` reducer action adds 15s to both `secondsRemaining` and the step's `duration` (keeps progress bar accurate). Button renders only on rest steps; `stopPropagation` prevents triggering pause.
+- **Skip Rest button** — replaces the old +15s extend button; dispatches `SKIP_SET_FORWARD` / `SKIP_FORWARD` so you can jump straight to the next set without waiting out the full rest.
+- **Next set number** — the set counter during rest now shows the *upcoming* set (e.g. "Set 4 / 4") rather than the one just completed, so you always know what you're about to do.
+- **Red countdown** — the last 10 s of rest turns red: timer ring, background glow, label, and set number all shift to red as an urgency signal.
+- **Bigger instructions** — exercise form cues bumped from `text-xs` to `text-sm` (exercise screen) and `text-sm` to `text-base` (warmup / cooldown / transition), readable at 1–2 m distance.
+
+### ✅ 3-category workout system
+
+PR: [#34 feat/new-workout-categories](https://github.com/Dorbra/oogi-workout/pull/34)
+
+Restructured from 2 categories (`upper` / `abs_legs`) to 3 clean categories:
+
+| Category | Key | Durations | Split |
+|---|---|---|---|
+| Upper Body | `upper` | 20 · 30 · 45 min | Day A / Day B |
+| Lower Body | `lower` | 20 · 30 · 45 min | Single template |
+| Full Body | `full_body` | 30 · 45 min | Single template |
+
+`lower_*` templates replaced `abs_legs_*` with a more leg-dominant structure (Sumo Squat, Goblet Squat, RDL, Bulgarian Split Squat, Hip Thrust for the 45 min session). `full_body_*` follows a squat → hinge → push → pull → core pattern. Exercise #39 Hip Thrust added to the library. Category cards on HomeScreen show a one-line description subtitle (e.g. "Chest · Back · Arms").
+
+---
 
 ### ✅ Dark / light mode toggle
 
@@ -105,18 +124,15 @@ On the **CompleteScreen**, add a "Share" button that opens the native share shee
 
 ---
 
-### 5. New workout categories: stretching & cardio `[data-only]` (half-day each)
+### 5. Stretching / active recovery category `[data-only]` (half-day)
 
-**Stretching:** A cooldown-only template — essentially just the cooldown steps. Useful as a standalone recovery session.
+A cooldown-only template — essentially just the shared cooldown steps plus some extra mobility work. Useful as a standalone recovery session on off days.
 
-- Add template key `stretch_20` to `workout-plan.json` with `exercises: []` and only warmupSecs/cooldownSecs
-- Add translation keys `stretch` / `גמישות` to `T`
-- Zero code change (the UI derives categories from template keys)
+- Add template key `stretch_20` to `workout-plan.json` with `exercises: []` and only `warmupSecs`/`cooldownSecs`
+- Add a row to `CATEGORY_META` in `src/constants/categories.js`
+- Add translation keys (`labelKey` / `descKey`) in both `he` and `en`
 
-**Cardio:** Similar pattern — a warmup + lightweight interval circuit.
-
-- Data-only if the intervals fit the existing step model (exercise/rest pairs)
-- If true HIIT is needed (different timing logic, intensity labels), that requires a new step type — separate engineering effort
+Note: the app now has 3 established categories (upper / lower / full_body). A stretch category would be a fourth — low friction to add, since the infrastructure is in place.
 
 ---
 

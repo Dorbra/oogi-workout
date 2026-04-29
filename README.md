@@ -8,40 +8,54 @@ A mobile-first home workout timer app — built for equipment-minimal training w
 
 ## Features
 
-- **Two workout categories** — Upper Body (push/pull split) and Abs & Legs
-- **Three durations** — 20, 30, or 45 minutes per session
-- **Day A / Day B variations** — every upper-body duration has a push-focused day and a pull-focused day so you never repeat the same stimulus back-to-back
+- **Three workout categories** — Upper Body · Lower Body · Full Body
+- **Flexible durations** — 20, 30, or 45 minutes (Full Body: 30 or 45 min)
+- **Day A / Day B variations** — Upper Body has a push-focused and a pull-focused day so you never repeat the same stimulus back-to-back
 - **Full session structure** — automatic warmup (90 s) → working sets → cooldown (150 s)
 - **Live countdown timer** — colour shifts to orange in the last 10 s of a set; audio beep fires at 5 s remaining
+- **Rest screen** — shows the *next* set number; last 10 s turns red; Skip Rest button to jump straight to the next set
 - **Superset support** — paired exercises are shown and timed together
 - **SVG exercise diagrams** — stick-figure illustrations for every exercise, warmup, and cooldown movement
+- **Bigger form cues** — exercise instructions are sized to be readable at 1–2 m distance
 - **Bilingual UI** — Hebrew (RTL) and English, switchable at any time
 - **Pause / resume** — tap anywhere on the active screen to pause mid-set
-- **Skip controls** — jump forward or back between sets without losing your place
+- **Skip controls** — jump forward or back between exercise groups without losing your place
+- **Haptic feedback** — vibration patterns for exercise start, step changes, last-3s countdown, and workout complete (where supported)
 - **Workout history** — every completed session is saved to `localStorage`; the history screen shows total workouts, total training time, this-week count, and a per-entry log with planned vs actual duration
+- **Dark / light mode** — persisted across sessions
+- **PWA** — installable, works offline, auto-updates in the background
 - **Semantic versioning** — every deploy is tagged; current version is shown on the home screen
 
 ---
 
 ## Workout structure
 
-### Upper Body
+### Upper Body — Day A / Day B split
 
 | Duration | Day A (Push + Vertical Pull) | Day B (Horizontal Pull + Push) |
 |----------|------------------------------|-------------------------------|
-| 20 min | Ring Pull-Ups · Incline Press · Ring Dips · Shoulder Press + Rear Delt Fly | Ring Rows · Floor Press · Bent-Over Row · Curl + Tricep Ext |
-| 30 min | Ring Pull-Ups · Incline Press · Arnold Press · Ring Dips · Lateral Raise + Rear Delt Fly | Ring Rows · Floor Press · Bent-Over Row · Weighted Push-Ups · Hammer Curl + Tricep Ext |
-| 45 min | Full push + vertical pull block with finisher | Full horizontal pull + push block with accessories |
+| 20 min | Ring Dips · Incline Press · Ring Dips · Shoulder Press + Rear Delt Fly | Ring Rows · Floor Press · Bent-Over Row · Curl + Tricep Ext |
+| 30 min | Ring Dips · Incline Press · Arnold Press · Ring Dips · Lateral Raise + Rear Delt Fly | Ring Rows · Floor Press · Bent-Over Row · Weighted Push-Ups · Hammer Curl + Tricep Ext |
+| 45 min | Full push + vertical pull block with accessories | Full horizontal pull + push block with accessories |
 
-### Abs & Legs
+### Lower Body — single template per duration
 
-Single template per duration (no A/B split) — combines compound leg work with core work.
+Leg-dominant structure with a core finisher.
 
-| Duration | Focus |
-|----------|-------|
-| 20 min | Goblet Squat · Glute Bridge · Plank · Crunch + Leg Raise |
-| 30 min | Goblet Squat · RDL · Reverse Lunge · Glute Bridge · Plank · Crunch + Leg Raise |
-| 45 min | Sumo Squat · Goblet Squat · RDL · Bulgarian Split Squat · Reverse Lunge · Glute Bridge · Plank · Leg Raise + Crunch · Russian Twists |
+| Duration | Key exercises |
+|----------|---------------|
+| 20 min | Goblet Squat · RDL · Glute Bridge · Crunch + Leg Raise |
+| 30 min | Goblet Squat · RDL · Reverse Lunge · Glute Bridge · Crunch + Leg Raise |
+| 45 min | Sumo Squat · Goblet Squat · RDL · Bulgarian Split Squat · Hip Thrust · Reverse Lunge · Calf Raises · Leg Raise + Russian Twists |
+
+### Full Body — single template per duration
+
+Squat → hinge → push → pull → core pattern. No A/B split — designed for 2× per week frequency.
+
+| Duration | Key exercises |
+|----------|---------------|
+| 30 min | Goblet Squat · RDL · Floor Press · Ring Rows · Shoulder Press · Plank · Dead Bug |
+| 45 min | Goblet Squat · RDL · Floor Press · Ring Pull-Ups · Ring Dips · Reverse Lunge · Plank · Leg Raises |
 
 ---
 
@@ -82,9 +96,11 @@ src/
   lib/
     steps.js               # buildSteps, formatTime, totalRemainingSeconds
     history.js             # versioned localStorage CRUD layer
+  constants/
+    categories.js          # CATEGORY_META — icon, label, description per category
   data/
-    exercises.json         # exercise library — 38 exercises
-    workout-plan.json      # workout templates, warmup, cooldown
+    exercises.json         # exercise library — 39 exercises
+    workout-plan.json      # 13 workout templates, shared warmup & cooldown
 .github/
   workflows/
     ci.yml                 # test + build + Cloudflare branch preview on every PR
@@ -101,8 +117,9 @@ Workout plans and exercises live in JSON files, not in component code. This mean
 
 Template key format:
 ```
-upper_30a      → Upper Body, 30 min, Day A
-abs_legs_20    → Abs & Legs, 20 min (no A/B split)
+upper_30a      → Upper Body, 30 min, Day A (A/B split)
+lower_20       → Lower Body, 20 min (no A/B split)
+full_body_45   → Full Body, 45 min (no A/B split)
 ```
 
 ---
