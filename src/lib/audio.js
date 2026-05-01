@@ -31,6 +31,12 @@ export function playStartTone() {
   setTimeout(() => playBeep(880, 0.2, 0.3), 120)
 }
 
+export function playWorkBuzzer() {
+  playBeep(880, 0.09, 0.32)
+  setTimeout(() => playBeep(880, 0.09, 0.32), 140)
+  setTimeout(() => playBeep(1100, 0.22, 0.38), 300)
+}
+
 export function playRestTone() {
   playBeep(440, 0.2, 0.2)
 }
