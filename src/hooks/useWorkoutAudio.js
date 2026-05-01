@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { playBeep, playStartTone, playRestTone } from '../lib/audio'
+import { playBeep, playWorkBuzzer, playRestTone } from '../lib/audio'
 
 export function useWorkoutAudio(screen, steps, stepIndex, secondsRemaining) {
   const prevStepRef = useRef(null)
@@ -21,7 +21,7 @@ export function useWorkoutAudio(screen, steps, stepIndex, secondsRemaining) {
 
     // Tone on step change
     if (prevStepRef.current !== stepIndex) {
-      if (step.type === 'exercise') playStartTone()
+      if (step.type === 'exercise') playWorkBuzzer()
       else if (step.type === 'rest') playRestTone()
       prevStepRef.current = stepIndex
     }
