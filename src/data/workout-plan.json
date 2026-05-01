@@ -52,7 +52,7 @@
         { "exerciseId": "3",  "sets": 4, "reps": 6,  "rest": 90, "setDuration": 35, "weight": "אפוד 8–16 ק\"ג" },
         { "exerciseId": "2",  "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
         { "exerciseId": "15", "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×8 ק\"ג" },
-        { "exerciseId": "3",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד / משקל גוף" },
+        { "exerciseId": "7",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד / משקל גוף" },
         { "exerciseId": "13", "sets": 2, "reps": 12, "rest": 45, "setDuration": 30, "weight": "2×5 ק\"ג", "supersetWith": "16" },
         { "exerciseId": "16", "sets": 2, "reps": 12, "rest": 45, "setDuration": 30, "weight": "2×5 ק\"ג" }
       ]
@@ -77,7 +77,7 @@
       "exercises": [
         { "exerciseId": "3",  "sets": 4, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד 0–16 ק\"ג" },
         { "exerciseId": "2",  "sets": 4, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
-        { "exerciseId": "3",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד 10–16 ק\"ג" },
+        { "exerciseId": "7",  "sets": 3, "reps": 8,  "rest": 90, "setDuration": 35, "weight": "אפוד 10–16 ק\"ג" },
         { "exerciseId": "15", "sets": 3, "reps": 10, "rest": 75, "setDuration": 35, "weight": "2×10 ק\"ג" },
         { "exerciseId": "16", "sets": 3, "reps": 12, "rest": 45, "setDuration": 35, "weight": "2×5 ק\"ג" },
         { "exerciseId": "17", "sets": 3, "reps": 10, "rest": 60, "setDuration": 30, "weight": "2×10 ק\"ג", "supersetWith": "21" },
