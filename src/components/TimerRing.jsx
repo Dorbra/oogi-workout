@@ -1,21 +1,21 @@
 const COLOR_MAP = {
   orange: {
     stroke: 'url(#ring-grad-orange)',
-    glow:   'rgba(249, 115, 22, 0.5)',
+    glow:   'rgba(13, 148, 136, 0.5)',
     text:   'var(--ring-text-orange)',
-    textShadow: '0 0 20px rgba(249, 115, 22, 0.5)',
+    textShadow: '0 0 20px rgba(13, 148, 136, 0.5)',
   },
   blue: {
     stroke: 'url(#ring-grad-blue)',
-    glow:   'rgba(99, 102, 241, 0.5)',
+    glow:   'rgba(59, 130, 246, 0.5)',
     text:   'var(--ring-text-blue)',
-    textShadow: '0 0 24px rgba(99, 102, 241, 0.5)',
+    textShadow: '0 0 24px rgba(59, 130, 246, 0.5)',
   },
   teal: {
     stroke: 'url(#ring-grad-teal)',
-    glow:   'rgba(20, 184, 166, 0.5)',
+    glow:   'rgba(34, 197, 94, 0.5)',
     text:   'var(--ring-text-teal)',
-    textShadow: '0 0 20px rgba(20, 184, 166, 0.4)',
+    textShadow: '0 0 20px rgba(34, 197, 94, 0.4)',
   },
   red: {
     stroke: 'url(#ring-grad-red)',
@@ -52,16 +52,16 @@ export function TimerRing({ seconds, totalSeconds, color = 'orange', size = 160 
       >
         <defs>
           <linearGradient id="ring-grad-orange" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stopColor="#f97316" />
-            <stop offset="100%" stopColor="#fbbf24" />
+            <stop offset="0%"   stopColor="#0d9488" />
+            <stop offset="100%" stopColor="#06b6d4" />
           </linearGradient>
           <linearGradient id="ring-grad-blue" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stopColor="#6366f1" />
-            <stop offset="100%" stopColor="#a5b4fc" />
+            <stop offset="0%"   stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#93c5fd" />
           </linearGradient>
           <linearGradient id="ring-grad-teal" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stopColor="#0d9488" />
-            <stop offset="100%" stopColor="#2dd4bf" />
+            <stop offset="0%"   stopColor="#16a34a" />
+            <stop offset="100%" stopColor="#4ade80" />
           </linearGradient>
           <linearGradient id="ring-grad-red" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%"   stopColor="#dc2626" />
@@ -83,7 +83,7 @@ export function TimerRing({ seconds, totalSeconds, color = 'orange', size = 160 
           r={radius}
           fill="none"
           stroke="var(--ring-track)"
-          strokeWidth={size * 0.045}
+          strokeWidth={size * 0.048}
         />
 
         {/* Progress arc */}
@@ -93,7 +93,7 @@ export function TimerRing({ seconds, totalSeconds, color = 'orange', size = 160 
           r={radius}
           fill="none"
           stroke={c.stroke}
-          strokeWidth={size * 0.045}
+          strokeWidth={size * 0.048}
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
