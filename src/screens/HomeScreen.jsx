@@ -16,7 +16,7 @@ export function HomeScreen({ state, dispatch, history }) {
       {/* Background hero glow */}
       <div
         className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%)', filter: 'blur(8px)' }}
+        style={{ background: 'radial-gradient(circle, rgba(13,148,136,0.15) 0%, transparent 70%)', filter: 'blur(8px)' }}
       />
 
       {/* Lang toggle */}
@@ -27,8 +27,8 @@ export function HomeScreen({ state, dispatch, history }) {
             onClick={() => dispatch({ type: 'SET_LANG', lang: l })}
             className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all ${
               state.lang === l
-                ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30'
-                : 'text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300'
+                ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-md shadow-teal-500/30'
+                : 'text-zinc-500 hover:text-zinc-400 dark:text-zinc-400 dark:hover:text-zinc-200'
             }`}
           >
             {l === 'he' ? 'עב' : 'EN'}
@@ -45,7 +45,7 @@ export function HomeScreen({ state, dispatch, history }) {
         >
           📊
           {history.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] font-black rounded-full w-4 h-4 flex items-center justify-center leading-none">
+            <span className="absolute -top-1 -right-1 bg-teal-500 text-white text-[10px] font-black rounded-full w-4 h-4 flex items-center justify-center leading-none">
               {history.length > 9 ? '9+' : history.length}
             </span>
           )}
@@ -61,17 +61,17 @@ export function HomeScreen({ state, dispatch, history }) {
 
       {/* Title */}
       <div className="text-center animate-slide-up" style={{ animationDelay: '0ms' }}>
-        <div className="text-5xl md:text-6xl mb-2 leading-none">💪</div>
-        <h1 className="font-display font-black text-zinc-900 dark:text-white tracking-wide uppercase" style={{ fontSize: 'clamp(2.4rem, 10vw, 3.8rem)' }}>
+        <div className="text-6xl md:text-7xl mb-2 leading-none">💪</div>
+        <h1 className="font-display font-black text-zinc-900 dark:text-white tracking-wide uppercase" style={{ fontSize: 'clamp(2.6rem, 11vw, 4rem)' }}>
           {t.appTitle}
         </h1>
-        <p className="text-zinc-500 mt-1 text-sm md:text-base">{t.pickDuration}</p>
+        <p className="text-zinc-500 dark:text-zinc-300 mt-1 text-base md:text-lg">{t.pickDuration}</p>
       </div>
 
       {/* Category picker */}
       {categories.length > 1 && (
         <div className="w-full max-w-sm animate-slide-up" style={{ animationDelay: '60ms' }}>
-          <p className="text-zinc-600 text-xs font-bold text-center uppercase tracking-widest mb-2">{t.category}</p>
+          <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">{t.category}</p>
           <div className="flex gap-3">
             {categories.map(cat => {
               const isSelected = state.selectedCategory === cat
@@ -79,21 +79,21 @@ export function HomeScreen({ state, dispatch, history }) {
                 <button
                   key={cat}
                   onClick={() => dispatch({ type: 'SET_CATEGORY', category: cat })}
-                  className={`flex-1 flex flex-col items-center py-4 rounded-2xl border transition-all active:scale-95 ${
+                  className={`flex-1 flex flex-col items-center py-5 rounded-2xl border transition-all active:scale-95 ${
                     isSelected
-                      ? 'border-orange-500/50 text-zinc-900 dark:text-white'
-                      : 'glass border-black/5 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-black/10 dark:hover:border-white/10'
+                      ? 'border-teal-500/50 text-zinc-900 dark:text-white'
+                      : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-300 hover:border-black/10 dark:hover:border-white/20'
                   }`}
                   style={isSelected ? {
-                    background: 'linear-gradient(145deg, rgba(249,115,22,0.18), rgba(245,158,11,0.08))',
-                    boxShadow: '0 0 24px rgba(249,115,22,0.15)',
+                    background: 'linear-gradient(145deg, rgba(13,148,136,0.18), rgba(6,182,212,0.08))',
+                    boxShadow: '0 0 24px rgba(13,148,136,0.15)',
                   } : {}}
                 >
                   <span className="text-2xl leading-none">{categoryIcon(cat)}</span>
-                  <span className={`mt-1.5 text-xs font-bold text-center leading-tight px-1 ${isSelected ? 'text-orange-600 dark:text-orange-200' : 'text-zinc-500'}`}>
+                  <span className={`mt-1.5 text-sm font-bold text-center leading-tight px-1 ${isSelected ? 'text-teal-600 dark:text-teal-300' : 'text-zinc-500 dark:text-zinc-300'}`}>
                     {categoryLabel(cat, t)}
                   </span>
-                  <span className={`mt-0.5 text-[10px] text-center leading-tight px-1 ${isSelected ? 'text-orange-500/80 dark:text-orange-300/70' : 'text-zinc-400 dark:text-zinc-600'}`}>
+                  <span className={`mt-0.5 text-xs text-center leading-tight px-1 ${isSelected ? 'text-teal-500/80 dark:text-teal-300/80' : 'text-zinc-400 dark:text-zinc-400'}`}>
                     {categoryDesc(cat, t)}
                   </span>
                 </button>
@@ -106,7 +106,7 @@ export function HomeScreen({ state, dispatch, history }) {
       {/* Variation picker */}
       {hasVariations && (
         <div className="w-full max-w-sm animate-slide-up" style={{ animationDelay: '100ms' }}>
-          <p className="text-zinc-600 text-xs font-bold text-center uppercase tracking-widest mb-2">
+          <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">
             {state.lang === 'he' ? 'בחר וריאציה' : 'Pick Variation'}
           </p>
           <div className="flex gap-3">
@@ -118,18 +118,18 @@ export function HomeScreen({ state, dispatch, history }) {
                 <button
                   key={v}
                   onClick={() => dispatch({ type: 'SET_VARIATION', variation: v })}
-                  className={`flex-1 flex flex-col items-center py-4 rounded-2xl border transition-all active:scale-95 ${
+                  className={`flex-1 flex flex-col items-center py-5 rounded-2xl border transition-all active:scale-95 ${
                     isSelected
-                      ? 'border-orange-500/50 text-zinc-900 dark:text-white'
-                      : 'glass border-black/5 dark:border-white/5 text-zinc-500 dark:text-zinc-400 hover:border-black/10 dark:hover:border-white/10'
+                      ? 'border-teal-500/50 text-zinc-900 dark:text-white'
+                      : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-300 hover:border-black/10 dark:hover:border-white/20'
                   }`}
                   style={isSelected ? {
-                    background: 'linear-gradient(145deg, rgba(249,115,22,0.18), rgba(245,158,11,0.08))',
-                    boxShadow: '0 0 24px rgba(249,115,22,0.15)',
+                    background: 'linear-gradient(145deg, rgba(13,148,136,0.18), rgba(6,182,212,0.08))',
+                    boxShadow: '0 0 24px rgba(13,148,136,0.15)',
                   } : {}}
                 >
                   <span className="font-display text-xl font-black leading-none">{label}</span>
-                  <span className={`mt-1.5 text-xs font-medium text-center px-2 leading-tight ${isSelected ? 'text-orange-600 dark:text-orange-200' : 'text-zinc-600'}`}>{sub}</span>
+                  <span className={`mt-1.5 text-sm font-medium text-center px-2 leading-tight ${isSelected ? 'text-teal-600 dark:text-teal-300' : 'text-zinc-500 dark:text-zinc-300'}`}>{sub}</span>
                 </button>
               )
             })}
@@ -139,7 +139,7 @@ export function HomeScreen({ state, dispatch, history }) {
 
       {/* Duration picker */}
       <div className="w-full max-w-sm animate-slide-up" style={{ animationDelay: '130ms' }}>
-        <p className="text-zinc-600 text-xs font-bold text-center uppercase tracking-widest mb-2">
+        <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">
           {state.lang === 'he' ? 'משך אימון' : 'Duration'}
         </p>
         <div className="flex gap-3">
@@ -149,14 +149,14 @@ export function HomeScreen({ state, dispatch, history }) {
               <button
                 key={d}
                 onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
-                  className={`flex-1 flex flex-col items-center py-3.5 rounded-2xl border font-black transition-all active:scale-95 ${
+                  className={`flex-1 flex flex-col items-center py-4 rounded-2xl border font-black transition-all active:scale-95 ${
                   isSelected
                     ? 'glass border-black/10 dark:border-white/20 text-zinc-900 dark:text-white'
-                    : 'glass border-black/5 dark:border-white/5 text-zinc-500 dark:text-zinc-600 hover:border-black/10 dark:hover:border-white/10 hover:text-zinc-700 dark:hover:text-zinc-400'
+                    : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-black/10 dark:hover:border-white/20 hover:text-zinc-700 dark:hover:text-zinc-200'
                 }`}
               >
-                <span className="font-display text-3xl leading-none">{d}</span>
-                <span className="text-xs font-medium mt-0.5 text-zinc-600">{t.min}</span>
+                <span className="font-display text-4xl leading-none">{d}</span>
+                <span className="text-sm font-medium mt-0.5 text-zinc-500 dark:text-zinc-400">{t.min}</span>
               </button>
             )
           })}
@@ -166,18 +166,18 @@ export function HomeScreen({ state, dispatch, history }) {
       {/* Preview button */}
       <button
         onClick={() => dispatch({ type: 'GO_PREVIEW' })}
-        className="btn-shine w-full max-w-xs md:max-w-sm text-white font-black text-lg md:text-xl py-5 rounded-2xl transition-all active:scale-95 animate-slide-up tracking-wide"
+        className="btn-shine w-full max-w-xs md:max-w-sm text-white font-black text-xl md:text-2xl py-6 rounded-2xl transition-all active:scale-95 animate-slide-up tracking-wide"
         style={{
           animationDelay: '160ms',
-          background: 'linear-gradient(135deg, #f97316, #f59e0b)',
-          boxShadow: '0 8px 32px rgba(249,115,22,0.4), 0 2px 6px rgba(0,0,0,0.4)',
+          background: 'linear-gradient(135deg, #0d9488, #06b6d4)',
+          boxShadow: '0 8px 32px rgba(13,148,136,0.4), 0 2px 6px rgba(0,0,0,0.4)',
         }}
       >
         {t.preview}
       </button>
 
       {/* Version badge */}
-      <p className="absolute bottom-4 text-zinc-400 dark:text-zinc-800 text-xs font-mono select-none">
+      <p className="absolute bottom-4 text-zinc-400 dark:text-zinc-600 text-xs font-mono select-none">
         v{__APP_VERSION__}
       </p>
     </div>

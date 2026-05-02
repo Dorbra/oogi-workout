@@ -46,7 +46,7 @@ export default function App() {
   return (
     <div
       dir={state.lang === 'he' ? 'rtl' : 'ltr'}
-      className={`h-full bg-gradient-to-b from-zinc-100 to-zinc-50 dark:from-zinc-900 dark:to-zinc-950 text-zinc-900 dark:text-white max-w-2xl mx-auto relative overflow-hidden${state.theme === 'dark' ? ' dark' : ''}`}
+      className={`h-full bg-gradient-to-b from-teal-50 to-sky-50 dark:from-slate-900 dark:to-slate-950 text-zinc-900 dark:text-white max-w-2xl mx-auto relative overflow-hidden${state.theme === 'dark' ? ' dark' : ''}`}
     >
       {state.screen === 'home'     && <HomeScreen     state={state} dispatch={dispatch} history={history} />}
       {state.screen === 'preview'  && <PreviewScreen  state={state} dispatch={dispatch} />}

@@ -31,11 +31,11 @@ function StatCard({ value, label }) {
     <div className="flex-1 glass rounded-2xl py-4 flex flex-col items-center gap-1">
       <span
         className="font-display font-black leading-none"
-        style={{ fontSize: 'clamp(1.6rem, 7vw, 2.2rem)', color: 'var(--ring-text-orange)' }}
+        style={{ fontSize: 'clamp(1.8rem, 8vw, 2.5rem)', color: 'var(--ring-text-orange)' }}
       >
         {value}
       </span>
-      <span className="text-xs text-zinc-500 font-medium text-center leading-tight px-1">{label}</span>
+      <span className="text-sm text-zinc-500 dark:text-zinc-400 font-medium text-center leading-tight px-1">{label}</span>
     </div>
   )
 }
@@ -50,29 +50,29 @@ function WorkoutCard({ entry, lang, t, onRemove }) {
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-xl leading-none shrink-0">{catIcon}</span>
           <div className="min-w-0">
-            <p className="font-bold text-zinc-900 dark:text-white text-sm leading-tight truncate">
+            <p className="font-bold text-zinc-900 dark:text-white text-base leading-tight truncate">
               {catLabel}
               {entry.variation && (
-                <span className="text-orange-500 font-black ms-1">
+                <span className="text-teal-500 dark:text-teal-400 font-black ms-1">
                   · {entry.variation === 'a' ? t.dayA : t.dayB}
                 </span>
               )}
             </p>
-            <p className="text-zinc-500 text-xs mt-0.5">{formatEntryDate(entry.completedAt, lang)}</p>
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">{formatEntryDate(entry.completedAt, lang)}</p>
           </div>
         </div>
         <button
           onClick={() => onRemove(entry.id)}
-          className="shrink-0 text-zinc-400 hover:text-red-400 transition-colors text-lg leading-none mt-0.5"
+          className="shrink-0 text-zinc-400 dark:text-zinc-500 hover:text-red-400 transition-colors text-lg leading-none mt-0.5"
           aria-label="Delete entry"
         >
           ×
         </button>
       </div>
 
-      <div className="flex gap-4 text-xs text-zinc-500 pt-1 border-t border-black/5 dark:border-white/5">
+      <div className="flex gap-4 text-sm text-zinc-500 dark:text-zinc-400 pt-1 border-t border-black/5 dark:border-white/10">
         <span>
-          <span className="font-bold text-zinc-700 dark:text-zinc-300">{entry.duration}{t.min}</span>
+          <span className="font-bold text-zinc-700 dark:text-zinc-200">{entry.duration}{t.min}</span>
           {' '}{t.planned}
         </span>
         <span>
@@ -85,7 +85,7 @@ function WorkoutCard({ entry, lang, t, onRemove }) {
           {' '}{t.actual}
         </span>
         {entry.skipWarmup && (
-          <span className="text-zinc-400">{t.skippedWarmup}</span>
+          <span className="text-zinc-400 dark:text-zinc-500">{t.skippedWarmup}</span>
         )}
       </div>
     </div>
@@ -116,7 +116,7 @@ export function HistoryScreen({ state, dispatch, history, removeEntry, wipeHisto
       <div className="flex items-center gap-3 shrink-0">
         <button
           onClick={() => dispatch({ type: 'GO_HOME' })}
-          className="glass rounded-full px-4 py-2 text-sm font-bold text-zinc-600 dark:text-zinc-300 active:scale-95 transition-transform"
+          className="glass rounded-full px-4 py-2 text-base font-bold text-zinc-600 dark:text-zinc-300 active:scale-95 transition-transform"
         >
           {state.lang === 'he' ? '→' : '←'} {t.back}
         </button>
@@ -130,7 +130,7 @@ export function HistoryScreen({ state, dispatch, history, removeEntry, wipeHisto
         /* Empty state */
         <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
           <div className="text-6xl leading-none">🏋️</div>
-          <p className="text-zinc-500 text-base">{t.noHistory}</p>
+          <p className="text-zinc-500 dark:text-zinc-400 text-lg">{t.noHistory}</p>
         </div>
 
       ) : (
@@ -158,7 +158,7 @@ export function HistoryScreen({ state, dispatch, history, removeEntry, wipeHisto
           {/* Clear all */}
           <button
             onClick={handleClearClick}
-            className={`shrink-0 w-full py-3 rounded-2xl text-sm font-bold transition-all active:scale-95 ${
+            className={`shrink-0 w-full py-3 rounded-2xl text-base font-bold transition-all active:scale-95 ${
               confirmingClear
                 ? 'bg-red-500/20 text-red-500 border border-red-500/30'
                 : 'glass text-zinc-500 dark:text-zinc-400'
