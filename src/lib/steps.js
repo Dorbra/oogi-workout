@@ -1,6 +1,8 @@
 import exercisesData from '../data/exercises.json'
 import planData from '../data/workout-plan.json'
 
+export const HYPER_INTENSE_REST_REDUCTION = 15
+
 export function resolvePlan(plan) {
   return {
     ...plan,
@@ -10,7 +12,9 @@ export function resolvePlan(plan) {
 
 export const DEFAULT_PLAN = resolvePlan(planData)
 
-export function buildSteps(template, skipWarmup, plan) {
+export function buildSteps(template, skipWarmup, plan, options = {}) {
+  const { reduceRestSecs = 0 } = options
+  const effectiveRest = (secs) => Math.max(0, secs - reduceRestSecs)
   const { exercises, warmup, cooldown } = plan
   const steps = []
   let groupIndex = 0
@@ -43,9 +47,9 @@ export function buildSteps(template, skipWarmup, plan) {
         steps.push({ type: 'exercise', exercise: exData, workoutEx: ex, set, totalSets: ex.sets, supersetPart: 'A', duration: ex.setDuration, groupIndex })
         steps.push({ type: 'exercise', exercise: exDataB, workoutEx: exB, set, totalSets: exB.sets, supersetPart: 'B', duration: exB.setDuration, groupIndex })
         if (set < ex.sets) {
-          steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, previewExB: exDataB, isSuperset: true, set, totalSets: ex.sets, groupIndex })
+          steps.push({ type: 'rest', duration: effectiveRest(ex.rest), previewExercise: exData, previewExB: exDataB, isSuperset: true, set, totalSets: ex.sets, groupIndex })
         } else {
-          steps.push({ type: 'rest', duration: ex.rest, previewExercise: nextExData, isInterExercise: true, groupIndex })
+          steps.push({ type: 'rest', duration: effectiveRest(ex.rest), previewExercise: nextExData, isInterExercise: true, groupIndex })
         }
       }
       groupIndex++
@@ -60,9 +64,9 @@ export function buildSteps(template, skipWarmup, plan) {
       for (let set = 1; set <= ex.sets; set++) {
         steps.push({ type: 'exercise', exercise: exData, workoutEx: ex, set, totalSets: ex.sets, duration: ex.setDuration, groupIndex })
         if (set < ex.sets) {
-          steps.push({ type: 'rest', duration: ex.rest, previewExercise: exData, set, totalSets: ex.sets, groupIndex })
+          steps.push({ type: 'rest', duration: effectiveRest(ex.rest), previewExercise: exData, set, totalSets: ex.sets, groupIndex })
         } else {
-          steps.push({ type: 'rest', duration: ex.rest, previewExercise: nextExData, isInterExercise: true, groupIndex })
+          steps.push({ type: 'rest', duration: effectiveRest(ex.rest), previewExercise: nextExData, isInterExercise: true, groupIndex })
         }
       }
       groupIndex++
