@@ -11,7 +11,7 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
     templates[`${state.selectedCategory}_${state.selectedDuration}b`] !== undefined
 
   return (
-    <div className={`flex flex-col h-full items-center justify-center px-5 ${isWatch ? 'gap-4' : 'gap-7'} relative overflow-hidden`}>
+    <div className={`flex flex-col h-full items-center px-4 relative${isWatch ? ' gap-2 justify-start pt-14 pb-4 overflow-y-auto' : ' gap-7 justify-center overflow-hidden'}`}>
 
       {/* Background hero glow */}
       {!isWatch && (
@@ -73,15 +73,15 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
       {/* Category picker */}
       {categories.length > 1 && (
         <div className="w-full max-w-sm animate-slide-up" style={{ animationDelay: '60ms' }}>
-          <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">{t.category}</p>
-          <div className="flex gap-3">
+          {!isWatch && <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">{t.category}</p>}
+          <div className="flex gap-2">
             {categories.map(cat => {
               const isSelected = state.selectedCategory === cat
               return (
                 <button
                   key={cat}
                   onClick={() => dispatch({ type: 'SET_CATEGORY', category: cat })}
-                  className={`flex-1 flex flex-col items-center py-5 rounded-2xl border transition-all active:scale-95 ${
+                  className={`flex-1 flex flex-col items-center ${isWatch ? 'py-2' : 'py-5'} rounded-2xl border transition-all active:scale-95 ${
                     isSelected
                       ? 'border-teal-500/50 text-zinc-900 dark:text-white'
                       : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-300 hover:border-black/10 dark:hover:border-white/20'
@@ -91,13 +91,15 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
                     boxShadow: '0 0 24px rgba(13,148,136,0.15)',
                   } : {}}
                 >
-                  <span className="text-2xl leading-none">{categoryIcon(cat)}</span>
-                  <span className={`mt-1.5 text-sm font-bold text-center leading-tight px-1 ${isSelected ? 'text-teal-600 dark:text-teal-300' : 'text-zinc-500 dark:text-zinc-300'}`}>
+                  <span className={`${isWatch ? 'text-xl' : 'text-2xl'} leading-none`}>{categoryIcon(cat)}</span>
+                  <span className={`${isWatch ? 'mt-0.5 text-xs' : 'mt-1.5 text-sm'} font-bold text-center leading-tight px-1 ${isSelected ? 'text-teal-600 dark:text-teal-300' : 'text-zinc-500 dark:text-zinc-300'}`}>
                     {categoryLabel(cat, t)}
                   </span>
-                  <span className={`mt-0.5 text-xs text-center leading-tight px-1 ${isSelected ? 'text-teal-500/80 dark:text-teal-300/80' : 'text-zinc-400 dark:text-zinc-400'}`}>
-                    {categoryDesc(cat, t)}
-                  </span>
+                  {!isWatch && (
+                    <span className={`mt-0.5 text-xs text-center leading-tight px-1 ${isSelected ? 'text-teal-500/80 dark:text-teal-300/80' : 'text-zinc-400 dark:text-zinc-400'}`}>
+                      {categoryDesc(cat, t)}
+                    </span>
+                  )}
                 </button>
               )
             })}
@@ -108,10 +110,12 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
       {/* Variation picker */}
       {hasVariations && (
         <div className="w-full max-w-sm animate-slide-up" style={{ animationDelay: '100ms' }}>
-          <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">
-            {state.lang === 'he' ? 'בחר וריאציה' : 'Pick Variation'}
-          </p>
-          <div className="flex gap-3">
+          {!isWatch && (
+            <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">
+              {state.lang === 'he' ? 'בחר וריאציה' : 'Pick Variation'}
+            </p>
+          )}
+          <div className="flex gap-2">
             {(['a', 'b']).map(v => {
               const isSelected = state.selectedVariation === v
               const label = v === 'a' ? t.dayA : t.dayB
@@ -120,7 +124,7 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
                 <button
                   key={v}
                   onClick={() => dispatch({ type: 'SET_VARIATION', variation: v })}
-                  className={`flex-1 flex flex-col items-center py-5 rounded-2xl border transition-all active:scale-95 ${
+                  className={`flex-1 flex flex-col items-center ${isWatch ? 'py-2' : 'py-5'} rounded-2xl border transition-all active:scale-95 ${
                     isSelected
                       ? 'border-teal-500/50 text-zinc-900 dark:text-white'
                       : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-300 hover:border-black/10 dark:hover:border-white/20'
@@ -130,8 +134,10 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
                     boxShadow: '0 0 24px rgba(13,148,136,0.15)',
                   } : {}}
                 >
-                  <span className="font-display text-xl font-black leading-none">{label}</span>
-                  <span className={`mt-1.5 text-sm font-medium text-center px-2 leading-tight ${isSelected ? 'text-teal-600 dark:text-teal-300' : 'text-zinc-500 dark:text-zinc-300'}`}>{sub}</span>
+                  <span className={`font-display ${isWatch ? 'text-base' : 'text-xl'} font-black leading-none`}>{label}</span>
+                  {!isWatch && (
+                    <span className={`mt-1.5 text-sm font-medium text-center px-2 leading-tight ${isSelected ? 'text-teal-600 dark:text-teal-300' : 'text-zinc-500 dark:text-zinc-300'}`}>{sub}</span>
+                  )}
                 </button>
               )
             })}
@@ -141,24 +147,26 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
 
       {/* Duration picker */}
       <div className="w-full max-w-sm animate-slide-up" style={{ animationDelay: '130ms' }}>
-        <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">
-          {state.lang === 'he' ? 'משך אימון' : 'Duration'}
-        </p>
-        <div className="flex gap-3">
+        {!isWatch && (
+          <p className="text-zinc-600 dark:text-zinc-300 text-sm font-bold text-center uppercase tracking-widest mb-2">
+            {state.lang === 'he' ? 'משך אימון' : 'Duration'}
+          </p>
+        )}
+        <div className="flex gap-2">
           {durations.map(d => {
             const isSelected = state.selectedDuration === d
             return (
               <button
                 key={d}
                 onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
-                  className={`flex-1 flex flex-col items-center py-4 rounded-2xl border font-black transition-all active:scale-95 ${
+                className={`flex-1 flex flex-col items-center ${isWatch ? 'py-2' : 'py-4'} rounded-2xl border font-black transition-all active:scale-95 ${
                   isSelected
                     ? 'glass border-black/10 dark:border-white/20 text-zinc-900 dark:text-white'
                     : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-black/10 dark:hover:border-white/20 hover:text-zinc-700 dark:hover:text-zinc-200'
                 }`}
               >
-                <span className="font-display text-4xl leading-none">{d}</span>
-                <span className="text-sm font-medium mt-0.5 text-zinc-500 dark:text-zinc-400">{t.min}</span>
+                <span className={`font-display ${isWatch ? 'text-2xl' : 'text-4xl'} leading-none`}>{d}</span>
+                {!isWatch && <span className="text-sm font-medium mt-0.5 text-zinc-500 dark:text-zinc-400">{t.min}</span>}
               </button>
             )
           })}
@@ -168,7 +176,7 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
       {/* Preview button */}
       <button
         onClick={() => dispatch({ type: 'GO_PREVIEW' })}
-        className="btn-shine w-full max-w-xs md:max-w-sm text-white font-black text-xl md:text-2xl py-6 rounded-2xl transition-all active:scale-95 animate-slide-up tracking-wide"
+        className={`btn-shine w-full max-w-xs md:max-w-sm text-white font-black rounded-2xl transition-all active:scale-95 animate-slide-up tracking-wide ${isWatch ? 'text-base py-3' : 'text-xl md:text-2xl py-6'}`}
         style={{
           animationDelay: '160ms',
           background: 'linear-gradient(135deg, #0d9488, #06b6d4)',
