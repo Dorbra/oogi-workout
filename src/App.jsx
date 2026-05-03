@@ -25,6 +25,13 @@ export default function App() {
     localStorage.setItem('theme', state.theme)
   }, [state.theme])
 
+  useEffect(() => {
+    // Both dimensions ≤ 450px = square small screen (Galaxy Watch); no phone has that geometry.
+    if (Math.min(screen.width, screen.height) <= 450) {
+      dispatch({ type: 'SET_WATCH_MODE' })
+    }
+  }, [])
+
   // Save a history entry exactly once when a workout transitions to complete.
   useEffect(() => {
     if (prevScreen.current === 'active' && state.screen === 'complete') {
@@ -46,11 +53,11 @@ export default function App() {
   return (
     <div
       dir={state.lang === 'he' ? 'rtl' : 'ltr'}
-      className={`h-full bg-gradient-to-b from-teal-50 to-sky-50 dark:from-slate-900 dark:to-slate-950 text-zinc-900 dark:text-white max-w-2xl mx-auto relative overflow-hidden${state.theme === 'dark' ? ' dark' : ''}`}
+      className={`h-full bg-gradient-to-b from-teal-50 to-sky-50 dark:from-slate-900 dark:to-slate-950 text-zinc-900 dark:text-white max-w-2xl mx-auto relative overflow-hidden${state.theme === 'dark' ? ' dark' : ''}${state.isWatch ? ' watch' : ''}`}
     >
-      {state.screen === 'home'     && <HomeScreen     state={state} dispatch={dispatch} history={history} />}
+      {state.screen === 'home'     && <HomeScreen     state={state} dispatch={dispatch} history={history} isWatch={state.isWatch} />}
       {state.screen === 'preview'  && <PreviewScreen  state={state} dispatch={dispatch} />}
-      {state.screen === 'active'   && <ActiveWorkoutScreen state={state} dispatch={dispatch} />}
+      {state.screen === 'active'   && <ActiveWorkoutScreen state={state} dispatch={dispatch} isWatch={state.isWatch} />}
       {state.screen === 'complete' && <CompleteScreen state={state} dispatch={dispatch} />}
       {state.screen === 'history'  && (
         <HistoryScreen

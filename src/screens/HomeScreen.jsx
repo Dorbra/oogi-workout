@@ -1,7 +1,7 @@
 import { T } from '../constants/translations'
 import { getAvailableCategories, getAvailableDurations, categoryLabel, categoryDesc, categoryIcon } from '../lib/plan'
 
-export function HomeScreen({ state, dispatch, history }) {
+export function HomeScreen({ state, dispatch, history, isWatch = false }) {
   const t = T[state.lang]
   const { templates } = state.plan
   const categories = getAvailableCategories(templates)
@@ -11,13 +11,15 @@ export function HomeScreen({ state, dispatch, history }) {
     templates[`${state.selectedCategory}_${state.selectedDuration}b`] !== undefined
 
   return (
-    <div className="flex flex-col h-full items-center justify-center px-5 gap-7 relative overflow-hidden">
+    <div className={`flex flex-col h-full items-center justify-center px-5 ${isWatch ? 'gap-4' : 'gap-7'} relative overflow-hidden`}>
 
       {/* Background hero glow */}
-      <div
-        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full"
-        style={{ background: 'radial-gradient(circle, rgba(13,148,136,0.15) 0%, transparent 70%)', filter: 'blur(8px)' }}
-      />
+      {!isWatch && (
+        <div
+          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(13,148,136,0.15) 0%, transparent 70%)', filter: 'blur(8px)' }}
+        />
+      )}
 
       {/* Lang toggle */}
       <div className="absolute top-5 left-5 flex gap-1 glass rounded-full p-1">
@@ -61,11 +63,11 @@ export function HomeScreen({ state, dispatch, history }) {
 
       {/* Title */}
       <div className="text-center animate-slide-up" style={{ animationDelay: '0ms' }}>
-        <div className="text-6xl md:text-7xl mb-2 leading-none">💪</div>
-        <h1 className="font-display font-black text-zinc-900 dark:text-white tracking-wide uppercase" style={{ fontSize: 'clamp(2.6rem, 11vw, 4rem)' }}>
+        {!isWatch && <div className="text-6xl md:text-7xl mb-2 leading-none">💪</div>}
+        <h1 className="font-display font-black text-zinc-900 dark:text-white tracking-wide uppercase" style={{ fontSize: isWatch ? 'clamp(1.8rem, 8vw, 2.4rem)' : 'clamp(2.6rem, 11vw, 4rem)' }}>
           {t.appTitle}
         </h1>
-        <p className="text-zinc-500 dark:text-zinc-300 mt-1 text-base md:text-lg">{t.pickDuration}</p>
+        {!isWatch && <p className="text-zinc-500 dark:text-zinc-300 mt-1 text-base md:text-lg">{t.pickDuration}</p>}
       </div>
 
       {/* Category picker */}
@@ -177,9 +179,11 @@ export function HomeScreen({ state, dispatch, history }) {
       </button>
 
       {/* Version badge */}
-      <p className="absolute bottom-4 text-zinc-400 dark:text-zinc-600 text-xs font-mono select-none">
-        v{__APP_VERSION__}
-      </p>
+      {!isWatch && (
+        <p className="absolute bottom-4 text-zinc-400 dark:text-zinc-600 text-xs font-mono select-none">
+          v{__APP_VERSION__}
+        </p>
+      )}
     </div>
   )
 }
