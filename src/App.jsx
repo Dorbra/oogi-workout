@@ -27,7 +27,7 @@ export default function App() {
 
   useEffect(() => {
     // Both dimensions ≤ 450px = square small screen (Galaxy Watch); no phone has that geometry.
-    if (Math.min(screen.width, screen.height) <= 450) {
+    if (screen.width <= 450 && screen.height <= 450) {
       dispatch({ type: 'SET_WATCH_MODE' })
     }
   }, [])
