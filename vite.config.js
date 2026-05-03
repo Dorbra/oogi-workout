@@ -16,6 +16,10 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Registration + all update logic lives in main.jsx so it is part of the
+      // content-hashed app bundle. registerSW.js is still generated but not
+      // injected; the bundle takes over.
+      injectRegister: false,
       includeAssets: ['icon.svg'],
       manifest: {
         name: 'Oogi Workout',
@@ -43,13 +47,16 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Precache all static assets including the HTML shell.
         globPatterns: ['**/*.{js,css,html,svg,json,woff2}'],
+        // Serve cached index.html for all navigations (SPA fallback).
+        // The new content reaches users via the update cycle: reg.update() →
+        // new SW installs → skipWaiting → controllerchange → page reload.
         navigateFallback: 'index.html',
-        // Take over immediately on install — don't wait for all tabs to close.
-        // Without this the old SW keeps serving the old app on Android PWA
-        // until the user force-quits the app, which almost never happens.
+        // Take over immediately — don't wait for all tabs to close.
         skipWaiting: true,
         clientsClaim: true,
+        cleanupOutdatedCaches: true,
       },
     }),
   ],
