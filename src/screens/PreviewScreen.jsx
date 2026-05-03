@@ -1,11 +1,13 @@
 import { T } from '../constants/translations'
 import { getDurationLabel } from '../lib/plan'
 import { ExerciseSvg } from '../components/Svgs'
+import { HYPER_INTENSE_REST_REDUCTION } from '../lib/steps'
 
 export function PreviewScreen({ state, dispatch }) {
   const t = T[state.lang]
   const isHe = state.lang === 'he'
   const { exercises, templates } = state.plan
+  const restSecs = (raw) => state.hyperIntense ? Math.max(0, raw - HYPER_INTENSE_REST_REDUCTION) : raw
   const hasVariants = templates[`${state.selectedCategory}_${state.selectedDuration}a`] !== undefined
   const templateKey = hasVariants
     ? `${state.selectedCategory}_${state.selectedDuration}${state.selectedVariation}`
@@ -77,7 +79,7 @@ export function PreviewScreen({ state, dispatch }) {
                   </div>
                 ))}
                 <div className="px-4 py-1.5" style={{ background: 'rgba(255,255,255,0.02)' }}>
-                  <span className="text-zinc-500 dark:text-zinc-400 text-sm">{t.rest}: {item.ex.rest}{t.sec}</span>
+                  <span className="text-zinc-500 dark:text-zinc-400 text-sm">{t.rest}: {restSecs(item.ex.rest)}{t.sec}</span>
                 </div>
               </div>
             )
@@ -91,7 +93,7 @@ export function PreviewScreen({ state, dispatch }) {
               <div className="flex-1 min-w-0">
                 <p className="text-zinc-900 dark:text-white font-bold text-base leading-tight">{isHe ? item.exData.nameHe : item.exData.nameEn}</p>
                 {isHe && <p className="text-zinc-500 dark:text-zinc-400 text-xs mt-0.5">{item.exData.nameEn}</p>}
-                <p className="text-zinc-500 dark:text-zinc-400 text-xs mt-0.5">{t.rest}: {item.ex.rest}{t.sec}</p>
+                <p className="text-zinc-500 dark:text-zinc-400 text-xs mt-0.5">{t.rest}: {restSecs(item.ex.rest)}{t.sec}</p>
               </div>
               <div className="text-right flex-shrink-0">
                 <p className="text-teal-600 dark:text-teal-400 font-display font-black text-base">{item.ex.sets}×{item.ex.reps}</p>
@@ -110,6 +112,18 @@ export function PreviewScreen({ state, dispatch }) {
 
       {/* Bottom bar */}
       <div className="px-4 pb-6 pt-3 flex-shrink-0 border-t border-black/5 dark:border-white/10 space-y-3">
+        <label className="flex items-center justify-between cursor-pointer">
+          <div>
+            <span className="text-zinc-600 dark:text-zinc-300 font-bold text-base">{t.hyperIntense}</span>
+            <span className="block text-zinc-400 dark:text-zinc-500 text-xs">{t.hyperIntenseDesc}</span>
+          </div>
+          <div
+            onClick={() => dispatch({ type: 'TOGGLE_HYPER_INTENSE' })}
+            className={`w-12 h-7 rounded-full relative transition-colors flex-shrink-0 ${state.hyperIntense ? 'bg-orange-500' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+          >
+            <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-all ${state.hyperIntense ? 'right-1' : 'left-1'}`} />
+          </div>
+        </label>
         <label className="flex items-center justify-between cursor-pointer">
           <span className="text-zinc-600 dark:text-zinc-300 font-bold text-base">{t.skipWarmup}</span>
           <div

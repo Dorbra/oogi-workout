@@ -1,4 +1,4 @@
-import { DEFAULT_PLAN, buildSteps } from '../lib/steps'
+import { DEFAULT_PLAN, buildSteps, HYPER_INTENSE_REST_REDUCTION } from '../lib/steps'
 import { getAvailableDurations } from '../lib/plan'
 
 export const initialState = {
@@ -9,6 +9,7 @@ export const initialState = {
   selectedDuration: 30,
   selectedVariation: 'a',
   skipWarmup: false,
+  hyperIntense: false,
   plan: DEFAULT_PLAN,
   steps: [],
   groupStarts: [],
@@ -60,6 +61,9 @@ export function reducer(state, action) {
     case 'TOGGLE_SKIP_WARMUP':
       return { ...state, skipWarmup: !state.skipWarmup }
 
+    case 'TOGGLE_HYPER_INTENSE':
+      return { ...state, hyperIntense: !state.hyperIntense }
+
     case 'SET_LANG':
       return { ...state, lang: action.lang }
 
@@ -81,7 +85,9 @@ export function reducer(state, action) {
         ? `${state.selectedCategory}_${state.selectedDuration}${state.selectedVariation}`
         : `${state.selectedCategory}_${state.selectedDuration}`
       const template = state.plan.templates[templateKey]
-      const { steps, groupStarts } = buildSteps(template, state.skipWarmup, state.plan)
+      const { steps, groupStarts } = buildSteps(template, state.skipWarmup, state.plan, {
+        reduceRestSecs: state.hyperIntense ? HYPER_INTENSE_REST_REDUCTION : 0,
+      })
       const firstStep = steps[0]
       const duration = firstStep?.duration ?? 0
       return {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildSteps, formatTime, totalRemainingSeconds } from './steps'
+import { buildSteps, formatTime, totalRemainingSeconds, HYPER_INTENSE_REST_REDUCTION } from './steps'
 import { DEFAULT_PLAN } from './steps'
 
 // ─── Minimal fixtures ────────────────────────────────────────────────────────
@@ -194,6 +194,48 @@ describe('buildSteps — groupStarts', () => {
     const { groupStarts: withWarmup }    = buildSteps(template, false, plan)
     const { groupStarts: withoutWarmup } = buildSteps(template, true,  plan)
     expect(withoutWarmup.length).toBe(withWarmup.length - 1)
+  })
+})
+
+// ─── buildSteps — hyper intense mode ─────────────────────────────────────────
+
+describe('buildSteps — hyper intense mode (reduceRestSecs)', () => {
+  const template = { exercises: [exercise('A', 2, 60, 30)] }
+  const options = { reduceRestSecs: HYPER_INTENSE_REST_REDUCTION }
+
+  it('reduces all rest durations by HYPER_INTENSE_REST_REDUCTION', () => {
+    const { steps } = buildSteps(template, true, plan, options)
+    steps.filter(s => s.type === 'rest').forEach(s => {
+      expect(s.duration).toBe(60 - HYPER_INTENSE_REST_REDUCTION)
+    })
+  })
+
+  it('clamps rest duration to zero when reduction exceeds rest length', () => {
+    const tinyRest = { exercises: [exercise('A', 2, 10, 30)] }
+    const { steps } = buildSteps(tinyRest, true, plan, { reduceRestSecs: 30 })
+    steps.filter(s => s.type === 'rest').forEach(s => {
+      expect(s.duration).toBe(0)
+    })
+  })
+
+  it('reduces rest in superset groups', () => {
+    const ssTemplate = {
+      exercises: [
+        { ...exercise('A', 2, 60, 30), supersetWith: 'B' },
+        exercise('B', 2, 60, 30),
+      ],
+    }
+    const { steps } = buildSteps(ssTemplate, true, plan, options)
+    steps.filter(s => s.type === 'rest').forEach(s => {
+      expect(s.duration).toBe(60 - HYPER_INTENSE_REST_REDUCTION)
+    })
+  })
+
+  it('does not alter rest when reduceRestSecs is 0 (default)', () => {
+    const { steps } = buildSteps(template, true, plan)
+    steps.filter(s => s.type === 'rest').forEach(s => {
+      expect(s.duration).toBe(60)
+    })
   })
 })
 

@@ -52,6 +52,8 @@ export const T = {
     planned: 'מתוכנן',
     actual: 'ביצוע',
     skippedWarmup: 'דולג חימום',
+    hyperIntense: 'מצב אינטנסיבי',
+    hyperIntenseDesc: 'מנוחה קצרה ב-15 שנ׳',
   },
   en: {
     appTitle: 'Workout',
@@ -106,5 +108,7 @@ export const T = {
     planned: 'Planned',
     actual: 'Actual',
     skippedWarmup: 'No warmup',
+    hyperIntense: 'Hyper Intense Mode',
+    hyperIntenseDesc: '-15s rest per set',
   },
 }
