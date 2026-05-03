@@ -17,6 +17,7 @@ export const initialState = {
   stepEndTime: 0,        // Date.now() ms — deadline for the current step
   isPaused: false,
   completedSeconds: 0,
+  isWatch: false,
 }
 
 function stepDeadline(durationSecs) {
@@ -73,7 +74,10 @@ export function reducer(state, action) {
       return { ...state, screen: 'history' }
 
     case 'GO_HOME':
-      return { ...initialState, lang: state.lang, plan: state.plan, selectedCategory: state.selectedCategory }
+      return { ...initialState, lang: state.lang, plan: state.plan, selectedCategory: state.selectedCategory, isWatch: state.isWatch }
+
+    case 'SET_WATCH_MODE':
+      return { ...state, isWatch: true }
 
     case 'START_WORKOUT': {
       const hasVariants = state.plan.templates[`${state.selectedCategory}_${state.selectedDuration}a`] !== undefined

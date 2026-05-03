@@ -6,7 +6,7 @@ import { NavBar } from '../components/NavBar'
 import { ProgressBar } from '../components/ProgressBar'
 import { TimerRing } from '../components/TimerRing'
 
-export function ActiveWorkoutScreen({ state, dispatch }) {
+export function ActiveWorkoutScreen({ state, dispatch, isWatch = false }) {
   const t = T[state.lang]
   const isHe = state.lang === 'he'
   const step = state.steps[state.stepIndex]
@@ -32,11 +32,11 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             <p className="text-teal-600 dark:text-teal-400 font-black text-xl leading-tight">{t.getReady}</p>
             <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">{currentGroup}/{exerciseCount} · ⏱ {formatTime(totalRemaining)} {t.remaining}</p>
           </div>
-          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="orange" size={84} />
+          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="orange" size={isWatch ? 70 : 84} />
         </div>
 
         <div className="flex-1 flex flex-col px-4 gap-3 overflow-y-auto pb-2" onClick={handleCenterTap}>
-          {ex && (
+          {!isWatch && ex && (
             <div className="w-full rounded-2xl overflow-hidden" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)' }}>
               <div className="w-full" style={{ aspectRatio: '200/80' }}>
                 <ExerciseSvg svgKey={ex.svg} />
@@ -67,14 +67,14 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             </div>
           )}
 
-          {instr && (
+          {!isWatch && instr && (
             <div className="glass rounded-xl px-4 py-3">
               <p className="text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-wide mb-1">{isHe ? 'הוראות ביצוע' : 'Form cues'}</p>
               <p className="text-zinc-700 dark:text-zinc-200 text-base leading-relaxed">{instr}</p>
             </div>
           )}
 
-          {step.isSuperset && step.previewExB && (
+          {!isWatch && step.isSuperset && step.previewExB && (
             <div className="glass rounded-xl px-4 py-3">
               <p className="text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-wide mb-1">{isHe ? step.previewExB.nameHe : step.previewExB.nameEn}</p>
               <p className="text-zinc-700 dark:text-zinc-200 text-base leading-relaxed">{isHe ? step.previewExB.instrHe : step.previewExB.instrEn}</p>
@@ -99,9 +99,11 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         <div className="flex-1 flex flex-col items-center px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
-          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/80' }}>
-            <ExerciseSvg svgKey={ex.svg} />
-          </div>
+          {!isWatch && (
+            <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/80' }}>
+              <ExerciseSvg svgKey={ex.svg} />
+            </div>
+          )}
 
           <div className="text-center flex-shrink-0">
             <h2 className="text-zinc-900 dark:text-white font-black leading-tight" style={{ fontSize: 'clamp(1.7rem, 6.5vw, 2.8rem)' }}>
@@ -110,12 +112,14 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             {isHe && <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
 
-          <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
-            {isHe ? ex.instrHe : ex.instrEn}
-          </p>
+          {!isWatch && (
+            <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
+              {isHe ? ex.instrHe : ex.instrEn}
+            </p>
+          )}
 
           <div className="flex flex-col items-center gap-3 mt-auto pb-2 flex-shrink-0">
-            <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="teal" size={160} />
+            <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="teal" size={isWatch ? 130 : 160} />
           </div>
         </div>
 
@@ -145,7 +149,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center gap-5 px-5" onClick={handleCenterTap}>
-          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color={restRing} size={184} />
+          <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color={restRing} size={isWatch ? 150 : 184} />
 
           {/* Set indicator — shows the NEXT set number coming up */}
           {nextSetNum != null && (
@@ -200,9 +204,11 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
 
         <div className="flex-1 flex flex-col items-center px-5 gap-4 overflow-hidden" onClick={handleCenterTap}>
-          <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/80' }}>
-            <ExerciseSvg svgKey={ex.svg} />
-          </div>
+          {!isWatch && (
+            <div className="w-full rounded-2xl overflow-hidden flex-shrink-0" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/80' }}>
+              <ExerciseSvg svgKey={ex.svg} />
+            </div>
+          )}
 
           <div className="text-center flex-shrink-0">
             <h2 className="text-zinc-900 dark:text-white font-black leading-tight" style={{ fontSize: 'clamp(1.7rem, 6.5vw, 2.8rem)' }}>
@@ -211,12 +217,14 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             {isHe && <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">{ex.nameEn}</p>}
           </div>
 
-          <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
-            {isHe ? ex.instrHe : ex.instrEn}
-          </p>
+          {!isWatch && (
+            <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed text-center px-2 flex-shrink-0 line-clamp-3">
+              {isHe ? ex.instrHe : ex.instrEn}
+            </p>
+          )}
 
           <div className="flex flex-col items-center gap-3 mt-auto pb-2 flex-shrink-0">
-            <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="teal" size={160} />
+            <TimerRing seconds={state.secondsRemaining} totalSeconds={step.duration} color="teal" size={isWatch ? 130 : 160} />
           </div>
         </div>
 
@@ -250,11 +258,13 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         </div>
       )}
 
-      <div className="flex-1 flex flex-col px-5 gap-3 overflow-hidden min-h-0" onClick={handleCenterTap}>
-        {/* SVG diagram */}
-        <div className="w-full flex-shrink-0 rounded-2xl overflow-hidden" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/78' }}>
-          <ExerciseSvg svgKey={ex.svg} />
-        </div>
+      <div className={`flex-1 flex flex-col px-5 gap-3 min-h-0 ${isWatch ? 'overflow-y-auto' : 'overflow-hidden'}`} onClick={handleCenterTap}>
+        {/* SVG diagram — hidden on watch */}
+        {!isWatch && (
+          <div className="w-full flex-shrink-0 rounded-2xl overflow-hidden" style={{ background: 'var(--color-svg-bg)', border: '1px solid var(--color-svg-border)', aspectRatio: '200/78' }}>
+            <ExerciseSvg svgKey={ex.svg} />
+          </div>
+        )}
 
         {/* Name */}
         <div className="text-center flex-shrink-0">
@@ -267,12 +277,12 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
         {/* Set indicator — large, glanceable */}
         <div className="flex-shrink-0 flex items-center justify-center gap-3">
           <span className="text-zinc-500 dark:text-zinc-400 text-base font-bold uppercase tracking-widest">{t.set}</span>
-          <span className="font-display font-black text-zinc-900 dark:text-white leading-none" style={{ fontSize: 'clamp(3rem, 12vw, 4.5rem)' }}>{step.set}</span>
+          <span className="font-display font-black text-zinc-900 dark:text-white leading-none" style={{ fontSize: isWatch ? 'clamp(2.4rem, 10vw, 3.5rem)' : 'clamp(3rem, 12vw, 4.5rem)' }}>{step.set}</span>
           <span className="text-zinc-400 dark:text-zinc-400 font-bold text-2xl">/ {step.totalSets}</span>
         </div>
 
         {/* Reps + weight */}
-        <div className="glass rounded-2xl flex items-center justify-around py-4 flex-shrink-0">
+        <div className={`glass rounded-2xl flex items-center justify-around flex-shrink-0 ${isWatch ? 'py-2' : 'py-4'}`}>
           <div className="text-center">
             <p className="text-zinc-500 dark:text-zinc-400 text-sm uppercase tracking-wide mb-0.5">{t.reps}</p>
             <p className="text-teal-600 dark:text-teal-400 font-display font-black text-3xl leading-none">{wo.reps}</p>
@@ -284,10 +294,12 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
           </div>
         </div>
 
-        {/* Form cue */}
-        <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed text-center px-1 flex-shrink-0 line-clamp-3">
-          {instr}
-        </p>
+        {/* Form cue — hidden on watch */}
+        {!isWatch && (
+          <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed text-center px-1 flex-shrink-0 line-clamp-3">
+            {instr}
+          </p>
+        )}
 
         {/* Timer ring */}
         <div className="mt-auto pb-1 flex-shrink-0 flex flex-col items-center gap-2">
@@ -295,7 +307,7 @@ export function ActiveWorkoutScreen({ state, dispatch }) {
             seconds={state.secondsRemaining}
             totalSeconds={step.duration}
             color={ringColor}
-            size={156}
+            size={isWatch ? 132 : 156}
           />
         </div>
       </div>
