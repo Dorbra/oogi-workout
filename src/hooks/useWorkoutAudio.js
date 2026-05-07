@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { playBeep, playWorkBuzzer, playRestTone } from '../lib/audio'
+import { playBeep, playWorkBuzzer, playRestTone, playGetReadyAlert } from '../lib/audio'
 
 export function useWorkoutAudio(screen, steps, stepIndex, secondsRemaining) {
   const prevStepRef = useRef(null)
@@ -8,6 +8,11 @@ export function useWorkoutAudio(screen, steps, stepIndex, secondsRemaining) {
     if (screen !== 'active') return
     const step = steps[stepIndex]
     if (!step) return
+
+    // "Get ready" alert at exactly 10s remaining during rest
+    if (step.type === 'rest' && secondsRemaining === 10) {
+      playGetReadyAlert()
+    }
 
     // Countdown beeps during transition or rest (last 3 seconds)
     if ((step.type === 'transition' || step.type === 'rest') && secondsRemaining <= 3 && secondsRemaining > 0) {
