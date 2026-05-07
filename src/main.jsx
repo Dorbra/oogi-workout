@@ -17,7 +17,7 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     let reg
     try {
-      reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      reg = await navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache: 'none' })
     } catch {
       return
     }
