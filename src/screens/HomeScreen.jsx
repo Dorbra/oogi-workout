@@ -99,11 +99,14 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
                 onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
                 className={`flex-1 py-2 rounded-xl border font-black text-center transition-all active:scale-95 ${
                   isSelected
-                    ? 'glass border-black/10 dark:border-white/20 text-zinc-900 dark:text-white'
+                    ? 'border-teal-500/60 text-zinc-900 dark:text-white'
                     : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-400'
                 }`}
+                style={isSelected ? {
+                  background: 'linear-gradient(135deg, rgba(13,148,136,0.22), rgba(6,182,212,0.10))',
+                } : {}}
               >
-                <span className="font-display text-2xl leading-none block">{d}</span>
+                <span className={`font-display text-2xl leading-none block ${isSelected ? 'text-teal-600 dark:text-teal-300' : ''}`}>{d}</span>
                 <span className="text-xs text-zinc-400 dark:text-zinc-500">{t.min}</span>
               </button>
             )
@@ -266,11 +269,15 @@ export function HomeScreen({ state, dispatch, history, isWatch = false }) {
                 onClick={() => dispatch({ type: 'SET_DURATION', duration: d })}
                 className={`flex-1 flex flex-col items-center py-4 rounded-2xl border font-black transition-all active:scale-95 ${
                   isSelected
-                    ? 'glass border-black/10 dark:border-white/20 text-zinc-900 dark:text-white'
+                    ? 'border-teal-500/50 text-zinc-900 dark:text-white'
                     : 'glass border-black/5 dark:border-white/10 text-zinc-500 dark:text-zinc-400 hover:border-black/10 dark:hover:border-white/20 hover:text-zinc-700 dark:hover:text-zinc-200'
                 }`}
+                style={isSelected ? {
+                  background: 'linear-gradient(145deg, rgba(13,148,136,0.18), rgba(6,182,212,0.08))',
+                  boxShadow: '0 0 24px rgba(13,148,136,0.15)',
+                } : {}}
               >
-                <span className="font-display text-4xl leading-none">{d}</span>
+                <span className={`font-display text-4xl leading-none ${isSelected ? 'text-teal-600 dark:text-teal-300' : ''}`}>{d}</span>
                 <span className="text-sm font-medium mt-0.5 text-zinc-500 dark:text-zinc-400">{t.min}</span>
               </button>
             )

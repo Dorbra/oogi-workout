@@ -40,3 +40,8 @@ export function playWorkBuzzer() {
 export function playRestTone() {
   playBeep(440, 0.2, 0.2)
 }
+
+export function playGetReadyAlert() {
+  playBeep(660, 0.12, 0.28)
+  setTimeout(() => playBeep(880, 0.18, 0.32), 180)
+}
