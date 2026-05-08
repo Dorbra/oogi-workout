@@ -11,7 +11,8 @@ Each item is tagged: `[data-only]` · `[frontend-only]` · `[new-api]` · `[new-
 
 PR: [#35 feat/workout-ux-polish](https://github.com/Dorbra/oogi-workout/pull/35)
 
-- **Skip Rest button** — replaces the old +15s extend button; dispatches `SKIP_SET_FORWARD` / `SKIP_FORWARD` so you can jump straight to the next set without waiting out the full rest.
+- **+15s extend button** — inline next to Skip Rest; dispatches `EXTEND_REST` to add 15 s to the current rest step without disrupting the deadline model.
+- **Skip Rest button** — dispatches `SKIP_SET_FORWARD` / `SKIP_FORWARD` so you can jump straight to the next set without waiting out the full rest.
 - **Next set number** — the set counter during rest now shows the *upcoming* set (e.g. "Set 4 / 4") rather than the one just completed, so you always know what you're about to do.
 - **Red countdown** — the last 10 s of rest turns red: timer ring, background glow, label, and set number all shift to red as an urgency signal.
 - **Bigger instructions** — exercise form cues bumped from `text-xs` to `text-sm` (exercise screen) and `text-sm` to `text-base` (warmup / cooldown / transition), readable at 1–2 m distance.
@@ -72,6 +73,19 @@ History entry point: `📊` icon button in the top-right corner, grouped with th
 PRs: [#12](https://github.com/Dorbra/oogi-workout/pull/12) · [#13](https://github.com/Dorbra/oogi-workout/pull/13) · [#14](https://github.com/Dorbra/oogi-workout/pull/14)
 
 SVG circular timer ring (`TimerRing`), glass-card surfaces, gradient CTAs, shine sweep, set-level navigation, rest-set indicator, and swap from ring pull-ups → ring dips.
+
+### ✅ Galaxy Watch support
+
+PRs: [#46 feat/galaxy-watch-ui](https://github.com/Dorbra/oogi-workout/pull/46)
+
+Compact, per-screen UI for small square screens (Galaxy Watch 4/5/7 and similar — detected by `screen.width ≤ 450 && screen.height ≤ 450`). Once detected, `state.isWatch = true` is set for the session. Changes by screen:
+
+- **Home** — full-width vertical category buttons, no preview step (taps Start straight to workout)
+- **Transition / Rest** — condensed header, larger ring relative to viewport, stripped footer
+- **Warmup / Cooldown** — name + ring only; instructions hidden
+- **Exercise** — ring, set counter, reps + weight; SVG diagram hidden; pause overlay retained
+
+Detection fires once in a `useEffect` on mount. The watch-mode branch of each screen is a sibling code path, not a separate screen file.
 
 ---
 

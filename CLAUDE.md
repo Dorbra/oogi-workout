@@ -29,7 +29,7 @@ Modular single-page React app that runs a structured home workout session. All w
 
 ```
 src/
-  App.jsx              # Root: useReducer + 4 hooks + screen router only
+  App.jsx              # Root: useReducer + 5 hooks + screen router only
   main.jsx             # React 19 entry point
   index.css            # Tailwind import + global resets
   screens/             # One file per full-page view
@@ -41,15 +41,18 @@ src/
   components/          # Shared presentational components
     NavBar.jsx             # Pause / skip controls
     ProgressBar.jsx        # Visual step-countdown bar
+    TimerRing.jsx          # SVG circular countdown ring (4 colour variants)
     Svgs.jsx               # All exercise SVG diagrams (ExerciseSvg lookup)
   hooks/               # Side-effect hooks
     useWorkoutTimer.js     # Dispatches TICK every second during active workout
     useWakeLock.js         # Keeps screen awake during workout
     useWorkoutAudio.js     # Web Audio API beeps and tones
     useWorkoutHistory.js   # localStorage history: saveWorkout, removeEntry, wipeHistory
+    useHaptics.js          # navigator.vibrate() patterns for step changes + completion
   lib/                 # Pure functions — no React imports
-    steps.js               # buildSteps, formatTime, totalRemainingSeconds
-    steps.test.js          # Vitest unit tests (25 tests)
+    steps.js               # buildSteps, formatTime, totalRemainingSeconds,
+                           #   HYPER_INTENSE_REST_REDUCTION, resolvePlan, DEFAULT_PLAN
+    steps.test.js          # Vitest unit tests (29 tests)
     plan.js                # Category/duration helpers (uses CATEGORY_META)
     audio.js               # Low-level Web Audio tone generation
     history.js             # localStorage CRUD: loadHistory, appendEntry, deleteEntry, clearHistory
@@ -230,7 +233,7 @@ npm test          # Vitest — must pass before any commit
 npm run test:watch  # watch mode during development
 ```
 
-Tests live in three colocated files — `src/lib/steps.test.js` (25 tests), `src/lib/history.test.js` (15 tests), `src/lib/haptics.test.js` (4 tests). **44 tests total.** See Testing guidelines below.
+Tests live in three colocated files — `src/lib/steps.test.js` (29 tests), `src/lib/history.test.js` (15 tests), `src/lib/haptics.test.js` (4 tests). **48 tests total.** See Testing guidelines below.
 
 Before marking any UI change complete, manually verify:
 1. The changed feature works on a mobile viewport

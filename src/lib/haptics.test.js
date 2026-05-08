@@ -4,9 +4,9 @@ import { vibrateShort, vibrateDouble, vibrateLong } from './haptics'
 describe('vibrateShort', () => {
   beforeEach(() => vi.stubGlobal('navigator', { vibrate: vi.fn() }))
 
-  it('calls navigator.vibrate(100)', () => {
+  it('calls navigator.vibrate(180)', () => {
     vibrateShort()
-    expect(navigator.vibrate).toHaveBeenCalledWith(100)
+    expect(navigator.vibrate).toHaveBeenCalledWith(180)
   })
 })
 
@@ -15,16 +15,16 @@ describe('vibrateDouble', () => {
 
   it('calls navigator.vibrate with a pulse-pause-pulse pattern', () => {
     vibrateDouble()
-    expect(navigator.vibrate).toHaveBeenCalledWith([100, 80, 200])
+    expect(navigator.vibrate).toHaveBeenCalledWith([180, 80, 300])
   })
 })
 
 describe('vibrateLong', () => {
   beforeEach(() => vi.stubGlobal('navigator', { vibrate: vi.fn() }))
 
-  it('calls navigator.vibrate(500)', () => {
+  it('calls navigator.vibrate(800)', () => {
     vibrateLong()
-    expect(navigator.vibrate).toHaveBeenCalledWith(500)
+    expect(navigator.vibrate).toHaveBeenCalledWith(800)
   })
 })
 

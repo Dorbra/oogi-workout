@@ -59,7 +59,7 @@ data/        → JSON only — no JS logic
 ### exercises.json
 
 - Do not add, remove, or rename exercises without explicit user instruction.
-- IDs are string integers (`"1"` – `"38"`). New entries increment from the current maximum.
+- IDs are string integers (`"1"` – `"39"`). New entries increment from the current maximum.
 - Every exercise entry requires exactly: `id`, `nameHe`, `nameEn`, `svg`, `instrHe`, `instrEn`.
 - The `svg` field must match a key in `src/components/Svgs.jsx`. Adding a new exercise without a matching SVG is incomplete.
 

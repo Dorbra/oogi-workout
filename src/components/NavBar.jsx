@@ -36,15 +36,15 @@ export function NavBar({ t, dispatch, isPaused = false, isTransition = false, pr
     <div className={`flex items-center justify-between flex-shrink-0 border-t border-black/5 dark:border-white/10 ${isWatch ? 'px-3 py-2' : 'px-4 py-3'}`}>
       <button
         onClick={() => dispatch({ type: prevAction })}
-        className={`flex items-center gap-1.5 glass rounded-full text-zinc-600 dark:text-zinc-300 font-bold active:scale-95 transition-transform ${isWatch ? 'px-4 py-3' : 'px-6 py-4 text-base'}`}
+        className={`flex items-center gap-1.5 glass rounded-full text-zinc-600 dark:text-zinc-300 font-bold active:scale-95 transition-transform ${isWatch ? 'px-3 py-2.5 text-xs' : 'px-6 py-4 text-base'}`}
       >
         <ChevronLeft />
-        {!isWatch && t.prev}
+        {t.prev}
       </button>
 
       <button
         onClick={() => dispatch({ type: 'PAUSE_RESUME' })}
-        className={`flex items-center gap-2 font-bold rounded-full active:scale-95 transition-all ${isWatch ? 'px-5 py-3 text-sm' : 'px-8 py-4 text-base'} ${
+        className={`flex items-center gap-2 font-bold rounded-full active:scale-95 transition-all ${isWatch ? 'px-4 py-2.5 text-xs' : 'px-8 py-4 text-base'} ${
           isPaused
             ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/40'
             : 'glass text-zinc-600 dark:text-zinc-300'
@@ -56,9 +56,9 @@ export function NavBar({ t, dispatch, isPaused = false, isTransition = false, pr
 
       <button
         onClick={() => dispatch({ type: nextAction })}
-        className={`flex items-center gap-1.5 glass rounded-full text-zinc-600 dark:text-zinc-300 font-bold active:scale-95 transition-transform ${isWatch ? 'px-4 py-3' : 'px-6 py-4 text-base'}`}
+        className={`flex items-center gap-1.5 glass rounded-full text-zinc-600 dark:text-zinc-300 font-bold active:scale-95 transition-transform ${isWatch ? 'px-3 py-2.5 text-xs' : 'px-6 py-4 text-base'}`}
       >
-        {!isWatch && (isTransition ? t.skip : t.next)}
+        {isTransition ? t.skip : t.next}
         <ChevronRight />
       </button>
     </div>
