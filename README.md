@@ -12,8 +12,8 @@ A mobile-first home workout timer app — built for equipment-minimal training w
 - **Flexible durations** — 20, 30, or 45 minutes (Full Body: 30 or 45 min)
 - **Day A / Day B variations** — Upper Body has a push-focused and a pull-focused day so you never repeat the same stimulus back-to-back
 - **Full session structure** — automatic warmup (90 s) → working sets → cooldown (150 s)
-- **Live countdown timer** — colour shifts to orange in the last 10 s of a set; audio beep fires at 5 s remaining
-- **Rest screen** — shows the *next* set number; last 10 s turns red; Skip Rest button to jump straight to the next set
+- **Live countdown timer** — colour shifts to red in the last 10 s of a set; audio beep fires at 5 s remaining
+- **Rest screen** — shows the *next* set number; last 10 s turns red; Skip Rest button to jump straight to the next set; "get ready" audio alert at 10 s remaining
 - **Superset support** — paired exercises are shown and timed together
 - **SVG exercise diagrams** — stick-figure illustrations for every exercise, warmup, and cooldown movement
 - **Bigger form cues** — exercise instructions are sized to be readable at 1–2 m distance
@@ -23,6 +23,7 @@ A mobile-first home workout timer app — built for equipment-minimal training w
 - **Haptic feedback** — vibration patterns for exercise start, step changes, last-3s countdown, and workout complete (where supported)
 - **Workout history** — every completed session is saved to `localStorage`; the history screen shows total workouts, total training time, this-week count, and a per-entry log with planned vs actual duration
 - **Dark / light mode** — persisted across sessions
+- **Galaxy Watch support** — compact per-screen layout auto-activated on small square screens (≤ 450 × 450 px); starts workouts directly without the preview step
 - **PWA** — installable, works offline, auto-updates in the background
 - **Semantic versioning** — every deploy is tagged; current version is shown on the home screen
 
@@ -91,11 +92,18 @@ src/
   hooks/
     useWorkoutTimer.js     # TICK dispatch every second
     useWakeLock.js         # keep screen awake
-    useWorkoutAudio.js     # Web Audio API beeps
+    useWorkoutAudio.js     # Web Audio API beeps + get-ready alert
     useWorkoutHistory.js   # localStorage history (save / delete / wipe)
+    useHaptics.js          # vibration patterns for step changes + completion
+  components/
+    TimerRing.jsx          # SVG circular countdown ring (orange/blue/teal/red)
   lib/
-    steps.js               # buildSteps, formatTime, totalRemainingSeconds
+    steps.js               # buildSteps, formatTime, totalRemainingSeconds,
+                           #   HYPER_INTENSE_REST_REDUCTION, resolvePlan, DEFAULT_PLAN
     history.js             # versioned localStorage CRUD layer
+    plan.js                # category / duration / label helpers (CATEGORY_META)
+    audio.js               # low-level Web Audio tone primitives
+    haptics.js             # navigator.vibrate() wrapper
   constants/
     categories.js          # CATEGORY_META — icon, label, description per category
   data/

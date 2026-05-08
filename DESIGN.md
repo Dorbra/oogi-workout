@@ -73,6 +73,19 @@ PRs: [#12](https://github.com/Dorbra/oogi-workout/pull/12) · [#13](https://gith
 
 SVG circular timer ring (`TimerRing`), glass-card surfaces, gradient CTAs, shine sweep, set-level navigation, rest-set indicator, and swap from ring pull-ups → ring dips.
 
+### ✅ Galaxy Watch support
+
+PRs: [#46 feat/galaxy-watch-ui](https://github.com/Dorbra/oogi-workout/pull/46)
+
+Compact, per-screen UI for small square screens (Galaxy Watch 4/5/7 and similar — detected by `screen.width ≤ 450 && screen.height ≤ 450`). Once detected, `state.isWatch = true` is set for the session. Changes by screen:
+
+- **Home** — full-width vertical category buttons, no preview step (taps Start straight to workout)
+- **Transition / Rest** — condensed header, larger ring relative to viewport, stripped footer
+- **Warmup / Cooldown** — name + ring only; instructions hidden
+- **Exercise** — ring, set counter, reps + weight; SVG diagram hidden; pause overlay retained
+
+Detection fires once in a `useEffect` on mount. The watch-mode branch of each screen is a sibling code path, not a separate screen file.
+
 ---
 
 ## P1 — High Value, Feasible Solo (evening-scale)
