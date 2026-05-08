@@ -205,13 +205,22 @@ export function ActiveWorkoutScreen({ state, dispatch, isWatch = false }) {
                 {step.isInterExercise ? t.nextExercise : t.nextSet}: <span className="text-zinc-700 dark:text-zinc-200 font-bold">{isHe ? ex.nameHe : ex.nameEn}</span>
               </p>
             )}
-            <button
-              onClick={e => { e.stopPropagation(); dispatch({ type: isIntraSet ? 'SKIP_SET_FORWARD' : 'SKIP_FORWARD' }) }}
-              className="glass rounded-full font-black text-sm px-5 py-2.5 active:scale-95 transition-transform text-blue-700 dark:text-blue-300"
-              style={{ border: '1px solid rgba(59,130,246,0.30)' }}
-            >
-              {t.skipRest} →
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={e => { e.stopPropagation(); dispatch({ type: 'EXTEND_REST' }) }}
+                className="glass rounded-full font-black text-sm px-4 py-2.5 active:scale-95 transition-transform text-zinc-600 dark:text-zinc-300"
+                style={{ border: '1px solid rgba(100,100,100,0.25)' }}
+              >
+                {t.extendRest}
+              </button>
+              <button
+                onClick={e => { e.stopPropagation(); dispatch({ type: isIntraSet ? 'SKIP_SET_FORWARD' : 'SKIP_FORWARD' }) }}
+                className="glass rounded-full font-black text-sm px-4 py-2.5 active:scale-95 transition-transform text-blue-700 dark:text-blue-300"
+                style={{ border: '1px solid rgba(59,130,246,0.30)' }}
+              >
+                {t.skipRest} →
+              </button>
+            </div>
           </div>
           <ProgressBar progress={progress} color={restBar} />
           <NavBar t={t} dispatch={dispatch} isPaused={state.isPaused} prevAction={isIntraSet ? 'SKIP_SET_BACKWARD' : 'SKIP_BACKWARD'} nextAction={isIntraSet ? 'SKIP_SET_FORWARD' : 'SKIP_FORWARD'} isWatch />
@@ -252,13 +261,22 @@ export function ActiveWorkoutScreen({ state, dispatch, isWatch = false }) {
             </div>
           )}
 
-          <button
-            onClick={e => { e.stopPropagation(); dispatch({ type: isIntraSet ? 'SKIP_SET_FORWARD' : 'SKIP_FORWARD' }) }}
-            className="glass rounded-full font-black text-base px-8 py-4 active:scale-95 transition-transform text-blue-700 dark:text-blue-300"
-            style={{ border: '1px solid rgba(59,130,246,0.30)' }}
-          >
-            {t.skipRest} →
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={e => { e.stopPropagation(); dispatch({ type: 'EXTEND_REST' }) }}
+              className="glass rounded-full font-black text-base px-6 py-4 active:scale-95 transition-transform text-zinc-600 dark:text-zinc-300"
+              style={{ border: '1px solid rgba(100,100,100,0.25)' }}
+            >
+              {t.extendRest}
+            </button>
+            <button
+              onClick={e => { e.stopPropagation(); dispatch({ type: isIntraSet ? 'SKIP_SET_FORWARD' : 'SKIP_FORWARD' }) }}
+              className="glass rounded-full font-black text-base px-8 py-4 active:scale-95 transition-transform text-blue-700 dark:text-blue-300"
+              style={{ border: '1px solid rgba(59,130,246,0.30)' }}
+            >
+              {t.skipRest} →
+            </button>
+          </div>
         </div>
 
         <ProgressBar progress={progress} color={restBar} />
