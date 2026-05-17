@@ -19,9 +19,9 @@ export function getAvailableDurations(templates, category) {
     .sort((a, b) => a - b)
 }
 
-export function getDurationLabel(selectedDuration, selectedVariation, t) {
-  if (selectedDuration === 30 && selectedVariation === 'a') return t.dayA
-  if (selectedDuration === 30 && selectedVariation === 'b') return t.dayB
+export function getDurationLabel(selectedDuration, selectedVariation, templates, category, t) {
+  const hasVariants = templates[`${category}_${selectedDuration}a`] !== undefined
+  if (hasVariants) return selectedVariation === 'a' ? t.dayA : t.dayB
   return `${selectedDuration} ${t.min}`
 }
 
