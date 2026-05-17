@@ -56,7 +56,7 @@ export function CompleteScreen({ state, dispatch }) {
           {t.complete}
         </h1>
         <p className="text-zinc-500 dark:text-zinc-300 text-lg md:text-xl mt-1">
-          {getDurationLabel(state.selectedDuration, state.selectedVariation, t)}{' '}
+          {getDurationLabel(state.selectedDuration, state.selectedVariation, state.plan.templates, state.selectedCategory, t)}{' '}
           {state.lang === 'he' ? 'אימון הושלם' : 'workout done'}
         </p>
       </div>

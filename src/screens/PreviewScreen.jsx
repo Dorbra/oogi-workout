@@ -41,7 +41,7 @@ export function PreviewScreen({ state, dispatch }) {
           {t.back}
         </button>
         <div className="flex-1 text-center">
-          <h2 className="font-display font-black text-zinc-900 dark:text-white text-2xl tracking-wide">{getDurationLabel(state.selectedDuration, state.selectedVariation, t)}</h2>
+          <h2 className="font-display font-black text-zinc-900 dark:text-white text-2xl tracking-wide">{getDurationLabel(state.selectedDuration, state.selectedVariation, templates, state.selectedCategory, t)}</h2>
           <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-0.5">{items.length} {t.exercises}</p>
         </div>
         <div className="w-16" />
