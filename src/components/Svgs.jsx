@@ -5,12 +5,6 @@
 // SVG DIAGRAMS
 // ─────────────────────────────────────────────
 // Shared stick figure primitives
-function Head({ cx = 50, cy = 18, r = 8 }) {
-  return <circle cx={cx} cy={cy} r={r} fill="var(--svg-figure)" />
-}
-function Body({ x1 = 50, y1 = 26, x2 = 50, y2 = 60 }) {
-  return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--svg-figure)" strokeWidth="3" strokeLinecap="round" />
-}
 function Dumbbell({ x1, y1, x2, y2 }) {
   return (
     <g>

@@ -9,8 +9,6 @@ import { TimerRing } from '../components/TimerRing'
 export function ActiveWorkoutScreen({ state, dispatch, isWatch = false }) {
   const t = T[state.lang]
   const isHe = state.lang === 'he'
-  const step = state.steps[state.stepIndex]
-  if (!step) return null
 
   // Memoize the O(n) loop over future steps; only re-runs on step transitions.
   // Add secondsRemaining inline — it changes every tick but the sum does not.
@@ -18,14 +16,17 @@ export function ActiveWorkoutScreen({ state, dispatch, isWatch = false }) {
     () => totalRemainingSeconds(state.steps, state.stepIndex, 0),
     [state.steps, state.stepIndex]
   )
+  const handleCenterTap = useCallback(() => {
+    dispatch({ type: 'PAUSE_RESUME' })
+  }, [dispatch])
+
+  const step = state.steps[state.stepIndex]
+  if (!step) return null
+
   const totalRemaining = futureStepSeconds + state.secondsRemaining
   const progress = step.duration > 0 ? state.secondsRemaining / step.duration : 0
   const exerciseCount = state.groupStarts.length - 1
   const currentGroup = step.groupIndex ?? 0
-
-  const handleCenterTap = useCallback(() => {
-    dispatch({ type: 'PAUSE_RESUME' })
-  }, [dispatch])
 
   // ── TRANSITION ──────────────────────────────────────────
   if (step.type === 'transition') {

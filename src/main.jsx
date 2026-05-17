@@ -1,7 +1,37 @@
-import { StrictMode } from 'react'
+import { StrictMode, Component } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+
+class ErrorBoundary extends Component {
+  state = { hasError: false, message: '' }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, message: error?.message ?? 'Unknown error' }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="h-full flex flex-col items-center justify-center gap-6 px-8 text-center bg-gradient-to-b from-slate-900 to-slate-950 text-white">
+          <div className="text-6xl">⚠️</div>
+          <div>
+            <p className="font-black text-2xl tracking-wide uppercase text-red-400">Something went wrong</p>
+            <p className="text-zinc-400 text-sm mt-2 font-mono break-all">{this.state.message}</p>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-white font-black text-lg px-10 py-4 rounded-2xl active:scale-95 transition-transform"
+            style={{ background: 'linear-gradient(135deg, #0d9488, #06b6d4)', boxShadow: '0 8px 24px rgba(13,148,136,0.4)' }}
+          >
+            Reload App
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 
 // ── Service worker registration & update logic ────────────────────────────
 // This is intentionally in the app bundle (injectRegister: false in vite.config)
@@ -42,6 +72,8 @@ if ('serviceWorker' in navigator) {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
 )
