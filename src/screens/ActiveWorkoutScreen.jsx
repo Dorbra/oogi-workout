@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { T } from '../constants/translations'
 import { totalRemainingSeconds, formatTime } from '../lib/steps'
 import { ExerciseSvg } from '../components/Svgs'
@@ -12,7 +12,13 @@ export function ActiveWorkoutScreen({ state, dispatch, isWatch = false }) {
   const step = state.steps[state.stepIndex]
   if (!step) return null
 
-  const totalRemaining = totalRemainingSeconds(state.steps, state.stepIndex, state.secondsRemaining)
+  // Memoize the O(n) loop over future steps; only re-runs on step transitions.
+  // Add secondsRemaining inline — it changes every tick but the sum does not.
+  const futureStepSeconds = useMemo(
+    () => totalRemainingSeconds(state.steps, state.stepIndex, 0),
+    [state.steps, state.stepIndex]
+  )
+  const totalRemaining = futureStepSeconds + state.secondsRemaining
   const progress = step.duration > 0 ? state.secondsRemaining / step.duration : 0
   const exerciseCount = state.groupStarts.length - 1
   const currentGroup = step.groupIndex ?? 0

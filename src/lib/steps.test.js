@@ -239,6 +239,47 @@ describe('buildSteps — hyper intense mode (reduceRestSecs)', () => {
   })
 })
 
+// ─── data integrity — workout-plan.json references valid exercise IDs ────────
+
+describe('data integrity — workout-plan.json exerciseIds', () => {
+  const { exercises, templates } = DEFAULT_PLAN
+
+  it('every exerciseId in every template exists in exercises', () => {
+    const missing = []
+    for (const [key, template] of Object.entries(templates)) {
+      for (const ex of template.exercises) {
+        if (!exercises[ex.exerciseId]) {
+          missing.push(`${key}: exerciseId "${ex.exerciseId}"`)
+        }
+      }
+    }
+    expect(missing).toEqual([])
+  })
+
+  it('every exercise entry has nameHe, nameEn, instrHe, instrEn, svg', () => {
+    const requiredFields = ['nameHe', 'nameEn', 'instrHe', 'instrEn', 'svg']
+    const incomplete = []
+    for (const [id, ex] of Object.entries(exercises)) {
+      for (const field of requiredFields) {
+        if (!ex[field]) incomplete.push(`exercise ${id}: missing "${field}"`)
+      }
+    }
+    expect(incomplete).toEqual([])
+  })
+
+  it('no template contains a duplicate exerciseId in the same exercise list', () => {
+    const duplicates = []
+    for (const [key, template] of Object.entries(templates)) {
+      const seen = new Set()
+      for (const ex of template.exercises) {
+        if (seen.has(ex.exerciseId)) duplicates.push(`${key}: exerciseId "${ex.exerciseId}" appears more than once`)
+        seen.add(ex.exerciseId)
+      }
+    }
+    expect(duplicates).toEqual([])
+  })
+})
+
 // ─── buildSteps — uses real plan data ────────────────────────────────────────
 
 describe('buildSteps — real plan data smoke test', () => {
