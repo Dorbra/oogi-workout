@@ -1,5 +1,6 @@
 import { useReducer, useEffect, useRef } from 'react'
 import { reducer, initialState } from './store/reducer'
+import { savePrefs } from './lib/prefs'
 import { useWorkoutTimer } from './hooks/useWorkoutTimer'
 import { useWakeLock } from './hooks/useWakeLock'
 import { useWorkoutAudio } from './hooks/useWorkoutAudio'
@@ -24,6 +25,16 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('theme', state.theme)
   }, [state.theme])
+
+  useEffect(() => {
+    savePrefs({
+      lang: state.lang,
+      selectedCategory: state.selectedCategory,
+      selectedDuration: state.selectedDuration,
+      selectedVariation: state.selectedVariation,
+      skipWarmup: state.skipWarmup,
+    })
+  }, [state.lang, state.selectedCategory, state.selectedDuration, state.selectedVariation, state.skipWarmup])
 
   useEffect(() => {
     // Both dimensions ≤ 450px = square small screen (Galaxy Watch); no phone has that geometry.

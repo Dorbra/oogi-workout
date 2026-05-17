@@ -1,14 +1,17 @@
 import { DEFAULT_PLAN, buildSteps, HYPER_INTENSE_REST_REDUCTION } from '../lib/steps'
 import { getAvailableDurations } from '../lib/plan'
+import { loadPrefs } from '../lib/prefs'
+
+const savedPrefs = loadPrefs()
 
 export const initialState = {
-  lang: 'he',
+  lang: savedPrefs.lang,
   theme: (typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null) ?? 'dark',
   screen: 'home',        // home | preview | active | complete
-  selectedCategory: 'upper',
-  selectedDuration: 30,
-  selectedVariation: 'a',
-  skipWarmup: false,
+  selectedCategory: savedPrefs.selectedCategory,
+  selectedDuration: savedPrefs.selectedDuration,
+  selectedVariation: savedPrefs.selectedVariation,
+  skipWarmup: savedPrefs.skipWarmup,
   hyperIntense: false,
   plan: DEFAULT_PLAN,
   steps: [],
@@ -78,7 +81,16 @@ export function reducer(state, action) {
       return { ...state, screen: 'history' }
 
     case 'GO_HOME':
-      return { ...initialState, lang: state.lang, plan: state.plan, selectedCategory: state.selectedCategory, isWatch: state.isWatch }
+      return {
+        ...initialState,
+        lang: state.lang,
+        plan: state.plan,
+        selectedCategory: state.selectedCategory,
+        selectedDuration: state.selectedDuration,
+        selectedVariation: state.selectedVariation,
+        skipWarmup: state.skipWarmup,
+        isWatch: state.isWatch,
+      }
 
     case 'SET_WATCH_MODE':
       return { ...state, isWatch: true }
