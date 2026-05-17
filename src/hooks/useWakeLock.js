@@ -10,7 +10,7 @@ export function useWakeLock(screen) {
     const acquire = async () => {
       try {
         wakeLock = await navigator.wakeLock.request('screen')
-      } catch (_) {
+      } catch {
         // best-effort — silently ignore if denied or unsupported
       }
     }

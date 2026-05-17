@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { loadHistory, appendEntry, deleteEntry, clearHistory } from './history'
 
-const store = {}
+const store: Record<string, string> = {}
 const localStorageMock = {
-  getItem:    (k)    => store[k] ?? null,
-  setItem:    (k, v) => { store[k] = String(v) },
-  removeItem: (k)    => { delete store[k] },
+  getItem:    (k: string)         => store[k] ?? null,
+  setItem:    (k: string, v: string) => { store[k] = String(v) },
+  removeItem: (k: string)         => { delete store[k] },
 }
 
 beforeEach(() => {

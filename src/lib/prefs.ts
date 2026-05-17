@@ -1,6 +1,14 @@
 const PREFS_KEY = 'oogi_prefs'
 
-const DEFAULTS = {
+export interface Prefs {
+  lang: string
+  selectedCategory: string
+  selectedDuration: number
+  selectedVariation: string
+  skipWarmup: boolean
+}
+
+const DEFAULTS: Prefs = {
   lang: 'he',
   selectedCategory: 'upper',
   selectedDuration: 30,
@@ -8,19 +16,19 @@ const DEFAULTS = {
   skipWarmup: false,
 }
 
-export function loadPrefs() {
+export function loadPrefs(): Prefs {
   try {
     const raw = localStorage.getItem(PREFS_KEY)
     if (!raw) return { ...DEFAULTS }
-    return { ...DEFAULTS, ...JSON.parse(raw) }
+    return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Prefs>) }
   } catch {
     return { ...DEFAULTS }
   }
 }
 
-export function savePrefs({ lang, selectedCategory, selectedDuration, selectedVariation, skipWarmup }) {
+export function savePrefs(prefs: Prefs): void {
   try {
-    localStorage.setItem(PREFS_KEY, JSON.stringify({ lang, selectedCategory, selectedDuration, selectedVariation, skipWarmup }))
+    localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
   } catch {
     // localStorage unavailable (private mode, quota exceeded) — silent no-op
   }

@@ -59,7 +59,7 @@ export default function App() {
       })
     }
     prevScreen.current = state.screen
-  }, [state.screen])
+  }, [state.screen, state.plan.templates, state.selectedCategory, state.selectedDuration, state.selectedVariation, state.skipWarmup, state.completedSeconds, saveWorkout])
 
   return (
     <div
