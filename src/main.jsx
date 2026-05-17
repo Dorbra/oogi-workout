@@ -33,18 +33,52 @@ class ErrorBoundary extends Component {
   }
 }
 
+// ── Version staleness check ───────────────────────────────────────────────
+// Strategy: fetch /version.json (never precached, served with no-store) and
+// compare the deployed version against __APP_VERSION__ baked into this bundle.
+//
+// Loop-safety: when we trigger a reload the old SW still serves the old bundle
+// on the next load, so a naive check would loop forever.  We set a sessionStorage
+// flag before reloading; the next load sees the flag, skips the check, and
+// waits for the SW update cycle to finish (skipWaiting → clientsClaim →
+// controllerchange → reload).  After that reload the new bundle is live and
+// the check matches.  Total forced reloads per deploy: ≤ 2.
+const VERSION_RELOAD_KEY = 'oogi_version_reload'
+
+async function checkVersion() {
+  // Skip on the immediate post-reload load so we don't loop while the new SW
+  // is still installing.  The SW's controllerchange handler takes it from here.
+  if (sessionStorage.getItem(VERSION_RELOAD_KEY)) {
+    sessionStorage.removeItem(VERSION_RELOAD_KEY)
+    return
+  }
+  try {
+    const res = await fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
+    if (!res.ok) return
+    const { v } = await res.json()
+    if (v && v !== __APP_VERSION__) {
+      sessionStorage.setItem(VERSION_RELOAD_KEY, '1')
+      window.location.reload()
+    }
+  } catch { /* network unavailable — keep running with cached version */ }
+}
+
 // ── Service worker registration & update logic ────────────────────────────
 // This is intentionally in the app bundle (injectRegister: false in vite.config)
 // rather than in a separate registerSW.js. That way every deploy ships new
 // update-checking code immediately without requiring a prior SW update first.
 if ('serviceWorker' in navigator) {
-  // Reload the page whenever a new SW activates and claims this client so the
-  // fresh content-hashed assets are served instead of the old cached bundle.
+  // Reload whenever a new SW activates and claims this client so the fresh
+  // content-hashed assets are served instead of the old cached bundle.
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     window.location.reload()
   })
 
   window.addEventListener('load', async () => {
+    // Version check on initial load catches the case where the SW is already
+    // serving stale content before the SW update cycle has had a chance to run.
+    checkVersion()
+
     let reg
     try {
       reg = await navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache: 'none' })
@@ -52,21 +86,21 @@ if ('serviceWorker' in navigator) {
       return
     }
 
-    // Force an update check immediately on every page load — this bypasses the
-    // browser's 24-hour passive-check throttle that register() alone uses.
-    // Combined with skipWaiting + clientsClaim in the SW, a new deploy is live
-    // within seconds of the user opening or returning to the app.
+    // Force an update check immediately — bypasses the browser's 24 h passive
+    // throttle.  Combined with skipWaiting + clientsClaim, a new deploy is live
+    // within seconds of the user opening the app.
     reg.update()
 
-    // Re-check on every app-foreground event. Android PWAs stay alive in the
-    // background indefinitely; without this the passive 24h check is the only
-    // trigger, and Android battery optimisation often suppresses it entirely.
+    // On every app-foreground: version check (direct, fast) + SW update check.
+    // Android PWAs live in background memory indefinitely; without this the
+    // passive 24 h browser check is the only trigger and battery optimisation
+    // often suppresses it entirely.
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') reg.update()
+      if (document.visibilityState === 'visible') {
+        checkVersion()
+        reg.update()
+      }
     })
-
-    // Belt-and-suspenders: also check every 30 min while the app is open.
-    setInterval(() => reg.update(), 30 * 60 * 1000)
   })
 }
 
