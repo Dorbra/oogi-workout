@@ -34,17 +34,32 @@ class ErrorBoundary extends Component {
 }
 
 // ── Version staleness check ───────────────────────────────────────────────
-// Fetches /version.json (excluded from SW precache, served with no-store)
-// and hard-reloads if the deployed version differs from the bundled one.
-// This fires on every page-foreground event so Android PWAs that are kept
-// alive in background memory always pick up a new deploy within seconds of
-// the user returning to the app — without relying on the SW update cycle.
+// Strategy: fetch /version.json (never precached, served with no-store) and
+// compare the deployed version against __APP_VERSION__ baked into this bundle.
+//
+// Loop-safety: when we trigger a reload the old SW still serves the old bundle
+// on the next load, so a naive check would loop forever.  We set a sessionStorage
+// flag before reloading; the next load sees the flag, skips the check, and
+// waits for the SW update cycle to finish (skipWaiting → clientsClaim →
+// controllerchange → reload).  After that reload the new bundle is live and
+// the check matches.  Total forced reloads per deploy: ≤ 2.
+const VERSION_RELOAD_KEY = 'oogi_version_reload'
+
 async function checkVersion() {
+  // Skip on the immediate post-reload load so we don't loop while the new SW
+  // is still installing.  The SW's controllerchange handler takes it from here.
+  if (sessionStorage.getItem(VERSION_RELOAD_KEY)) {
+    sessionStorage.removeItem(VERSION_RELOAD_KEY)
+    return
+  }
   try {
     const res = await fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
     if (!res.ok) return
     const { v } = await res.json()
-    if (v && v !== __APP_VERSION__) window.location.reload()
+    if (v && v !== __APP_VERSION__) {
+      sessionStorage.setItem(VERSION_RELOAD_KEY, '1')
+      window.location.reload()
+    }
   } catch { /* network unavailable — keep running with cached version */ }
 }
 
@@ -60,8 +75,8 @@ if ('serviceWorker' in navigator) {
   })
 
   window.addEventListener('load', async () => {
-    // Version check on initial load catches the case where the SW is serving
-    // a stale index.html and the controllerchange event hasn't fired yet.
+    // Version check on initial load catches the case where the SW is already
+    // serving stale content before the SW update cycle has had a chance to run.
     checkVersion()
 
     let reg
@@ -71,13 +86,15 @@ if ('serviceWorker' in navigator) {
       return
     }
 
-    // Force an update check immediately on every page load — this bypasses the
-    // browser's 24-hour passive-check throttle that register() alone uses.
+    // Force an update check immediately — bypasses the browser's 24 h passive
+    // throttle.  Combined with skipWaiting + clientsClaim, a new deploy is live
+    // within seconds of the user opening the app.
     reg.update()
 
-    // On every app-foreground: version check (fast, direct) + SW update check.
-    // Android PWAs stay alive in background; without this the 24 h passive
-    // check is the only trigger and battery optimisation often suppresses it.
+    // On every app-foreground: version check (direct, fast) + SW update check.
+    // Android PWAs live in background memory indefinitely; without this the
+    // passive 24 h browser check is the only trigger and battery optimisation
+    // often suppresses it entirely.
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         checkVersion()
