@@ -12,6 +12,7 @@ npm install
 npm run dev       # http://localhost:5173/
 npm test          # Vitest — must pass before committing
 npm run build     # must pass with zero errors before committing
+npm run lint      # ESLint — must pass before committing
 ```
 
 ---
@@ -49,16 +50,18 @@ src/
     useWorkoutAudio.js     # Web Audio API beeps and tones
     useWorkoutHistory.js   # localStorage history: saveWorkout, removeEntry, wipeHistory
     useHaptics.js          # navigator.vibrate() patterns for step changes + completion
-  lib/                 # Pure functions — no React imports
-    steps.js               # buildSteps, formatTime, totalRemainingSeconds,
+  lib/                 # Pure functions — no React imports (TypeScript)
+    steps.ts               # buildSteps, formatTime, totalRemainingSeconds,
                            #   HYPER_INTENSE_REST_REDUCTION, resolvePlan, DEFAULT_PLAN
-    steps.test.js          # Vitest unit tests (29 tests)
-    plan.js                # Category/duration helpers (uses CATEGORY_META)
-    audio.js               # Low-level Web Audio tone generation
-    history.js             # localStorage CRUD: loadHistory, appendEntry, deleteEntry, clearHistory
-    history.test.js        # Vitest unit tests (15 tests)
-    haptics.js             # navigator.vibrate() wrapper — vibrateShort/Double/Long
-    haptics.test.js        # Vitest unit tests (4 tests)
+    steps.test.ts          # Vitest unit tests
+    plan.ts                # Category/duration helpers (uses CATEGORY_META)
+    audio.ts               # Low-level Web Audio tone generation
+    history.ts             # localStorage CRUD: loadHistory, appendEntry, deleteEntry, clearHistory
+    history.test.ts        # Vitest unit tests
+    haptics.ts             # navigator.vibrate() wrapper — vibrateShort/Double/Long
+    haptics.test.ts        # Vitest unit tests
+    prefs.ts               # localStorage preference persistence: loadPrefs, savePrefs
+    prefs.test.ts          # Vitest unit tests
   store/               # State
     reducer.js             # useReducer handler + initialState
   constants/           # Static data
@@ -231,9 +234,10 @@ npm run build     # must pass with zero errors before any commit
 npm run dev       # open http://localhost:5173/ to test manually
 npm test          # Vitest — must pass before any commit
 npm run test:watch  # watch mode during development
+npm run lint      # ESLint — must pass before any commit
 ```
 
-Tests live in three colocated files — `src/lib/steps.test.js` (29 tests), `src/lib/history.test.js` (15 tests), `src/lib/haptics.test.js` (4 tests). **48 tests total.** See Testing guidelines below.
+Tests live in four colocated files — `src/lib/steps.test.ts`, `src/lib/history.test.ts`, `src/lib/haptics.test.ts`, `src/lib/prefs.test.ts`. **116 tests total.** See Testing guidelines below.
 
 Before marking any UI change complete, manually verify:
 1. The changed feature works on a mobile viewport
@@ -244,15 +248,15 @@ Before marking any UI change complete, manually verify:
 
 ## Testing guidelines
 
-**What has tests:** Pure functions in `src/lib/` — `steps.js` and `history.js` are fully covered.
+**What has tests:** Pure functions in `src/lib/` — `steps.ts`, `history.ts`, `haptics.ts`, and `prefs.ts` are covered.
 
 **What does not have tests (currently acceptable):** `reducer.js`, hooks, and screen components.
 
-**When to add tests:** Any new function added to `src/lib/` must have accompanying tests in a colocated `.test.js` file next to it.
+**When to add tests:** Any new function added to `src/lib/` must have accompanying tests in a colocated `.test.ts` file next to it.
 
 **Test environment:** Vitest runs in `node` mode — no DOM available. Do not write tests for React components or hooks unless specifically asked and the jsdom environment is configured first.
 
-**Test file naming:** Colocate as `[filename].test.js` next to the file under test. Do not create a separate `__tests__/` directory.
+**Test file naming:** Colocate as `[filename].test.ts` next to the file under test. Do not create a separate `__tests__/` directory.
 
 **Rule:** Do not modify existing tests to make new code pass. Fix the code instead.
 

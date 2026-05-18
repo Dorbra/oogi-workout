@@ -6,8 +6,8 @@ Terse, imperative rules. Read before acting. These complement [CLAUDE.md](CLAUDE
 
 ## Code Quality
 
-- Pure JavaScript. Do not add `.ts` / `.tsx` files or JSDoc type annotations unless explicitly asked.
-- No ESLint, no Prettier config. Do not create `eslint.config.js`, `.eslintrc`, `.prettierrc`, or similar. Do not reformat code style.
+- `src/lib/` is TypeScript (`.ts`). All other source files remain plain JavaScript (`.jsx`, `.js`). Do not add `.ts` / `.tsx` files outside `src/lib/` without explicit instruction.
+- ESLint is configured via `eslint.config.js` with `eslint-plugin-react` and `eslint-plugin-react-hooks`. Run `npm run lint` and fix all warnings before committing. Do not add Prettier — no `.prettierrc` or similar.
 - Named exports everywhere. The only default export in the codebase is `App` in `App.jsx`.
 - No barrel files (`index.js` re-exports). Import directly from the source file.
 - No third-party libraries without explicit user approval. The dependency list is intentionally minimal.
@@ -74,18 +74,18 @@ data/        → JSON only — no JS logic
 
 ## Testing Rules
 
-- Every new function added to `src/lib/` must have accompanying tests in a colocated `.test.js` file.
+- Every new function added to `src/lib/` must have accompanying tests in a colocated `.test.ts` file.
 - Tests run via `npm test` (Vitest, `node` environment — no DOM available).
 - Do not write tests for React components, screen files, or hooks unless explicitly asked.
 - Do not modify existing passing tests to make new code pass. Fix the code.
-- Test files: colocate as `[filename].test.js` next to the source file. No separate `__tests__/` directory.
+- Test files: colocate as `[filename].test.ts` next to the source file. No separate `__tests__/` directory.
 
 ---
 
 ## PR Process
 
 - One logical change per PR. If a PR touches `screens/` AND `data/`, split it.
-- Run `npm run build && npm test` before opening any PR. Both must pass.
+- Run `npm run build && npm test && npm run lint` before opening any PR. All must pass.
 - Never merge your own PR. The user merges.
 - Always target `main`. Never target another branch.
 - Branch names: `feat/` · `fix/` · `refactor/` · `chore/` — no other prefixes.
