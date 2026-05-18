@@ -28,7 +28,7 @@
     "globals": "^17.6.0",
     "tailwindcss": "^4.1.4",
     "typescript": "^6.0.3",
-    "vite": "^6.3.2",
+    "vite": "^8.0.13",
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.1.4",
     "wrangler": "^4.86.0"
